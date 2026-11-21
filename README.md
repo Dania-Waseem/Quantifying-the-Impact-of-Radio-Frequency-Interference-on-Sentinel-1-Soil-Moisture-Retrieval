@@ -68,6 +68,29 @@ the main sample. OZNET, in the Murrumbidgee catchment, Australia (Smith et al.,
    the station coordinates in `data/raw/ismn/stations.csv` (Google Earth Engine)
    and export the tables listed above.
 
+**RFI statistics (OpenSAR).** The severity and extent of the injected
+interference come from `data/processed/opensar_rfi_stats.csv`, produced by a
+separate analysis of OpenSAR Sentinel-1 RFI patches (not part of this
+repository, not tracked). Notes on these statistics:
+
+- they come from 125 of 223 OpenSAR patches; 98 patches had no measurable RFI
+  in the mask;
+- severity is the measured excess power (dB) of the masked RFI pixels against
+  the unmasked pixels, from SLC power per polarisation. Severity levels are
+  the 10th, 25th, 50th, 75th and 90th percentiles per polarisation, using
+  only patches with an excess above 0.1 dB in that polarisation (30 patches
+  excluded for VV, 7 for VH); some patches show no power excess in one
+  polarisation. Each level is converted to SIR with
+  SIR = -10 log10(10^(C/10) - 1), and each polarisation is injected with its
+  own SIR;
+- extent levels are the same percentiles of the masked fraction over all 125
+  patches. The extent distribution is wide (0.003 to 0.92) with a cluster of
+  very large values near 0.9 (9 patches above 0.85);
+- the statistics are measured on SLC pixels, while the injection acts on
+  station-level GRD backscatter (3x3 pixel means);
+- the contamination probability p_c is not measured by OpenSAR and remains
+  an assumed range (0.1, 0.25, 0.5).
+
 The variables of the analysis table are described in
 [`docs/codebook.csv`](docs/codebook.csv).
 
