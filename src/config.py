@@ -57,8 +57,11 @@ def derive_seed(*keys: int | str) -> int:
     same keys always give the same seed, and different keys give independent
     streams.
     """
-    # Strings are turned into stable integers (Python's hash() is salted).
-    ints = [k if isinstance(k, int) else int.from_bytes(str(k).encode(), "little") % (2**32)
+    # Non-negative integers are used as they are. Other keys (strings,
+    # floats, negative integers such as a SIR of -5 dB) are turned into
+    # stable integers from their text (Python's hash() is salted).
+    ints = [k if isinstance(k, (int, np.integer)) and not isinstance(k, bool) and k >= 0
+            else int.from_bytes(str(k).encode(), "little") % (2**32)
             for k in keys]
     seq = np.random.SeedSequence([master_seed(), *ints])
     return int(seq.generate_state(1)[0])
