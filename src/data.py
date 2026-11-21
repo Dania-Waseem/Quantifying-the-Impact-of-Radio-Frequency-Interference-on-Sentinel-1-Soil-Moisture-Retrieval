@@ -419,7 +419,9 @@ def write_codebook(dest: str | Path | None = None) -> Path:
         ("t_ismn", "Time of the matched ISMN hourly value", "UTC", "ISMN"),
         ("vh_low", "Flag: VH below the noise floor in config.yaml (-30 dB); kept, sensitivity run in Stage 4", "boolean", "Derived"),
         # Model output variables (prediction and metric tables).
-        ("feature_set", "Feature configuration: F1 (primary, all features), F2 (radar-reliant, p7 and p30 removed), VV (change-detection models, VV only)", "-", "Model output"),
+        ("rVV", "Relative VV: VV minus the robust median of the station's own VV series (MAD-clipped, no soil moisture used); under RFI computed from the series the model receives", "dB", "Derived"),
+        ("rVH", "Relative VH: VH minus the robust median of the station's own VH series (MAD-clipped, no soil moisture used); under RFI computed from the series the model receives", "dB", "Derived"),
+        ("feature_set", "Feature configuration: F1 (primary, all features), F2 (radar-reliant, p7 and p30 removed), F3 (secondary, relative backscatter rVV, rVH with VHVV, angle, ndvi, doy), VV (change-detection models, VV only)", "-", "Model output"),
         ("model", "Retrieval model: rf (random forest), xgb (XGBoost), cd (change detection, per-station scaling), cd_pooled (change detection, original pooled scaling)", "-", "Model output"),
         ("pred", "Predicted soil moisture", "m3/m3", "Model output"),
         ("cd scaling: per_station", "cd: relative wetness standardised within each station, then scaled to the pooled training mean and to the median within-station standard deviation of soil moisture over the training stations (no test data used)", "-", "Model definition"),
@@ -477,3 +479,57 @@ def run_stage1() -> tuple[pd.DataFrame, dict[str, pd.DataFrame]]:
     write_version_log(path("results_aggregate") / "screening_steps.csv")
     write_codebook()
     return df, scr
+
+
+# --------------------------------------------------------------------------
+# Relative backscatter (feature configuration F3)
+# --------------------------------------------------------------------------
+
+def robust_median(x: np.ndarray, clip_mad: float = 3.0, min_obs: int = 5) -> float:
+    """Median of a series after removing values far from the median.
+
+    Steps: compute the median and the scaled MAD (1.4826 * MAD) of the valid
+    values, drop values further than ``clip_mad`` scaled MADs from the
+    median, and return the median of the remaining values. This limits the
+    influence of outliers, for example RFI-contaminated acquisitions, on the
+    reference. Returns NaN if fewer than ``min_obs`` valid values exist.
+    """
+    x = np.asarray(x, dtype=float)
+    x = x[np.isfinite(x)]
+    if len(x) < min_obs:
+        return np.nan
+    med = np.median(x)
+    mad = 1.4826 * np.median(np.abs(x - med))
+    if mad > 0:
+        x = x[np.abs(x - med) <= clip_mad * mad]
+    return float(np.median(x))
+
+
+def add_relative_backscatter(df: pd.DataFrame) -> pd.DataFrame:
+    """Add ``rVV`` and ``rVH``: backscatter minus the station's robust median.
+
+    The reference is computed per station from the backscatter values in
+    ``df`` itself, so it reflects whatever series is passed in (clean,
+    contaminated, filled or after discarding). No soil moisture is used.
+    Returns a copy of ``df`` with the new columns.
+    """
+    cfg = load_config()["relative_backscatter"]
+    out = df.copy()
+    for c in cfg["columns"]:
+        ref = out.groupby("station_id")[c].transform(
+            lambda s: robust_median(s.to_numpy(), cfg["clip_mad"], cfg["min_obs"]))
+        out[f"r{c}"] = out[c] - ref
+    return out
+
+
+def add_derived_features(df: pd.DataFrame) -> pd.DataFrame:
+    """Recompute every feature derived from backscatter.
+
+    ``VHVV`` is recomputed from the current VV and VH, and the relative
+    backscatter of F3 is added. Called on clean data and again after any
+    injection or mitigation, so that derived features always match the
+    backscatter the model receives.
+    """
+    out = df.copy()
+    out["VHVV"] = out["VH"] - out["VV"]
+    return add_relative_backscatter(out)
