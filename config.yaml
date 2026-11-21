@@ -156,6 +156,7 @@ experiment:
   evaluations: [USCRN_cv, OZNET_cv, OZNET_transfer]
   variants: [M0, M1, M2, M3, M3b, M4]
   models: [rf, xgb, cd, cd_pooled]
+  n_jobs: 4         # fewer workers than cores: each worker holds about 0.5 GB of models
 
 stats:
   n_bootstrap: 5000
