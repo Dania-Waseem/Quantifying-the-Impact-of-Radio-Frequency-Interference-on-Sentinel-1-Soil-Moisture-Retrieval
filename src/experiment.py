@@ -43,6 +43,8 @@ from .models import (CD_FEATURE_SET, CD_MODELS, TREE_MODELS, feature_sets, featu
 from .stats import metrics_from_sums
 
 SUM_COLS = ["n", "e", "e2", "ae", "y", "y2", "p", "p2", "yp"]
+# Gzip with a fixed header time, so that reruns write identical files.
+GZIP = {"method": "gzip", "mtime": 0}
 KEY_SETTING = ["evaluation", "severity_q", "extent", "p_c", "polarisation", "seed"]
 VARIANTS_RUN = ["M1", "M3", "M3b", "M0_kept", "M4"]
 
@@ -453,11 +455,11 @@ def run_stage3(n_jobs: int | None = None) -> dict[str, pd.DataFrame]:
     share_lost = (det.groupby(KEY_SETTING)[["n_obs", "n_kept"]].sum()
                   .assign(share_lost=lambda d: 1 - d.n_kept / d.n_obs).reset_index())
 
-    runs_m.to_csv(path("results") / "experiment_runs.csv.gz", index=False)
-    pooled.to_csv(path("results") / "experiment_pooled.csv.gz", index=False)
-    derived.to_csv(path("results") / "experiment_derived.csv.gz", index=False)
-    det.to_csv(path("results") / "experiment_detection.csv.gz", index=False)
-    share_lost.to_csv(path("results") / "experiment_share_lost.csv.gz", index=False)
+    runs_m.to_csv(path("results") / "experiment_runs.csv.gz", index=False, compression=GZIP)
+    pooled.to_csv(path("results") / "experiment_pooled.csv.gz", index=False, compression=GZIP)
+    derived.to_csv(path("results") / "experiment_derived.csv.gz", index=False, compression=GZIP)
+    det.to_csv(path("results") / "experiment_detection.csv.gz", index=False, compression=GZIP)
+    share_lost.to_csv(path("results") / "experiment_share_lost.csv.gz", index=False, compression=GZIP)
     write_version_log(path("results") / "experiment_runs.csv")
     for name, table in {**summaries, **det_sum}.items():
         table.to_csv(path("results_aggregate") / f"{name}.csv", index=False)
@@ -639,8 +641,8 @@ def run_stage4_recompute(n_jobs: int | None = None) -> tuple[pd.DataFrame, pd.Da
     print(f"done in {time.time() - t0:.0f} s")
     sums = pd.concat([s for r in res for s in r[0]], ignore_index=True)
     rows = pd.concat([x for r in res for x in r[1]], ignore_index=True)
-    sums.to_csv(path("processed") / "stage4_station_sums.csv.gz", index=False)
-    rows.to_csv(path("processed") / "stage4_rows.csv.gz", index=False)
+    sums.to_csv(path("processed") / "stage4_station_sums.csv.gz", index=False, compression=GZIP)
+    rows.to_csv(path("processed") / "stage4_rows.csv.gz", index=False, compression=GZIP)
     scen.to_csv(path("results_aggregate") / "stage4_scenarios.csv", index=False)
 
     # Consistency with Stage 3: pooled RMSE of the reference scenario.
