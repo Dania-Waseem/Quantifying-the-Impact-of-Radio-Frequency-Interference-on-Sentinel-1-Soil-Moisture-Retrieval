@@ -47,3 +47,6 @@ notebooks/executed/
 PROJECT_BRIEF.md
 .claude/
 .vscode/
+
+# Package version logs of large local run files
+results/*.versions.json
