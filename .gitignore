@@ -7,18 +7,40 @@ __pycache__/
 # Third-party code (not part of this repository)
 Code/
 
-# Data (obtained separately, see README)
-data/raw/
-data/external/
-data/processed/
-
-# Generated models and large result files
+# Data policy: no data derived from ISMN, Google Earth Engine, ERA5-Land,
+# Sentinel or OpenSAR is ever committed (redistribution is restricted).
+data/
 models/
-results/*.parquet
-results/*.pkl
-results/*.joblib
-results/experiment_runs*.csv
-results/bootstrap_*.csv
+
+# Per-station or per-row results and executed notebooks stay local
+results/private/
+notebooks/executed/
+
+# Data file formats are never committed anywhere in the repository
+*.csv
+*.csv.gz
+*.gz
+*.zip
+*.parquet
+*.feather
+*.npy
+*.npz
+*.pkl
+*.pickle
+*.joblib
+*.h5
+*.hdf5
+*.nc
+*.tif
+*.tiff
+
+# Allowed: the codebook (variable descriptions only) and aggregated result
+# tables that contain no per-station or per-row values. Each allowed file is
+# listed explicitly.
+!docs/codebook.csv
+!docs/notation.csv
+!results/aggregate/
+!results/aggregate/*.csv
 
 # Local working notes and editor settings
 PROJECT_BRIEF.md
