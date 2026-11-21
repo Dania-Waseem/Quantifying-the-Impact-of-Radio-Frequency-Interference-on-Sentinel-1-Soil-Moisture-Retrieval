@@ -112,6 +112,65 @@ Pooled metrics use all test rows. `r_station_median` and
     ])
 
 
+def nb03() -> None:
+    """Notebook 03: RFI statistics from OpenSAR (placeholder)."""
+    write("03_rfi_statistics.ipynb", [
+        cell("markdown", """# 03 RFI statistics (input pending)
+
+The RFI statistics are derived from the OpenSAR data in a separate analysis
+(Google Colab). That analysis is not part of this repository. Its only output
+used here is `data/processed/opensar_rfi_stats.csv`, with one row per patch
+and the columns `patch_id, split, extent, severity_db_vv, severity_db_vh`.
+
+**Status: input pending.** Until the file exists, the injection grid in
+Stage 3 is the PROVISIONAL grid from `config.yaml`, and a warning is printed
+every time it is used. When the file is present, the grid is derived from its
+quantiles (`src/rfi.py`, `injection_grid`)."""),
+        cell("code", SETUP),
+        cell("code", """from src.rfi import injection_grid, load_opensar_stats
+
+stats = load_opensar_stats()
+print("OpenSAR statistics:", "not available (input pending)" if stats is None
+      else f"{len(stats)} patches")
+injection_grid()"""),
+    ])
+
+
+def nb04() -> None:
+    """Notebook 04: extended RFI-aware pipeline (Stage 3)."""
+    write("04_extended_model.ipynb", [
+        cell("markdown", """# 04 Extended model: RFI injection and mitigation
+
+Injects RFI into the Sentinel-1 test inputs and evaluates the variants
+M0 (clean), M1 (contaminated), M2 (published suppression, not available),
+M3 (detect-and-fill), M3b (detect-and-discard) and M4 (detect-and-fill with
+RFI-aware training) for the feature configurations F1, F2 and F3 and the
+change-detection baseline. The injection grid is PROVISIONAL until the
+OpenSAR statistics exist. All logic is in `src/rfi.py` and
+`src/experiment.py`. A full run takes about 70 minutes on four workers."""),
+        cell("code", SETUP),
+        cell("code", "from src.experiment import run_stage3\n\nout = run_stage3()"),
+        cell("markdown", """## Degradation and recovery by variant (all settings)
+
+D = RMSE_M1 - RMSE_M0, G = RMSE_M1 - RMSE_variant, RR = G / D, in m3/m3,
+averaged over settings and seeds. M2 rows are empty (not available)."""),
+        cell("code", """cols = ["evaluation", "feature_set", "model", "variant", "rmse_M0", "rmse_M1",
+        "rmse_variant", "D_mean", "G_mean", "RR_of_means", "RR_median"]
+out["stage3_summary_overall"][cols].round(4)"""),
+        cell("markdown", "## Degradation by severity (SIR) and by extent, variant M3 rows"),
+        cell("code", """s = out["stage3_summary_by_sir"]
+s[s.variant == "M3"].pivot_table(index=["evaluation", "feature_set", "model"],
+                                 columns="sir_db", values="D_mean").round(4)"""),
+        cell("code", """s = out["stage3_summary_by_extent"]
+s[s.variant == "M3"].pivot_table(index=["evaluation", "feature_set", "model"],
+                                 columns="extent", values="D_mean").round(4)"""),
+        cell("markdown", "## Detection precision, recall and F1 by SIR"),
+        cell("code", "out[\"stage3_detection_by_sir\"].round(3)"),
+    ])
+
+
 if __name__ == "__main__":
     nb01()
     nb02()
+    nb03()
+    nb04()
