@@ -117,16 +117,28 @@ testing:
   multiple_testing: holm       # Holm correction across the hypothesis tests;
                                # corrected and uncorrected p-values are reported
 
-# PROVISIONAL injection grid. These values are placeholders and will be
-# replaced by quantiles of data/processed/opensar_rfi_stats.csv once the
-# OpenSAR statistics exist.
+# Injection grid. When data/processed/opensar_rfi_stats.csv exists, the
+# severity and extent levels come from it:
+#   * severity levels per polarisation: the listed percentiles of the measured
+#     excess power C = severity_db_vv / severity_db_vh (dB), using only patches
+#     with C above min_contrast_db in that polarisation; each level is
+#     converted to SIR with SIR = -10 log10(10^(C/10) - 1), and each
+#     polarisation is injected with its own SIR (the sir_db_* columns of the
+#     file are not used: they hold a capped value for C <= 0.1 dB);
+#   * extent levels: the listed percentiles of extent over all patches.
+# The contamination probability p_c is not measured by OpenSAR (patch
+# statistics do not give a per-acquisition rate); it remains an assumed range.
+# The provisional lists below are used only if the file is absent (fallback,
+# with a warning).
 injection:
-  provisional: true
-  sir_db: [-5, 0, 5, 10, 15, 20]       # signal-to-interference ratio (dB)
-  extent: [0.1, 0.25, 0.5, 0.75, 1.0]  # affected fraction rho
-  p_c: [0.1, 0.25, 0.5]                # probability an acquisition is contaminated
+  opensar:
+    percentiles: [10, 25, 50, 75, 90]
+    min_contrast_db: 0.1
+  p_c: [0.1, 0.25, 0.5]                # assumed, not from OpenSAR
   polarisation: [VV, VH, both]
-  opensar_quantiles: [0.1, 0.25, 0.5, 0.75, 0.9]
+  provisional_fallback:
+    sir_db: [-5, 0, 5, 10, 15, 20]     # used only without the OpenSAR file
+    extent: [0.1, 0.25, 0.5, 0.75, 1.0]
 
 detection:
   window: 10        # w, past acquisitions of the same orbit (observed values)
@@ -176,8 +188,9 @@ robustness:
 # splits, same seed streams as Stage 3) and their per-station error sums and
 # row-level errors are kept locally (never committed).
 stage4:
-  # Reference scenario (PROVISIONAL, the middle of the provisional grid).
-  reference: {sir_db: 0, extent: 0.5, p_c: 0.25, polarisation: both}
+  # Reference scenario: the median severity level and the median extent level
+  # of the injection grid (percentile labels), p_c = 0.25, both polarisations.
+  reference: {severity_q: 50, extent_q: 50, p_c: 0.25, polarisation: both}
   # Dose-response sweeps around the reference (H1: severity, H2: extent).
   severity_sweep: true         # all grid SIR values at the reference extent, p_c, polarisation
   extent_sweep: true           # all grid extents at the reference SIR, p_c, polarisation
