@@ -418,6 +418,12 @@ def write_codebook(dest: str | Path | None = None) -> Path:
         ("sm", "In situ soil moisture, 0 to 5 cm, good-quality flag", "m3/m3", "ISMN"),
         ("t_ismn", "Time of the matched ISMN hourly value", "UTC", "ISMN"),
         ("vh_low", "Flag: VH below the noise floor in config.yaml (-30 dB); kept, sensitivity run in Stage 4", "boolean", "Derived"),
+        # Model output variables (prediction and metric tables).
+        ("feature_set", "Feature configuration: F1 (primary, all features), F2 (radar-reliant, p7 and p30 removed), VV (change-detection models, VV only)", "-", "Model output"),
+        ("model", "Retrieval model: rf (random forest), xgb (XGBoost), cd (change detection, per-station scaling), cd_pooled (change detection, original pooled scaling)", "-", "Model output"),
+        ("pred", "Predicted soil moisture", "m3/m3", "Model output"),
+        ("cd scaling: per_station", "cd: relative wetness standardised within each station, then scaled to the pooled training mean and to the median within-station standard deviation of soil moisture over the training stations (no test data used)", "-", "Model definition"),
+        ("cd scaling: pooled", "cd_pooled: one mean and standard deviation matching of relative wetness to soil moisture over all training rows (original version, kept for comparison)", "-", "Model definition"),
     ]
     dest = Path(dest) if dest else path("docs") / "codebook.csv"
     dest.parent.mkdir(parents=True, exist_ok=True)
