@@ -3,7 +3,15 @@
 Models:
   * random forest (scikit-learn);
   * XGBoost (gradient boosted trees);
-  * a change-detection baseline in the style of the TU Wien method.
+  * a change-detection baseline in the style of the TU Wien method, with
+    two scalings: per-station (``cd``, primary) and pooled (``cd_pooled``,
+    the original version).
+
+The tree models are fitted on each feature configuration declared in
+``config.yaml`` (F1 primary, F2 radar-reliant). The change-detection
+baseline uses VV only, so it is fitted once and labelled ``feature_set =
+"VV"``. For a given setting, model and fold, F1 and F2 use the same model
+seed and the same bootstrap draws, so that their comparison is paired.
 
 Evaluation settings (Stage 2):
   * ``USCRN_cv``: station-wise 5-fold cross-validation within USCRN (main);
@@ -29,12 +37,23 @@ from xgboost import XGBRegressor
 from .config import derive_seed, load_config, path, write_version_log
 from .metrics import all_metrics, per_station_metrics
 
-MODEL_NAMES = ["rf", "xgb", "cd"]
+TREE_MODELS = ["rf", "xgb"]
+CD_MODELS = {"cd": "per_station", "cd_pooled": "pooled"}
+CD_FEATURE_SET = "VV"   # label of the change-detection rows
 
 
-def features() -> list[str]:
-    """Return the list of model features defined in the configuration."""
-    return list(load_config()["features"])
+def feature_sets() -> list[str]:
+    """Return the names of the feature configurations, primary first."""
+    cfg = load_config()
+    names = list(cfg["feature_sets"])
+    primary = cfg["primary_feature_set"]
+    return [primary] + [n for n in names if n != primary]
+
+
+def features(fset: str | None = None) -> list[str]:
+    """Return the feature columns of a configuration (default: the primary one)."""
+    cfg = load_config()
+    return list(cfg["feature_sets"][fset or cfg["primary_feature_set"]]["columns"])
 
 
 # --------------------------------------------------------------------------
@@ -48,10 +67,19 @@ class ChangeDetection:
        95th percentiles of its VV backscatter (dB).
     2. The relative wetness is ``m = (VV - dry) / (wet - dry)``, clipped to
        the range 0 to 1.
-    3. ``m`` is mapped to soil moisture by matching its mean and standard
-       deviation to those of the in situ soil moisture of the training
-       stations: ``sm = mu_sm + sd_sm * (m - mu_m) / sd_m``, where ``mu_m``
-       and ``sd_m`` are computed on the training stations.
+    3. ``m`` is mapped to soil moisture with one of two scalings:
+
+       * ``per_station`` (model ``cd``, primary): ``m`` is standardised over
+         each station's own series, ``z = (m - mean_s(m)) / sd_s(m)``, and
+         ``sm = mu_sm + s_med * z``, where ``mu_sm`` is the mean soil moisture
+         of all training rows and ``s_med`` is the median over training
+         stations of the within-station standard deviation of soil
+         moisture. This gives each station a realistic temporal spread.
+       * ``pooled`` (model ``cd_pooled``, the original version): one mean and
+         standard deviation matching over all training rows,
+         ``sm = mu_sm + sd_sm * (m - mu_m) / sd_m``. Because each station's
+         ``m`` spans 0 to 1, this gives every station the full spread of
+         soil moisture across all stations and overstates the dynamics.
 
     Under station-wise cross-validation a test station has no rows in the
     training fold, so its references are computed from its own VV series.
@@ -64,8 +92,11 @@ class ChangeDetection:
     labels), not a feature matrix.
     """
 
-    def __init__(self, dry_pct: float = 5, wet_pct: float = 95, col: str = "VV"):
-        self.dry_pct, self.wet_pct, self.col = dry_pct, wet_pct, col
+    def __init__(self, dry_pct: float = 5, wet_pct: float = 95, col: str = "VV",
+                 scaling: str = "per_station"):
+        if scaling not in ("per_station", "pooled"):
+            raise ValueError(f"unknown scaling: {scaling}")
+        self.dry_pct, self.wet_pct, self.col, self.scaling = dry_pct, wet_pct, col, scaling
 
     def references(self, df: pd.DataFrame) -> pd.DataFrame:
         """Return the dry and wet reference of each station in ``df``."""
@@ -80,17 +111,33 @@ class ChangeDetection:
         span = np.where(r[:, 1] - r[:, 0] > 0, r[:, 1] - r[:, 0], np.nan)
         return np.clip((df[self.col].to_numpy() - r[:, 0]) / span, 0.0, 1.0)
 
+    @staticmethod
+    def station_z(m: np.ndarray, stations: np.ndarray) -> np.ndarray:
+        """Standardise ``m`` within each station (NaN for a constant series)."""
+        s = pd.Series(m)
+        g = s.groupby(stations)
+        sd = g.transform(lambda x: x.std(ddof=0))
+        return ((s - g.transform("mean")) / sd.where(sd > 0)).to_numpy()
+
     def fit(self, df: pd.DataFrame, y: np.ndarray) -> "ChangeDetection":
-        """Estimate the mean and standard deviation matching on training rows."""
+        """Estimate the scaling from the training rows only."""
         m = self.relative_wetness(df)
-        self.mu_m_, self.sd_m_ = np.nanmean(m), np.nanstd(m)
-        self.mu_y_, self.sd_y_ = float(np.mean(y)), float(np.std(y))
+        self.mu_y_ = float(np.mean(y))
+        if self.scaling == "pooled":
+            self.mu_m_, self.sd_m_ = np.nanmean(m), np.nanstd(m)
+            self.sd_y_ = float(np.std(y))
+        else:
+            # Median over training stations of the within-station spread.
+            self.sd_y_ = float(pd.Series(y).groupby(df["station_id"].to_numpy())
+                               .std(ddof=0).median())
         return self
 
     def predict(self, df: pd.DataFrame, refs: pd.DataFrame | None = None) -> np.ndarray:
         """Predict soil moisture; references default to each station's own VV."""
         m = self.relative_wetness(df, refs)
-        return self.mu_y_ + self.sd_y_ * (m - self.mu_m_) / self.sd_m_
+        if self.scaling == "pooled":
+            return self.mu_y_ + self.sd_y_ * (m - self.mu_m_) / self.sd_m_
+        return self.mu_y_ + self.sd_y_ * self.station_z(m, df["station_id"].to_numpy())
 
 
 def make_model(name: str, seed: int):
@@ -111,26 +158,27 @@ def make_model(name: str, seed: int):
                             max_depth=c["max_depth"], subsample=c["subsample"],
                             colsample_bytree=c["colsample_bytree"], tree_method="hist",
                             random_state=seed, n_jobs=1)
-    if name == "cd":
+    if name in CD_MODELS:
         c = mcfg["change_detection"]
-        return ChangeDetection(c["dry_percentile"], c["wet_percentile"])
+        return ChangeDetection(c["dry_percentile"], c["wet_percentile"],
+                               scaling=CD_MODELS[name])
     raise ValueError(f"unknown model: {name}")
 
 
-def fit_model(name: str, train: pd.DataFrame, seed: int):
+def fit_model(name: str, train: pd.DataFrame, seed: int, fset: str | None = None):
     """Fit a model on the training rows and return it."""
     model = make_model(name, seed)
     y = train["sm"].to_numpy()
-    if name == "cd":
+    if name in CD_MODELS:
         return model.fit(train, y)
-    return model.fit(train[features()].to_numpy(), y)
+    return model.fit(train[features(fset)].to_numpy(), y)
 
 
-def predict_model(name: str, model, test: pd.DataFrame) -> np.ndarray:
+def predict_model(name: str, model, test: pd.DataFrame, fset: str | None = None) -> np.ndarray:
     """Predict soil moisture for the test rows."""
-    if name == "cd":
+    if name in CD_MODELS:
         return model.predict(test)
-    return model.predict(test[features()].to_numpy())
+    return model.predict(test[features(fset)].to_numpy())
 
 
 # --------------------------------------------------------------------------
@@ -159,30 +207,33 @@ def station_folds(df: pd.DataFrame, n_folds: int, *seed_keys) -> np.ndarray:
 # Stage 2 runner
 # --------------------------------------------------------------------------
 
-def _fit_predict_task(setting: str, name: str, k: int, train: pd.DataFrame,
+def _fit_predict_task(setting: str, fset: str, name: str, k: int, train: pd.DataFrame,
                       test: pd.DataFrame) -> tuple[pd.DataFrame, dict]:
-    """Fit one model on one fold, save it, and return its test predictions."""
+    """Fit one model on one fold, save it, and return its test predictions.
+
+    The seed does not depend on the feature set, so F1 and F2 are paired.
+    """
     seed = derive_seed("stage2", setting, name, k)
-    t0 = time.time()
-    model = fit_model(name, train, seed)
-    pred = predict_model(name, model, test)
-    joblib.dump(model, path("models") / "stage2" / f"{setting}_{name}_fold{k}.joblib")
+    # No timing is stored, so that the run table is identical between runs.
+    model = fit_model(name, train, seed, fset)
+    pred = predict_model(name, model, test, fset)
+    joblib.dump(model, path("models") / "stage2" / f"{setting}_{fset}_{name}_fold{k}.joblib")
     out = test[["network", "station_id", "t", "sm", "vh_low", "ndvi", "lc"]].copy()
     out["pred"] = pred
-    out["setting"], out["model"], out["fold"] = setting, name, k
+    out["setting"], out["feature_set"], out["model"], out["fold"] = setting, fset, name, k
     imp = {}
-    if name in ("rf", "xgb"):
-        imp = dict(zip(features(), model.feature_importances_))
-    info = {"setting": setting, "model": name, "fold": k, "seed": seed,
+    if name in TREE_MODELS:
+        imp = dict(zip(features(fset), model.feature_importances_))
+    info = {"setting": setting, "feature_set": fset, "model": name, "fold": k, "seed": seed,
             "n_train": len(train), "n_test": len(test),
             "train_stations": train["station_id"].nunique(),
             "test_stations": test["station_id"].nunique(),
-            "seconds": time.time() - t0, **{f"imp_{f}": v for f, v in imp.items()}}
+            **{f"imp_{f}": v for f, v in imp.items()}}
     return out, info
 
 
 def build_tasks(df: pd.DataFrame) -> list[tuple]:
-    """List every (setting, model, fold, train, test) combination of Stage 2."""
+    """List every (setting, feature set, model, fold, train, test) combination."""
     cfg = load_config()
     n_folds = cfg["cv"]["n_folds"]
     main, second = cfg["samples"]["main"], cfg["samples"]["second"]
@@ -193,17 +244,27 @@ def build_tasks(df: pd.DataFrame) -> list[tuple]:
         fold = station_folds(sub, n_folds, setting)
         for k in range(n_folds):
             tr, te = sub[fold != k], sub[fold == k]
-            for name in MODEL_NAMES:
-                tasks.append((setting, name, k, tr, te))
+            for fset, name in model_grid():
+                tasks.append((setting, fset, name, k, tr, te))
 
     cv(f"{main}_cv", df[df["network"] == main])
     cv(f"{second}_cv", df[df["network"] == second])
     cv("ALL_cv", df)
     # Transfer: one model per type, trained on all main-sample stations.
-    for name in MODEL_NAMES:
-        tasks.append((f"{second}_transfer", name, 0, df[df["network"] == main],
+    for fset, name in model_grid():
+        tasks.append((f"{second}_transfer", fset, name, 0, df[df["network"] == main],
                       df[df["network"] == second]))
     return tasks
+
+
+def model_grid() -> list[tuple[str, str]]:
+    """Return all (feature set, model) pairs.
+
+    Tree models are fitted on every feature set; the change-detection models
+    are fitted once, because they use VV only.
+    """
+    grid = [(fset, name) for fset in feature_sets() for name in TREE_MODELS]
+    return grid + [(CD_FEATURE_SET, name) for name in CD_MODELS]
 
 
 def evaluate(pred: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
@@ -216,20 +277,24 @@ def evaluate(pred: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
 
     second = load_config()["samples"]["second"]
     rows, per_station = [], []
-    for (setting, name), g in pred.groupby(["setting", "model"], sort=False):
+    for (setting, fset, name), g in pred.groupby(["setting", "feature_set", "model"],
+                                                 sort=False):
         scopes = [("all", g)]
         if setting == "ALL_cv":
             scopes += [(net, gg) for net, gg in g.groupby("network")]
         for scope, gg in scopes:
+            # Bootstrap keys exclude the feature set: F1 and F2 share draws.
             b = cluster_bootstrap(gg, "stage2", setting, name, scope)
             b.insert(0, "scope", scope)
             b.insert(0, "model", name)
+            b.insert(0, "feature_set", fset)
             b.insert(0, "setting", setting)
             b["small_sample"] = setting == f"{second}_cv" or (
                 setting == "ALL_cv" and scope == second)
             rows.append(b)
         ps = per_station_metrics(g)
         ps.insert(0, "model", name)
+        ps.insert(0, "feature_set", fset)
         ps.insert(0, "setting", setting)
         per_station.append(ps)
     return pd.concat(rows, ignore_index=True), pd.concat(per_station, ignore_index=True)
@@ -238,8 +303,9 @@ def evaluate(pred: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
 def fold_metrics(pred: pd.DataFrame) -> pd.DataFrame:
     """Pooled metrics per fold (aggregated over the test stations of the fold)."""
     rows = []
-    for (setting, name, k), g in pred.groupby(["setting", "model", "fold"]):
-        rows.append({"setting": setting, "model": name, "fold": k,
+    for (setting, fset, name, k), g in pred.groupby(["setting", "feature_set", "model",
+                                                     "fold"]):
+        rows.append({"setting": setting, "feature_set": fset, "model": name, "fold": k,
                      "test_stations": g["station_id"].nunique(),
                      **all_metrics(g["sm"].to_numpy(), g["pred"].to_numpy())})
     return pd.DataFrame(rows)
@@ -274,14 +340,15 @@ def run_stage2(n_jobs: int | None = None) -> dict[str, pd.DataFrame]:
     runs = pd.DataFrame([r[1] for r in results])
     # Each cross-validation setting must predict every row of its sample once.
     for setting, g in pred.groupby("setting"):
-        counts = g.groupby("model").size()
+        counts = g.groupby(["feature_set", "model"]).size()
         assert counts.nunique() == 1, f"unequal prediction counts in {setting}"
-        assert not g.duplicated(["model", "station_id", "t"]).any(), setting
+        assert not g.duplicated(["feature_set", "model", "station_id", "t"]).any(), setting
 
     metrics, per_station = evaluate(pred)
     folds = fold_metrics(pred)
     imp_cols = [c for c in runs if c.startswith("imp_")]
-    importance = (runs.dropna(subset=imp_cols).groupby(["setting", "model"])[imp_cols]
+    importance = (runs[runs["model"].isin(TREE_MODELS)]
+                  .groupby(["setting", "feature_set", "model"])[imp_cols]
                   .mean().reset_index())
 
     pred.to_csv(path("processed") / "stage2_predictions.csv", index=False)
@@ -301,7 +368,7 @@ def summary_table(metrics: pd.DataFrame,
     """Format the metric table as 'estimate [low, high]' strings for display."""
     m = metrics[metrics["metric"].isin(keep)].copy()
     m["value"] = m.apply(lambda r: f"{r.estimate:.3f} [{r.ci_low:.3f}, {r.ci_high:.3f}]", axis=1)
-    t = m.pivot_table(index=["setting", "scope", "model"], columns="metric", values="value",
-                      aggfunc="first", sort=False)
-    n = metrics.groupby(["setting", "scope", "model"], sort=False)[["n_stations", "n"]].first()
+    idx = ["setting", "scope", "feature_set", "model"]
+    t = m.pivot_table(index=idx, columns="metric", values="value", aggfunc="first", sort=False)
+    n = metrics.groupby(idx, sort=False)[["n_stations", "n"]].first()
     return t[[k for k in keep if k in t.columns]].join(n)
