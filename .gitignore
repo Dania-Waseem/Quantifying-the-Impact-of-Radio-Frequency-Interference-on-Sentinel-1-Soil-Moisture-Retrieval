@@ -12,8 +12,9 @@ Code/
 data/
 models/
 
-# Per-station or per-row results and executed notebooks stay local
+# Per-station or per-row results, figures and executed notebooks stay local
 results/private/
+figures/private/
 notebooks/executed/
 
 # Data file formats are never committed anywhere in the repository
