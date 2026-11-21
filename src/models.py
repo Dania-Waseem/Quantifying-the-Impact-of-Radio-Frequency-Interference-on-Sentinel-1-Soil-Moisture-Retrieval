@@ -174,11 +174,36 @@ def fit_model(name: str, train: pd.DataFrame, seed: int, fset: str | None = None
     return model.fit(train[features(fset)].to_numpy(), y)
 
 
+def rf_predict(model: RandomForestRegressor, X: np.ndarray) -> np.ndarray:
+    """Random forest prediction without the per-tree dispatch overhead.
+
+    Calls each tree's compiled prediction directly and accumulates the tree
+    outputs in the same order and precision as scikit-learn (float64 sum,
+    then division by the number of trees), so the result is identical to
+    ``model.predict(X)``; it is only faster for repeated small calls.
+    """
+    X32 = np.ascontiguousarray(X, dtype=np.float32)
+    # The node values of every tree are extracted once and kept on the model
+    # (``tree_.predict`` rebuilds this array on every call); prediction is
+    # then a leaf lookup (``tree_.apply``) and an index into the values.
+    values = getattr(model, "_leaf_values_cache", None)
+    if values is None:
+        values = [est.tree_.value[:, 0, 0].copy() for est in model.estimators_]
+        model._leaf_values_cache = values
+    out = np.zeros(X32.shape[0], dtype=np.float64)
+    for est, v in zip(model.estimators_, values):
+        out += v[est.tree_.apply(X32)]
+    return out / len(model.estimators_)
+
+
 def predict_model(name: str, model, test: pd.DataFrame, fset: str | None = None) -> np.ndarray:
     """Predict soil moisture for the test rows."""
     if name in CD_MODELS:
         return model.predict(test)
-    return model.predict(test[features(fset)].to_numpy())
+    X = test[features(fset)].to_numpy()
+    if isinstance(model, RandomForestRegressor):
+        return rf_predict(model, X)
+    return model.predict(X)
 
 
 # --------------------------------------------------------------------------
