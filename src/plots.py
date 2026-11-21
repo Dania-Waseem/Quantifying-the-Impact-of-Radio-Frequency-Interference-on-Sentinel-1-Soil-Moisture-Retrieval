@@ -520,7 +520,7 @@ def fig15_oracle() -> list:
                 fontsize=7, va="bottom")
     hd, lb = axes[0].get_legend_handles_labels()
     fig.legend(hd, lb, ncol=3, loc="upper center", bbox_to_anchor=(0.5, 1.04))
-    fig.tight_layout(rect=(0, 0, 1, 0.84))
+    fig.tight_layout(rect=(0, 0, 1, 0.88))
     return ps.save(fig, "fig15_oracle_mitigation")
 
 
@@ -562,7 +562,7 @@ def fig16_persistent() -> list:
                  transform=axes[0].transAxes, fontsize=6.5, va="bottom")
     hd, lb = axes[0].get_legend_handles_labels()
     fig.legend(hd, lb, ncol=3, loc="upper center", bbox_to_anchor=(0.5, 1.03))
-    fig.tight_layout(rect=(0, 0, 1, 0.86))
+    fig.tight_layout(rect=(0, 0, 1, 0.92))
     return ps.save(fig, "fig16_persistent_rfi")
 
 
@@ -593,7 +593,7 @@ def fig17_stress() -> list:
         ax.text(0.98, 1.02, f"pᶜ = {pc}", transform=ax.transAxes, ha="right", fontsize=7,
                 va="bottom")
     axes[0].set_ylabel("D as share of clean RMSE (%)")
-    axes[0].legend(loc="upper left")
+    axes[0].legend(loc="center left", bbox_to_anchor=(0.0, 0.77), fontsize=6.3)
     fig.tight_layout()
     return ps.save(fig, "fig17_stress_test")
 
