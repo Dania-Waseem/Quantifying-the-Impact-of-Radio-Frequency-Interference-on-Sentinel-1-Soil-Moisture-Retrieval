@@ -214,6 +214,8 @@ restart):
    (about 70 minutes on four CPU workers).
 5. `notebooks/05_robustness_statistics.ipynb`: statistics and robustness.
 6. `notebooks/06_plots_tables.ipynb`: figures, tables and diagrams.
+7. `notebooks/07_followup.ipynb`: exploratory follow-up experiments (see
+   below).
 
 Alternatively, `python run_all.py` executes all notebooks in order (executed
 copies are written to `notebooks/executed/`, which is not tracked). All
@@ -246,6 +248,24 @@ Only aggregated results are part of the repository. Per-station and per-row
 outputs (`results/private/`, `data/processed/`), large run files in
 `results/` and fitted models (`models/`) are regenerated locally, because
 the source data may not be redistributed.
+
+## Follow-up experiments (exploratory)
+
+Three further experiments were declared in `config.yaml` (section
+`followup`) after the main analysis and are reported separately; they do not
+replace any earlier result:
+
+1. **Oracle mitigation:** fill and discard using the true injection flags
+   instead of the detector, an upper bound on what mitigation can recover.
+2. **Persistent RFI:** contamination of one contiguous block of each
+   station's series, or of every acquisition of a share of the stations
+   (fixed emitters), instead of independent random contamination.
+3. **Stress test:** severity and extent beyond the OpenSAR 90th percentile,
+   up to the largest observed values, with the weakest setting at which the
+   degradation reaches 5% and 10% of the clean RMSE.
+
+Their tests form a separate Holm family. Outputs:
+`results/aggregate/followup_*.csv` and figures 15 to 17.
 
 ## Limitations
 
