@@ -98,7 +98,16 @@ The variables of the analysis table are described in
    matchups are excluded; the stricter threshold of 100 would leave no OZNET
    station.
 2. **Clean model.** Random forest, XGBoost and a change-detection baseline are
-   evaluated with station-wise 5-fold cross-validation. USCRN is the main
+   evaluated with station-wise 5-fold cross-validation. Two feature
+   configurations are fixed in `config.yaml` before any RFI experiment and
+   are reported side by side in every later stage: F1 (primary) uses `VV, VH,
+   VHVV, angle, ndvi, p7, p30, elev, slope, doy`; F2 (radar-reliant) removes
+   the precipitation features `p7` and `p30`. The change-detection baseline
+   uses VV only. Its relative wetness is standardised within each station and
+   scaled to the mean soil moisture of the training stations and to their
+   median within-station standard deviation (`cd`); the original version,
+   with one pooled mean and standard deviation matching (`cd_pooled`), is kept
+   as a second row in the results. USCRN is the main
    sample. OZNET is used as a transfer test (trained on USCRN, tested on
    OZNET); within-OZNET cross-validation is also reported but is based on few
    stations and matchups.
