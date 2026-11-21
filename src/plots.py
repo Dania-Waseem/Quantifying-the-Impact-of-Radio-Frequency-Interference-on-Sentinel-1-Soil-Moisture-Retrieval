@@ -479,3 +479,125 @@ def make_all() -> list:
                fig12_mediation, fig13_learning_curve, fig14_base_vs_extended):
         out += fn()
     return out
+
+
+# --------------------------------------------------------------------------
+# Follow-up figures 15 to 17 (exploratory experiments, kept separate)
+# --------------------------------------------------------------------------
+
+def fig15_oracle() -> list:
+    """Recovery G with the detector and with oracle (true) flags."""
+    ps.apply()
+    ev, mdl = primary()
+    b = agg("followup_bootstrap")
+    b = b[(b.experiment == "oracle") & (b.evaluation == ev) & (b.quantity == "G")]
+    pairs = [("M3", "M3_oracle"), ("M3b", "M3b_oracle"), ("M4", "M4_oracle")]
+    groups = [("F1", mdl), ("F2", mdl), ("F3", mdl)]
+    fig, axes = plt.subplots(1, 2, figsize=(ps.width("double"), 2.6), sharey=False)
+    for ax, lab, (q, e) in zip(axes, "ab", ((50, 50), (90, 90))):
+        g = b[b.label == f"P{q} severity, P{e} extent"]
+        n = 6
+        w = 0.8 / n
+        for j, (det, ora) in enumerate(pairs):
+            for h, v in enumerate((det, ora)):
+                k = 2 * j + h
+                x = np.arange(len(groups)) + (k - (n - 1) / 2) * w
+                r = [g[(g.feature_set == f) & (g.model == m) & (g.variant == v)] for f, m in groups]
+                y = np.array([x_["estimate"].iloc[0] if len(x_) else np.nan for x_ in r])
+                lo = np.array([x_["ci_low"].iloc[0] if len(x_) else np.nan for x_ in r])
+                hi = np.array([x_["ci_high"].iloc[0] if len(x_) else np.nan for x_ in r])
+                ax.bar(x, y, width=w, color=ps.VARIANT_COLOURS[det],
+                       hatch="////" if h else None, edgecolor="white" if h else None,
+                       label=f"{ps.VARIANT_LABELS[det]}{' (oracle flags)' if h else ''}")
+                ax.errorbar(x, y, yerr=[y - lo, hi - y], fmt="none", ecolor=ps.SLATE,
+                            elinewidth=0.6, capsize=1.2)
+        ax.axhline(0, color=ps.GREY, lw=0.7)
+        ax.set_xticks(np.arange(len(groups)), [f"{f} RF" for f, _ in groups])
+        ax.set_xlim(-0.6, len(groups) - 0.4)
+        ax.set_ylabel("Recovery G (m³/m³)")
+        ps.panel_label(ax, f"({lab})")
+        ax.text(0.02, 1.02, f"P{q} severity, P{e} extent, pᶜ = 0.25", transform=ax.transAxes,
+                fontsize=7, va="bottom")
+    hd, lb = axes[0].get_legend_handles_labels()
+    fig.legend(hd, lb, ncol=3, loc="upper center", bbox_to_anchor=(0.5, 1.04))
+    fig.tight_layout(rect=(0, 0, 1, 0.84))
+    return ps.save(fig, "fig15_oracle_mitigation")
+
+
+def fig16_persistent() -> list:
+    """Degradation and detector recovery under persistent and random RFI."""
+    ps.apply()
+    ev, mdl = primary()
+    s = agg("followup_summary")
+    s = s[(s.experiment == "persistent") & (s.evaluation == ev) & (s.model == mdl)
+          & (s.severity == "P90") & (s.variant == "M3")]
+    s = s[s.extent == s.extent.max()]
+    r3 = agg("stage3_summary_by_setting")
+    r3 = r3[(r3.evaluation == ev) & (r3.model == mdl) & (r3.variant == "M3") & (r3.severity_q == 90)
+            & np.isclose(r3.extent, s.extent.max()) & (r3.polarisation == "both")]
+    cats = []
+    for frac in (0.25, 0.5):
+        cats += [("random", frac), ("block", frac), ("station", frac)]
+    fig, axes = plt.subplots(1, 2, figsize=(ps.width("double"), 2.5))
+    w = 0.8 / 3
+    for ax, col, yl, lab in ((axes[0], "D_mean", "Degradation D (m³/m³)", "a"),
+                             (axes[1], "G_mean", "Recovery G of M3 (m³/m³)", "b")):
+        for j, f in enumerate(FSETS):
+            vals = []
+            for mode, frac in cats:
+                if mode == "random":
+                    x = r3[(r3.feature_set == f) & (r3.p_c == frac)]
+                else:
+                    x = s[(s.feature_set == f) & (s["mode"] == mode) & (s.fraction == frac)]
+                vals.append(x[col].iloc[0] if len(x) else np.nan)
+            xs = np.arange(len(cats)) + (j - 1) * w
+            ax.bar(xs, vals, width=w, color=ps.FSET_SHADES[f] if f != "F1" else ps.VERMILLION,
+                   label=f"{f} RF")
+        ax.axhline(0, color=ps.GREY, lw=0.7)
+        ax.set_xticks(np.arange(len(cats)), [f"{m}\n{fr:g}" for m, fr in cats], fontsize=6.5)
+        ax.set_xlim(-0.6, len(cats) - 0.4)
+        ax.set_ylabel(yl)
+        ps.panel_label(ax, f"({lab})")
+    axes[0].text(0.02, 1.02, "P90 severity, P90 extent; contamination pattern and share",
+                 transform=axes[0].transAxes, fontsize=6.5, va="bottom")
+    hd, lb = axes[0].get_legend_handles_labels()
+    fig.legend(hd, lb, ncol=3, loc="upper center", bbox_to_anchor=(0.5, 1.03))
+    fig.tight_layout(rect=(0, 0, 1, 0.86))
+    return ps.save(fig, "fig16_persistent_rfi")
+
+
+def fig17_stress() -> list:
+    """Relative degradation against injected error, up to the OpenSAR maxima."""
+    ps.apply()
+    ev, mdl = primary()
+    s = agg("followup_summary")
+    s = s[(s.evaluation == ev) & (s.variant == "M3") & s.experiment.isin(["oracle", "stress"])]
+    thr = load_config()["followup"]["stress"]["breakpoint_relative_d"]
+    fig, axes = plt.subplots(1, 2, figsize=(ps.width("double"), 2.5), sharey=True)
+    for ax, pc, lab in zip(axes, (0.25, 0.5), "ab"):
+        for f, m in [("F1", mdl), ("F2", mdl), ("F3", mdl), ("VV", "cd")]:
+            g = s[(s.feature_set == f) & (s.model == m) & (s.fraction == pc)].sort_values("eps_mean")
+            if g.empty:
+                continue
+            st = ps.FSET_STYLES[f]
+            c = ps.FSET_SHADES[f] if f != "F1" else ps.VERMILLION
+            ax.plot(g["eps_mean"], 100 * g["D_rel"], color=c, label=f"{f} RF" if m == mdl
+                    else "change detection", linestyle=st["linestyle"], marker=st["marker"],
+                    markersize=2.5, lw=1.0)
+        for t in thr:
+            ax.axhline(100 * t, color=ps.GREY, lw=0.7, ls="--")
+            ax.text(ax.get_xlim()[0] if False else 0.02, 100 * t, f" {int(t * 100)}% of clean RMSE",
+                    transform=ax.get_yaxis_transform(), fontsize=5.8, color=ps.GREY, va="bottom")
+        ax.set_xlabel("Mean injected error ε of contaminated acquisitions (dB)")
+        ps.panel_label(ax, f"({lab})")
+        ax.text(0.98, 1.02, f"pᶜ = {pc}", transform=ax.transAxes, ha="right", fontsize=7,
+                va="bottom")
+    axes[0].set_ylabel("D as share of clean RMSE (%)")
+    axes[0].legend(loc="upper left")
+    fig.tight_layout()
+    return ps.save(fig, "fig17_stress_test")
+
+
+def make_followup() -> list:
+    """Draw the follow-up figures 15 to 17 (separate from figures 5 to 14)."""
+    return fig15_oracle() + fig16_persistent() + fig17_stress()
