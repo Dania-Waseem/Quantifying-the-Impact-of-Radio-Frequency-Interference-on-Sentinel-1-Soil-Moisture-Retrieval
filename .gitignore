@@ -1,0 +1,26 @@
+# Python environment and caches
+.venv/
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+
+# Third-party code (not part of this repository)
+Code/
+
+# Data (obtained separately, see README)
+data/raw/
+data/external/
+data/processed/
+
+# Generated models and large result files
+models/
+results/*.parquet
+results/*.pkl
+results/*.joblib
+results/experiment_runs*.csv
+results/bootstrap_*.csv
+
+# Local working notes and editor settings
+PROJECT_BRIEF.md
+.claude/
+.vscode/
