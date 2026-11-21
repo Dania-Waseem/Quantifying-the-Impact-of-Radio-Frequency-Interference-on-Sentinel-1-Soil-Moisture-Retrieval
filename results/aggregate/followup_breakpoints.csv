@@ -1,0 +1,145 @@
+evaluation,feature_set,model,grid,p_c,threshold_D_rel,reached,setting,eps_mean_db,D,max_D_rel_in_grid
+OZNET_cv,F1,rf,oracle,0.25,0.05,False,not reached,,,0.003983824176496486
+OZNET_cv,F1,rf,oracle,0.25,0.1,False,not reached,,,0.003983824176496486
+OZNET_cv,F1,rf,stress,0.25,0.05,False,not reached,,,0.00828341072111274
+OZNET_cv,F1,rf,stress,0.25,0.1,False,not reached,,,0.00828341072111274
+OZNET_cv,F1,rf,stress,0.5,0.05,False,not reached,,,0.015182226900776563
+OZNET_cv,F1,rf,stress,0.5,0.1,False,not reached,,,0.015182226900776563
+OZNET_cv,F1,xgb,oracle,0.25,0.05,False,not reached,,,0.0014838134103090839
+OZNET_cv,F1,xgb,oracle,0.25,0.1,False,not reached,,,0.0014838134103090839
+OZNET_cv,F1,xgb,stress,0.25,0.05,False,not reached,,,-0.0004805531605195657
+OZNET_cv,F1,xgb,stress,0.25,0.1,False,not reached,,,-0.0004805531605195657
+OZNET_cv,F1,xgb,stress,0.5,0.05,False,not reached,,,-0.0007558434425060769
+OZNET_cv,F1,xgb,stress,0.5,0.1,False,not reached,,,-0.0007558434425060769
+OZNET_cv,F2,rf,oracle,0.25,0.05,False,not reached,,,-0.00027900712418911684
+OZNET_cv,F2,rf,oracle,0.25,0.1,False,not reached,,,-0.00027900712418911684
+OZNET_cv,F2,rf,stress,0.25,0.05,False,not reached,,,0.0017488560934744654
+OZNET_cv,F2,rf,stress,0.25,0.1,False,not reached,,,0.0017488560934744654
+OZNET_cv,F2,rf,stress,0.5,0.05,False,not reached,,,0.0032374969319621623
+OZNET_cv,F2,rf,stress,0.5,0.1,False,not reached,,,0.0032374969319621623
+OZNET_cv,F2,xgb,oracle,0.25,0.05,False,not reached,,,0.00031910218322796273
+OZNET_cv,F2,xgb,oracle,0.25,0.1,False,not reached,,,0.00031910218322796273
+OZNET_cv,F2,xgb,stress,0.25,0.05,False,not reached,,,0.0049427795506866035
+OZNET_cv,F2,xgb,stress,0.25,0.1,False,not reached,,,0.0049427795506866035
+OZNET_cv,F2,xgb,stress,0.5,0.05,False,not reached,,,0.007118618825372438
+OZNET_cv,F2,xgb,stress,0.5,0.1,False,not reached,,,0.007118618825372438
+OZNET_cv,F3,rf,oracle,0.25,0.05,False,not reached,,,0.007568771711203879
+OZNET_cv,F3,rf,oracle,0.25,0.1,False,not reached,,,0.007568771711203879
+OZNET_cv,F3,rf,stress,0.25,0.05,False,not reached,,,0.04162966729404261
+OZNET_cv,F3,rf,stress,0.25,0.1,False,not reached,,,0.04162966729404261
+OZNET_cv,F3,rf,stress,0.5,0.05,True,"P99 severity, P99 extent, p_c 0.5",6.807964764012564,0.0038940277344379826,0.05467047371952503
+OZNET_cv,F3,rf,stress,0.5,0.1,False,not reached,,,0.05467047371952503
+OZNET_cv,F3,xgb,oracle,0.25,0.05,False,not reached,,,0.011443468041815211
+OZNET_cv,F3,xgb,oracle,0.25,0.1,False,not reached,,,0.011443468041815211
+OZNET_cv,F3,xgb,stress,0.25,0.05,False,not reached,,,0.04692793639768461
+OZNET_cv,F3,xgb,stress,0.25,0.1,False,not reached,,,0.04692793639768461
+OZNET_cv,F3,xgb,stress,0.5,0.05,True,"P99 severity, P99 extent, p_c 0.5",6.807964764012564,0.003314349828574548,0.0510446789991474
+OZNET_cv,F3,xgb,stress,0.5,0.1,False,not reached,,,0.0510446789991474
+OZNET_cv,VV,cd,oracle,0.25,0.05,False,not reached,,,0.017299332674091436
+OZNET_cv,VV,cd,oracle,0.25,0.1,False,not reached,,,0.017299332674091436
+OZNET_cv,VV,cd,stress,0.25,0.05,True,"P95 severity, P95 extent, p_c 0.25",5.238959881812877,0.004831589355985108,0.08479294898598412
+OZNET_cv,VV,cd,stress,0.25,0.1,False,not reached,,,0.08479294898598412
+OZNET_cv,VV,cd,stress,0.5,0.05,True,"P90 severity, P95 extent, p_c 0.5",4.453902256931002,0.0040787474271029855,0.09936536311227762
+OZNET_cv,VV,cd,stress,0.5,0.1,False,not reached,,,0.09936536311227762
+OZNET_cv,VV,cd_pooled,oracle,0.25,0.05,False,not reached,,,0.008862166879448689
+OZNET_cv,VV,cd_pooled,oracle,0.25,0.1,False,not reached,,,0.008862166879448689
+OZNET_cv,VV,cd_pooled,stress,0.25,0.05,True,"P100 severity, P100 extent, p_c 0.25",7.958292485585462,0.004680019182174004,0.05427938875673482
+OZNET_cv,VV,cd_pooled,stress,0.25,0.1,False,not reached,,,0.05427938875673482
+OZNET_cv,VV,cd_pooled,stress,0.5,0.05,True,"P99 severity, P95 extent, p_c 0.5",6.7436689273420125,0.005532743182854001,0.06926003948255492
+OZNET_cv,VV,cd_pooled,stress,0.5,0.1,False,not reached,,,0.06926003948255492
+OZNET_transfer,F1,rf,oracle,0.25,0.05,False,not reached,,,0.017421957969370103
+OZNET_transfer,F1,rf,oracle,0.25,0.1,False,not reached,,,0.017421957969370103
+OZNET_transfer,F1,rf,stress,0.25,0.05,True,"P100 severity, P95 extent, p_c 0.25",7.880075481328924,0.005418661745911832,0.05153806177184696
+OZNET_transfer,F1,rf,stress,0.25,0.1,False,not reached,,,0.05153806177184696
+OZNET_transfer,F1,rf,stress,0.5,0.05,True,"P95 severity, P90 extent, p_c 0.5",3.597491788220568,0.005358533241295278,0.1098486317223113
+OZNET_transfer,F1,rf,stress,0.5,0.1,True,"P100 severity, P95 extent, p_c 0.5",7.880075481328924,0.010776242112042166,0.1098486317223113
+OZNET_transfer,F1,xgb,oracle,0.25,0.05,False,not reached,,,0.02562270103256969
+OZNET_transfer,F1,xgb,oracle,0.25,0.1,False,not reached,,,0.02562270103256969
+OZNET_transfer,F1,xgb,stress,0.25,0.05,True,"P95 severity, P95 extent, p_c 0.25",5.238959881812877,0.006215076410265754,0.06456645129268279
+OZNET_transfer,F1,xgb,stress,0.25,0.1,False,not reached,,,0.06456645129268279
+OZNET_transfer,F1,xgb,stress,0.5,0.05,True,"P90 severity, P90 extent, p_c 0.5",2.997137296224583,0.0058086123715558186,0.1328921579154544
+OZNET_transfer,F1,xgb,stress,0.5,0.1,True,"P95 severity, P95 extent, p_c 0.5",5.238959881812877,0.011818671676967972,0.1328921579154544
+OZNET_transfer,F2,rf,oracle,0.25,0.05,False,not reached,,,0.04707598013776592
+OZNET_transfer,F2,rf,oracle,0.25,0.1,False,not reached,,,0.04707598013776592
+OZNET_transfer,F2,rf,stress,0.25,0.05,True,"P95 severity, P90 extent, p_c 0.25",3.597491788220568,0.008763430458811314,0.12575682114133638
+OZNET_transfer,F2,rf,stress,0.25,0.1,True,"P95 severity, P95 extent, p_c 0.25",5.238959881812877,0.014649302423440303,0.12575682114133638
+OZNET_transfer,F2,rf,stress,0.5,0.05,True,"P90 severity, P90 extent, p_c 0.5",2.997137296224583,0.013597495648940888,0.24424427498056195
+OZNET_transfer,F2,rf,stress,0.5,0.1,True,"P95 severity, P90 extent, p_c 0.5",3.597491788220568,0.018077156994686594,0.24424427498056195
+OZNET_transfer,F2,xgb,oracle,0.25,0.05,False,not reached,,,0.047137081840984245
+OZNET_transfer,F2,xgb,oracle,0.25,0.1,False,not reached,,,0.047137081840984245
+OZNET_transfer,F2,xgb,stress,0.25,0.05,True,"P95 severity, P90 extent, p_c 0.25",3.597491788220568,0.009020488184376113,0.11568573454634057
+OZNET_transfer,F2,xgb,stress,0.25,0.1,True,"P99 severity, P95 extent, p_c 0.25",6.7436689273420125,0.01656337115676306,0.11568573454634057
+OZNET_transfer,F2,xgb,stress,0.5,0.05,True,"P90 severity, P90 extent, p_c 0.5",2.997137296224583,0.014113991728766095,0.22851135258477587
+OZNET_transfer,F2,xgb,stress,0.5,0.1,True,"P95 severity, P90 extent, p_c 0.5",3.597491788220568,0.01823543898900993,0.22851135258477587
+OZNET_transfer,F3,rf,oracle,0.25,0.05,False,not reached,,,0.00835173154520041
+OZNET_transfer,F3,rf,oracle,0.25,0.1,False,not reached,,,0.00835173154520041
+OZNET_transfer,F3,rf,stress,0.25,0.05,False,not reached,,,0.02374002214974964
+OZNET_transfer,F3,rf,stress,0.25,0.1,False,not reached,,,0.02374002214974964
+OZNET_transfer,F3,rf,stress,0.5,0.05,True,"P100 severity, P100 extent, p_c 0.5",7.958292485585462,0.006037671215487489,0.05127370959316814
+OZNET_transfer,F3,rf,stress,0.5,0.1,False,not reached,,,0.05127370959316814
+OZNET_transfer,F3,xgb,oracle,0.25,0.05,False,not reached,,,0.018859085181714412
+OZNET_transfer,F3,xgb,oracle,0.25,0.1,False,not reached,,,0.018859085181714412
+OZNET_transfer,F3,xgb,stress,0.25,0.05,False,not reached,,,0.026864730737545285
+OZNET_transfer,F3,xgb,stress,0.25,0.1,False,not reached,,,0.026864730737545285
+OZNET_transfer,F3,xgb,stress,0.5,0.05,False,not reached,,,0.046176430816617264
+OZNET_transfer,F3,xgb,stress,0.5,0.1,False,not reached,,,0.046176430816617264
+OZNET_transfer,VV,cd,oracle,0.25,0.05,False,not reached,,,0.015623683982177903
+OZNET_transfer,VV,cd,oracle,0.25,0.1,False,not reached,,,0.015623683982177903
+OZNET_transfer,VV,cd,stress,0.25,0.05,True,"P95 severity, P95 extent, p_c 0.25",5.238959881812877,0.005426933241085334,0.07797190794934196
+OZNET_transfer,VV,cd,stress,0.25,0.1,False,not reached,,,0.07797190794934196
+OZNET_transfer,VV,cd,stress,0.5,0.05,True,"P99 severity, P90 extent, p_c 0.5",4.864032802661294,0.004622551943562191,0.1018379854985365
+OZNET_transfer,VV,cd,stress,0.5,0.1,True,"P100 severity, P100 extent, p_c 0.5",7.958292485585462,0.00863036445128933,0.1018379854985365
+OZNET_transfer,VV,cd_pooled,oracle,0.25,0.05,False,not reached,,,0.0019691051105858643
+OZNET_transfer,VV,cd_pooled,oracle,0.25,0.1,False,not reached,,,0.0019691051105858643
+OZNET_transfer,VV,cd_pooled,stress,0.25,0.05,False,not reached,,,-0.014911054512925067
+OZNET_transfer,VV,cd_pooled,stress,0.25,0.1,False,not reached,,,-0.014911054512925067
+OZNET_transfer,VV,cd_pooled,stress,0.5,0.05,True,"P100 severity, P100 extent, p_c 0.5",7.958292485585462,0.006670478949224257,0.052378125050560775
+OZNET_transfer,VV,cd_pooled,stress,0.5,0.1,False,not reached,,,0.052378125050560775
+USCRN_cv,F1,rf,oracle,0.25,0.05,False,not reached,,,0.007801420327199555
+USCRN_cv,F1,rf,oracle,0.25,0.1,False,not reached,,,0.007801420327199555
+USCRN_cv,F1,rf,stress,0.25,0.05,False,not reached,,,0.016275565083230907
+USCRN_cv,F1,rf,stress,0.25,0.1,False,not reached,,,0.016275565083230907
+USCRN_cv,F1,rf,stress,0.5,0.05,False,not reached,,,0.029913844985548336
+USCRN_cv,F1,rf,stress,0.5,0.1,False,not reached,,,0.029913844985548336
+USCRN_cv,F1,xgb,oracle,0.25,0.05,False,not reached,,,0.02187119762183319
+USCRN_cv,F1,xgb,oracle,0.25,0.1,False,not reached,,,0.02187119762183319
+USCRN_cv,F1,xgb,stress,0.25,0.05,False,not reached,,,0.0435868813747776
+USCRN_cv,F1,xgb,stress,0.25,0.1,False,not reached,,,0.0435868813747776
+USCRN_cv,F1,xgb,stress,0.5,0.05,True,"P95 severity, P90 extent, p_c 0.5",3.597491788220568,0.0049390460142289426,0.08400939003494792
+USCRN_cv,F1,xgb,stress,0.5,0.1,False,not reached,,,0.08400939003494792
+USCRN_cv,F2,rf,oracle,0.25,0.05,False,not reached,,,0.014970595157565495
+USCRN_cv,F2,rf,oracle,0.25,0.1,False,not reached,,,0.014970595157565495
+USCRN_cv,F2,rf,stress,0.25,0.05,False,not reached,,,0.03194593553182002
+USCRN_cv,F2,rf,stress,0.25,0.1,False,not reached,,,0.03194593553182002
+USCRN_cv,F2,rf,stress,0.5,0.05,True,"P99 severity, P90 extent, p_c 0.5",4.864032802661294,0.005739131175387202,0.06133892184075565
+USCRN_cv,F2,rf,stress,0.5,0.1,False,not reached,,,0.06133892184075565
+USCRN_cv,F2,xgb,oracle,0.25,0.05,False,not reached,,,0.025491251203367638
+USCRN_cv,F2,xgb,oracle,0.25,0.1,False,not reached,,,0.025491251203367638
+USCRN_cv,F2,xgb,stress,0.25,0.05,True,"P99 severity, P95 extent, p_c 0.25",6.7436689273420125,0.0057833539264025065,0.05199208849377137
+USCRN_cv,F2,xgb,stress,0.25,0.1,False,not reached,,,0.05199208849377137
+USCRN_cv,F2,xgb,stress,0.5,0.05,True,"P95 severity, P90 extent, p_c 0.5",3.597491788220568,0.007072790004061913,0.10054102552461498
+USCRN_cv,F2,xgb,stress,0.5,0.1,True,"P99 severity, P95 extent, p_c 0.5",6.7436689273420125,0.011304705806623442,0.10054102552461498
+USCRN_cv,F3,rf,oracle,0.25,0.05,False,not reached,,,0.012537647641620023
+USCRN_cv,F3,rf,oracle,0.25,0.1,False,not reached,,,0.012537647641620023
+USCRN_cv,F3,rf,stress,0.25,0.05,False,not reached,,,0.0342596890388786
+USCRN_cv,F3,rf,stress,0.25,0.1,False,not reached,,,0.0342596890388786
+USCRN_cv,F3,rf,stress,0.5,0.05,True,"P100 severity, P95 extent, p_c 0.5",7.880075481328924,0.0058195577318324076,0.053676362732363675
+USCRN_cv,F3,rf,stress,0.5,0.1,False,not reached,,,0.053676362732363675
+USCRN_cv,F3,xgb,oracle,0.25,0.05,False,not reached,,,0.016665436425290087
+USCRN_cv,F3,xgb,oracle,0.25,0.1,False,not reached,,,0.016665436425290087
+USCRN_cv,F3,xgb,stress,0.25,0.05,False,not reached,,,0.03222260949242068
+USCRN_cv,F3,xgb,stress,0.25,0.1,False,not reached,,,0.03222260949242068
+USCRN_cv,F3,xgb,stress,0.5,0.05,True,"P95 severity, P95 extent, p_c 0.5",5.238959881812877,0.006059896492160469,0.06609158454940865
+USCRN_cv,F3,xgb,stress,0.5,0.1,False,not reached,,,0.06609158454940865
+USCRN_cv,VV,cd,oracle,0.25,0.05,False,not reached,,,0.008724097929458625
+USCRN_cv,VV,cd,oracle,0.25,0.1,False,not reached,,,0.008724097929458625
+USCRN_cv,VV,cd,stress,0.25,0.05,False,not reached,,,0.034647032864162465
+USCRN_cv,VV,cd,stress,0.25,0.1,False,not reached,,,0.034647032864162465
+USCRN_cv,VV,cd,stress,0.5,0.05,False,not reached,,,0.039302965996546216
+USCRN_cv,VV,cd,stress,0.5,0.1,False,not reached,,,0.039302965996546216
+USCRN_cv,VV,cd_pooled,oracle,0.25,0.05,False,not reached,,,0.0025999741211501603
+USCRN_cv,VV,cd_pooled,oracle,0.25,0.1,False,not reached,,,0.0025999741211501603
+USCRN_cv,VV,cd_pooled,stress,0.25,0.05,True,"P95 severity, P95 extent, p_c 0.25",5.238959881812877,0.010132626119965196,0.10462706652962925
+USCRN_cv,VV,cd_pooled,stress,0.25,0.1,True,"P99 severity, P100 extent, p_c 0.25",6.81889865217983,0.015412605473057287,0.10462706652962925
+USCRN_cv,VV,cd_pooled,stress,0.5,0.05,True,"P90 severity, P95 extent, p_c 0.5",4.453902256931002,0.008874873987907742,0.13284336925904228
+USCRN_cv,VV,cd_pooled,stress,0.5,0.1,True,"P99 severity, P95 extent, p_c 0.5",6.7436689273420125,0.01927561013657405,0.13284336925904228
