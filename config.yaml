@@ -1,0 +1,92 @@
+# Central configuration for the RFI and soil moisture study.
+# All paths are relative to the repository root.
+
+seed: 42            # master seed; every per-run seed is derived from it
+n_seeds: 10         # number of repeated seeds per experimental setting
+n_jobs: -1          # joblib workers (-1 uses all CPU cores)
+
+paths:
+  external: data/external
+  raw_ismn: data/raw/ismn
+  processed: data/processed
+  models: models
+  results: results
+  figures: figures
+  diagrams: figures/diagrams
+  docs: docs
+  s1: data/external/s1_grd.csv
+  ndvi: data/external/s2_ndvi.csv
+  precip: data/external/era5_precip.csv
+  static: data/external/static.csv
+  ismn_sm: data/external/ismn_sm_0_5cm.csv   # a .csv.gz file is also accepted
+  stations: data/raw/ismn/stations.csv
+  matchups: data/processed/matchups.csv
+  opensar_stats: data/processed/opensar_rfi_stats.csv
+
+matchup:
+  ismn_tolerance_minutes: 60   # nearest hourly ISMN value within this window
+  ndvi_tolerance_days: 30      # nearest Sentinel-2 date within this window
+  precip_windows_days: [7, 30] # antecedent precipitation sums (p7, p30)
+  min_n: 50                    # minimum matchups per station (lowered from 100 so that OZNET keeps 12 stations)
+  outlier_iqr_factor: 1.5      # outliers are flagged, never removed silently
+
+samples:
+  main: USCRN
+  second: OZNET
+
+features: [VV, VH, VHVV, angle, ndvi, p7, p30, elev, slope, doy]
+target: sm
+
+cv:
+  n_folds: 5                   # station-wise GroupKFold
+
+models:
+  random_forest:
+    n_estimators: 300
+    min_samples_leaf: 3
+  xgboost:
+    n_estimators: 500
+    learning_rate: 0.05
+    max_depth: 6
+    subsample: 0.8
+    colsample_bytree: 0.8
+  change_detection:
+    dry_percentile: 5
+    wet_percentile: 95
+
+# PROVISIONAL injection grid. These values are placeholders and will be
+# replaced by quantiles of data/processed/opensar_rfi_stats.csv once the
+# OpenSAR statistics exist.
+injection:
+  provisional: true
+  sir_db: [-5, 0, 5, 10, 15, 20]       # signal-to-interference ratio (dB)
+  extent: [0.1, 0.25, 0.5, 0.75, 1.0]  # affected fraction rho
+  p_c: [0.1, 0.25, 0.5]                # probability an acquisition is contaminated
+  polarisation: [VV, VH, both]
+  opensar_quantiles: [0.1, 0.25, 0.5, 0.75, 0.9]
+
+detection:
+  window: 10        # w, past acquisitions of the same orbit
+  tau: 3.0          # robust z-score threshold
+  tau_grid: [2.0, 2.5, 3.0, 3.5, 4.0]
+  min_history: 5    # acquisitions needed before a z-score is computed
+
+fill:
+  k: 5              # median of the previous k clean acquisitions
+
+rfi_aware_training:
+  mix_lambda: 0.5   # weight of injected copies relative to clean samples
+  seed_offset: 100000  # training injection seeds differ from test seeds
+
+stats:
+  n_bootstrap: 5000
+  alpha: 0.05
+  ci_level: 0.95
+  min_degradation: 1.0e-4   # guard for the recovery ratio G / D
+  learning_curve_sizes: [10, 20, 40, 60, 80, all]
+  learning_curve_repeats: 50
+
+plots:
+  dpi: 400
+  single_column_in: 3.5
+  double_column_in: 7.16
