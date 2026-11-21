@@ -96,7 +96,8 @@ def save(fig: plt.Figure, name: str, folder: Path | None = None) -> list[Path]:
     dpi = load_config()["plots"]["dpi"]
     out = [folder / f"{name}.png", folder / f"{name}.pdf"]
     fig.savefig(out[0], dpi=dpi)
-    fig.savefig(out[1])
+    # No creation date in the PDF metadata, so that reruns give identical files.
+    fig.savefig(out[1], metadata={"CreationDate": None})
     plt.close(fig)
     return out
 
