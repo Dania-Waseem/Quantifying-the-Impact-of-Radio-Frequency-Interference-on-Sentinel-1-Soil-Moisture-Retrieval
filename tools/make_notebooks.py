@@ -115,24 +115,38 @@ Pooled metrics use all test rows. `r_station_median` and
 def nb03() -> None:
     """Notebook 03: RFI statistics from OpenSAR (placeholder)."""
     write("03_rfi_statistics.ipynb", [
-        cell("markdown", """# 03 RFI statistics (input pending)
+        cell("markdown", """# 03 RFI statistics from OpenSAR
 
 The RFI statistics are derived from the OpenSAR data in a separate analysis
-(Google Colab). That analysis is not part of this repository. Its only output
-used here is `data/processed/opensar_rfi_stats.csv`, with one row per patch
-and the columns `patch_id, split, extent, severity_db_vv, severity_db_vh`.
+(Google Colab), which is not part of this repository. Its output used here is
+`data/processed/opensar_rfi_stats.csv` (not tracked): one row per patch with
+`patch_id, split, extent, severity_db_vv, severity_db_vh`. `severity_db_*` is
+the measured excess power (dB) of the masked RFI pixels against the unmasked
+pixels, from SLC power per polarisation. The `sir_db_*` columns of the file
+are not used (they hold a capped value for contrasts of 0.1 dB or less);
+SIR is recomputed as SIR = -10 log10(10^(C/10) - 1) for C > 0.1 dB.
 
-**Status: input pending.** Until the file exists, the injection grid in
-Stage 3 is the PROVISIONAL grid from `config.yaml`, and a warning is printed
-every time it is used. When the file is present, the grid is derived from its
-quantiles (`src/rfi.py`, `injection_grid`)."""),
+Notes: the statistics come from 125 of 223 OpenSAR patches (98 had no
+measurable RFI in the mask). They are measured on SLC pixels, while the
+injection acts on station-level GRD backscatter. Some patches show no power
+excess in one polarisation. If the file is absent, the provisional grid is
+used with a warning."""),
         cell("code", SETUP),
-        cell("code", """from src.rfi import injection_grid, load_opensar_stats
+        cell("code", """from src.rfi import grid_table, injection_grid, load_opensar_stats
 
 stats = load_opensar_stats()
-print("OpenSAR statistics:", "not available (input pending)" if stats is None
+print("OpenSAR statistics:", "not available (provisional grid)" if stats is None
       else f"{len(stats)} patches")
-injection_grid()"""),
+grid = injection_grid()
+grid_table(grid).round(4)"""),
+        cell("markdown", "## Distribution summary (aggregated)"),
+        cell("code", """if stats is not None:
+    display(stats[["extent", "severity_db_vv", "severity_db_vh"]].describe().round(3))
+    for p in ("vv", "vh"):
+        c = stats[f"severity_db_{p}"]
+        print(p.upper(), "patches with contrast <= 0.1 dB:", int((c <= 0.1).sum()),
+              "(of which <= 0:", int((c <= 0).sum()), ")")
+    print("patches with extent > 0.85:", int((stats["extent"] > 0.85).sum()))"""),
     ])
 
 
@@ -145,8 +159,8 @@ Injects RFI into the Sentinel-1 test inputs and evaluates the variants
 M0 (clean), M1 (contaminated), M2 (published suppression, not available),
 M3 (detect-and-fill), M3b (detect-and-discard) and M4 (detect-and-fill with
 RFI-aware training) for the feature configurations F1, F2 and F3 and the
-change-detection baseline. The injection grid is PROVISIONAL until the
-OpenSAR statistics exist. All logic is in `src/rfi.py` and
+change-detection baseline. The injection grid comes from the
+OpenSAR statistics (severity and extent levels from 125 patches). All logic is in `src/rfi.py` and
 `src/experiment.py`. A full run takes about 70 minutes on four workers."""),
         cell("code", SETUP),
         cell("code", "from src.experiment import run_stage3\n\nout = run_stage3()"),
@@ -157,15 +171,71 @@ averaged over settings and seeds. M2 rows are empty (not available)."""),
         cell("code", """cols = ["evaluation", "feature_set", "model", "variant", "rmse_M0", "rmse_M1",
         "rmse_variant", "D_mean", "G_mean", "RR_of_means", "RR_median"]
 out["stage3_summary_overall"][cols].round(4)"""),
-        cell("markdown", "## Degradation by severity (SIR) and by extent, variant M3 rows"),
-        cell("code", """s = out["stage3_summary_by_sir"]
+        cell("markdown", "## Degradation by severity level and by extent, variant M3 rows"),
+        cell("code", """s = out["stage3_summary_by_severity"]
 s[s.variant == "M3"].pivot_table(index=["evaluation", "feature_set", "model"],
-                                 columns="sir_db", values="D_mean").round(4)"""),
+                                 columns="severity_q", values="D_mean").round(4)"""),
         cell("code", """s = out["stage3_summary_by_extent"]
 s[s.variant == "M3"].pivot_table(index=["evaluation", "feature_set", "model"],
                                  columns="extent", values="D_mean").round(4)"""),
-        cell("markdown", "## Detection precision, recall and F1 by SIR"),
-        cell("code", "out[\"stage3_detection_by_sir\"].round(3)"),
+        cell("markdown", "## Detection precision, recall and F1 by severity level"),
+        cell("code", "out[\"stage3_detection_by_severity\"].round(3)"),
+    ])
+
+
+def nb05() -> None:
+    """Notebook 05: statistics and robustness (Stage 4)."""
+    write("05_robustness_statistics.ipynb", [
+        cell("markdown", """# 05 Statistics and robustness
+
+Recomputes the Stage 4 scenarios (reference, severity and extent sweeps,
+polarisation and threshold checks) with per-station errors, then runs the
+cluster bootstrap (5,000 resamples over stations), Wilcoxon signed-rank tests
+with Holm correction, mediation, moderation, the nested robustness and
+alternative checks, the station-count learning curve, the power analysis and
+the reliability and validity analogues. All logic is in `src/experiment.py`
+and `src/stats.py`. The scenarios are PROVISIONAL (OpenSAR statistics
+pending)."""),
+        cell("code", SETUP),
+        cell("code", """from src.experiment import run_stage4_recompute
+from src.stats import run_stage4, SECONDARY_WARNING
+
+run_stage4_recompute()
+out = run_stage4()"""),
+        cell("markdown", "## Hypothesis verdicts (Holm-corrected, alpha = 0.05)"),
+        cell("code", "out[\"stage4_hypotheses\"]"),
+        cell("markdown", "## Tests with uncorrected and Holm-corrected p-values"),
+        cell("code", """cols = ["evaluation", "feature_set", "model", "test", "n", "median_diff", "estimate",
+        "z", "r", "p", "p_holm"]
+out["stage4_tests"][[c for c in cols if c in out["stage4_tests"]]].round(5)"""),
+        cell("markdown", "## Mediation (primary and secondary)"),
+        cell("code", "print(SECONDARY_WARNING)\nout[\"stage4_mediation\"].drop(columns=\"note\").round(5)"),
+        cell("markdown", "## Moderation (NDVI terciles and polarisation)"),
+        cell("code", "out[\"stage4_moderation\"].round(5)"),
+        cell("markdown", "## Learning curve and power"),
+        cell("code", "display(out[\"stage4_learning_curve_summary\"].round(4))\nout[\"stage4_power\"].round(3)"),
+    ])
+
+
+def nb06() -> None:
+    """Notebook 06: figures, tables and diagrams (Stages 5 and 6)."""
+    write("06_plots_tables.ipynb", [
+        cell("markdown", """# 06 Figures, tables and diagrams
+
+Draws the result figures 5 to 14 (PNG at 400 dpi and vector PDF in
+`figures/`), writes the tables T1 to T11 (CSV in `results/aggregate/`) and
+draws the four diagrams (PNG in `figures/diagrams/`). Everything is read from
+saved result files; no experiment is rerun. The station map is written to
+`figures/private/` because it shows station locations."""),
+        cell("code", SETUP),
+        cell("code", """from src import diagrams, plots, tables
+
+figs = plots.make_all()
+tabs = tables.make_all()
+dgms = diagrams.make_all()
+print(len(figs), "figure files;", len(tabs), "tables;", len(dgms), "diagrams")"""),
+        cell("code", "tabs[\"t08_hypotheses\"]"),
+        cell("code", "tabs[\"t09_nested\"]"),
     ])
 
 
@@ -174,3 +244,5 @@ if __name__ == "__main__":
     nb02()
     nb03()
     nb04()
+    nb05()
+    nb06()
