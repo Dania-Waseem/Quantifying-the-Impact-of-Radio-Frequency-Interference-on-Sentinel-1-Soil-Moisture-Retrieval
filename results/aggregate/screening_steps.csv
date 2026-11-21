@@ -1,11 +1,12 @@
 step,rows,stations,nulls
 1a read Sentinel-1,27620,103,VH=292; VV=294
 1b drop missing VV/VH/angle,27326,103,none
-2 keep most frequent orbit,15128,103,none
-3 match ISMN within tolerance,15128,103,t_ismn=5192; sm=5192
-4 match NDVI within tolerance,15128,103,t_ismn=5192; sm=5192; ndvi=71; t_ndvi=71; ndvi_lag_days=71
-5 add antecedent precipitation,15128,103,t_ismn=5192; sm=5192; ndvi=71; t_ndvi=71; ndvi_lag_days=71; p7=513; p30=697
-"6 join static, add VHVV and doy",15128,103,t_ismn=5192; sm=5192; ndvi=71; t_ndvi=71; ndvi_lag_days=71; p7=513; p30=697; elev=140; slope=140
-7a drop rows with any missing feature,9333,100,none
-7b apply row-level quality rules,9277,100,none
-7d drop stations with < 50 matchups,8835,88,none
+1c merge duplicate acquisitions,27316,103,none
+2 keep most frequent orbit,15121,103,none
+3 match ISMN within tolerance,15121,103,t_ismn=5191; sm=5191
+4 match NDVI within tolerance,15121,103,t_ismn=5191; sm=5191; ndvi=71; t_ndvi=71; ndvi_lag_days=71
+5 add antecedent precipitation,15121,103,t_ismn=5191; sm=5191; ndvi=71; t_ndvi=71; ndvi_lag_days=71; p7=513; p30=697
+"6 join static, add VHVV and doy",15121,103,t_ismn=5191; sm=5191; ndvi=71; t_ndvi=71; ndvi_lag_days=71; p7=513; p30=697; elev=140; slope=140
+7a drop rows with any missing feature,9327,100,none
+7b apply row-level quality rules,9271,100,none
+7d drop stations with < 50 matchups,8829,88,none

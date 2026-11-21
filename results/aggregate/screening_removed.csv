@@ -1,6 +1,7 @@
 item,rows
 "Sentinel-1 rows with missing VV, VH or angle",294
-matchup rows with any missing feature or soil moisture,5795
+Sentinel-1 duplicate acquisition rows merged,10
+matchup rows with any missing feature or soil moisture,5794
 quality rule: NDVI below 0 (invalid NDVI),52
 quality rule: VV equals VH exactly (export error),1
 quality rule: soil moisture exactly 0 (likely sensor fault),3
@@ -9,4 +10,4 @@ missing before drop: p7,513
 missing before drop: p30,697
 missing before drop: elev,140
 missing before drop: slope,140
-missing before drop: sm,5192
+missing before drop: sm,5191
