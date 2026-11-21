@@ -88,8 +88,9 @@ def nb02() -> None:
 Random forest, XGBoost and a change-detection baseline, evaluated with
 station-wise 5-fold cross-validation (test stations are never seen in
 training). The tree models are fitted on both feature configurations
-declared in `config.yaml`: F1 (primary, all features) and F2
-(radar-reliant, without `p7` and `p30`). The change-detection baseline uses
+declared in `config.yaml`: F1 (primary, all features), F2
+(radar-reliant, without `p7` and `p30`) and F3 (secondary, relative
+backscatter `rVV`, `rVH` with `VHVV`, `angle`, `ndvi`, `doy`). The change-detection baseline uses
 VV only and is reported with per-station scaling (`cd`) and with the
 original pooled scaling (`cd_pooled`). USCRN is the main sample. OZNET is the second sample, used as a
 transfer test (trained on all USCRN stations) and with within-OZNET
