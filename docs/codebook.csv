@@ -1,0 +1,23 @@
+variable,meaning,unit,source
+network,ISMN network of the station,-,ISMN
+station_id,ISMN station name,-,ISMN
+t,Sentinel-1 acquisition time,UTC,Sentinel-1 GRD (Google Earth Engine)
+orbit,Sentinel-1 relative orbit (one per station),-,Sentinel-1 GRD
+pass,Orbit direction (ASCENDING or DESCENDING),-,Sentinel-1 GRD
+VV,"Backscatter coefficient sigma0, VV polarisation, 3x3 pixel mean",dB,Sentinel-1 GRD
+VH,"Backscatter coefficient sigma0, VH polarisation, 3x3 pixel mean",dB,Sentinel-1 GRD
+VHVV,Cross-polarisation ratio VH - VV,dB,Derived
+angle,Local incidence angle at the station,degree,Sentinel-1 GRD
+ndvi,"Normalised difference vegetation index, nearest date within 30 days",-,Sentinel-2
+ndvi_lag_days,Acquisition time minus NDVI date,day,Derived
+p7,Precipitation sum over the 7 days before the acquisition date (acquisition day excluded),mm,ERA5-Land
+p30,Precipitation sum over the 30 days before the acquisition date (acquisition day excluded),mm,ERA5-Land
+elev,Elevation,m,static.csv (DEM source to be confirmed)
+slope,Terrain slope,degree,static.csv (DEM source to be confirmed)
+lc,ESA WorldCover land cover class,-,ESA WorldCover
+lat,Station latitude,degree,ISMN
+lon,Station longitude,degree,ISMN
+doy,Day of year of the acquisition,day,Derived
+sm,"In situ soil moisture, 0 to 5 cm, good-quality flag",m3/m3,ISMN
+t_ismn,Time of the matched ISMN hourly value,UTC,ISMN
+vh_low,"Flag: VH below the noise floor in config.yaml (-30 dB); kept, sensitivity run in Stage 4",boolean,Derived
