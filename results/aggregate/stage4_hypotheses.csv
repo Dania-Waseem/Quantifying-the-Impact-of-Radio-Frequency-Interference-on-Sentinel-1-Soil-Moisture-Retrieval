@@ -1,0 +1,25 @@
+evaluation,feature_set,model,H1,H2,H4,H5,H3,H6
+OZNET_cv,F1,rf,not supported,not supported,not supported,not supported,not supported,not supported
+OZNET_cv,F1,xgb,not supported,not supported,not supported,not supported,not supported,not supported
+OZNET_cv,F2,rf,not supported,not supported,not supported,not supported,not supported,not supported
+OZNET_cv,F2,xgb,not supported,not supported,not supported,not supported,not supported,not supported
+OZNET_cv,F3,rf,not supported,not supported,not supported,not supported,not supported,not supported
+OZNET_cv,F3,xgb,not supported,not supported,not supported,not supported,not supported,not supported
+OZNET_cv,VV,cd,supported,supported,not supported,not applicable,not supported,not supported
+OZNET_cv,VV,cd_pooled,not supported,not supported,not supported,not applicable,not supported,not supported
+OZNET_transfer,F1,rf,not supported,not supported,not supported,not supported,not supported,supported
+OZNET_transfer,F1,xgb,not supported,not supported,not supported,not supported,not supported,supported
+OZNET_transfer,F2,rf,supported,supported,supported,not supported,not supported,supported
+OZNET_transfer,F2,xgb,supported,supported,supported,not supported,not supported,supported
+OZNET_transfer,F3,rf,not supported,not supported,not supported,not supported,not supported,supported
+OZNET_transfer,F3,xgb,not supported,supported,not supported,not supported,not supported,not supported
+OZNET_transfer,VV,cd,supported,supported,not supported,not applicable,not supported,supported
+OZNET_transfer,VV,cd_pooled,not supported,not supported,not supported,not applicable,not supported,supported
+USCRN_cv,F1,rf,not supported,not supported,not supported,not supported,not supported,not supported
+USCRN_cv,F1,xgb,not supported,not supported,not supported,not supported,not supported,not supported
+USCRN_cv,F2,rf,supported,supported,not supported,not supported,not supported,not supported
+USCRN_cv,F2,xgb,supported,supported,not supported,not supported,not supported,not supported
+USCRN_cv,F3,rf,supported,supported,not supported,not supported,not supported,not supported
+USCRN_cv,F3,xgb,supported,supported,not supported,not supported,not supported,not supported
+USCRN_cv,VV,cd,supported,supported,not supported,not applicable,not supported,supported
+USCRN_cv,VV,cd_pooled,not supported,not supported,not supported,not applicable,not supported,supported

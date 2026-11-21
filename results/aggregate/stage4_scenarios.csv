@@ -1,0 +1,16 @@
+scenario,severity_q,extent,p_c,polarisation,tau,roles,row_level
+0,50,0.21368,0.25,both,3.0,extent_sweep;reference;severity_sweep;tau_check,True
+1,10,0.21368,0.25,both,3.0,severity_sweep,True
+2,25,0.21368,0.25,both,3.0,severity_sweep,True
+3,75,0.21368,0.25,both,3.0,severity_sweep,True
+4,90,0.21368,0.25,both,3.0,severity_sweep,True
+5,50,0.033074,0.25,both,3.0,extent_sweep,False
+6,50,0.08202,0.25,both,3.0,extent_sweep,False
+7,50,0.35366,0.25,both,3.0,extent_sweep,False
+8,50,0.48916800000000044,0.25,both,3.0,extent_sweep,False
+9,50,0.21368,0.25,VV,3.0,pol_VV,True
+10,50,0.21368,0.25,VH,3.0,pol_VH,True
+11,50,0.21368,0.25,both,2.0,tau_check,False
+12,50,0.21368,0.25,both,2.5,tau_check,False
+13,50,0.21368,0.25,both,3.5,tau_check,False
+14,50,0.21368,0.25,both,4.0,tau_check,False
