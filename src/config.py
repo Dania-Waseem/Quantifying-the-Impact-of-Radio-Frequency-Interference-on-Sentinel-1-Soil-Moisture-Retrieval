@@ -39,7 +39,8 @@ def path(key: str) -> Path:
 
 def ensure_dirs() -> None:
     """Create all output directories listed in the configuration."""
-    for key in ("processed", "models", "results", "figures", "diagrams", "docs"):
+    for key in ("processed", "models", "results", "results_aggregate", "results_private",
+                "figures", "diagrams", "docs"):
         path(key).mkdir(parents=True, exist_ok=True)
 
 

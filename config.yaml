@@ -11,6 +11,10 @@ paths:
   processed: data/processed
   models: models
   results: results
+  # Aggregated results only (no per-station or per-row values); committed.
+  results_aggregate: results/aggregate
+  # Per-station and per-row results; kept local, never committed.
+  results_private: results/private
   figures: figures
   diagrams: figures/diagrams
   docs: docs
@@ -26,13 +30,28 @@ paths:
 matchup:
   ismn_tolerance_minutes: 60   # nearest hourly ISMN value within this window
   ndvi_tolerance_days: 30      # nearest Sentinel-2 date within this window
-  precip_windows_days: [7, 30] # antecedent precipitation sums (p7, p30)
-  min_n: 50                    # minimum matchups per station (lowered from 100 so that OZNET keeps 12 stations)
+  precip_windows_days: [7, 30] # antecedent sums over the days BEFORE the acquisition date
+  # Minimum matchups per station. Fixed at 50 because the strict value of 100
+  # leaves 0 OZNET stations (one orbit per station, 60-minute window), which
+  # would remove the second sample. MIN_N = 75 is a Stage 4 robustness run.
+  min_n: 50
   outlier_iqr_factor: 1.5      # outliers are flagged, never removed silently
+
+# Row-level quality rules, applied after the matchup and before the MIN_N rule.
+# Every removed row is written to results/screening_quality_removed.csv.
+quality:
+  drop_vv_equals_vh: true      # VV exactly equal to VH is an export error
+  drop_negative_ndvi: true     # NDVI below 0 is invalid over these sites
+  drop_zero_sm: true           # soil moisture of exactly 0 is a likely sensor fault
+  vh_noise_floor_db: -30.0     # rows with VH below this are flagged (vh_low), not removed
 
 samples:
   main: USCRN
+  # OZNET has only about 50 to 80 matchups per station. It is used mainly as a
+  # transfer test (train on USCRN, test on OZNET). Within-OZNET cross-validation
+  # is also run but is flagged as small, with wide intervals.
   second: OZNET
+  second_small_sample_flag: true
 
 features: [VV, VH, VHVV, angle, ndvi, p7, p30, elev, slope, doy]
 target: sm
@@ -85,6 +104,12 @@ stats:
   min_degradation: 1.0e-4   # guard for the recovery ratio G / D
   learning_curve_sizes: [10, 20, 40, 60, 80, all]
   learning_curve_repeats: 50
+
+# Robustness and sensitivity runs scheduled for Stage 4 (in addition to the
+# alternative checks listed in the project plan).
+robustness:
+  min_n_check: 75              # USCRN restricted to stations with >= 75 matchups
+  exclude_vh_low: true         # rerun without the rows flagged vh_low
 
 plots:
   dpi: 400
