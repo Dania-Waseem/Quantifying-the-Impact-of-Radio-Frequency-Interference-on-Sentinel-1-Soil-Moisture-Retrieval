@@ -157,9 +157,10 @@ def inject(df: pd.DataFrame, sir_db: np.ndarray | float, extent: np.ndarray | fl
         hit = contaminated & ((pol == p) | (pol == "both"))
         sigma = 10 ** (out[p].to_numpy() / 10)                     # dB to linear power
         factor = 1 + np.broadcast_to(extent, (n,)) * 10 ** (-np.broadcast_to(sir_db, (n,)) / 10)
-        noisy = np.where(hit, sigma * factor, sigma)
         out[f"{p}_clean"] = out[p]
-        out[p] = 10 * np.log10(noisy)                              # back to dB
+        # Back to dB for contaminated rows only; other rows keep their exact
+        # original value (no round trip through the linear domain).
+        out[p] = np.where(hit, 10 * np.log10(sigma * factor), out[p].to_numpy())
         out[f"inj_{p}"] = hit
         out[f"eps_{p}"] = out[p] - out[f"{p}_clean"]
     return out
