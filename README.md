@@ -98,11 +98,17 @@ The variables of the analysis table are described in
    matchups are excluded; the stricter threshold of 100 would leave no OZNET
    station.
 2. **Clean model.** Random forest, XGBoost and a change-detection baseline are
-   evaluated with station-wise 5-fold cross-validation. Two feature
-   configurations are fixed in `config.yaml` before any RFI experiment and
+   evaluated with station-wise 5-fold cross-validation.
+   Three feature configurations are fixed in `config.yaml` before any RFI experiment and
    are reported side by side in every later stage: F1 (primary) uses `VV, VH,
    VHVV, angle, ndvi, p7, p30, elev, slope, doy`; F2 (radar-reliant) removes
-   the precipitation features `p7` and `p30`. The change-detection baseline
+   the precipitation features `p7` and `p30`; F3 (secondary) uses relative
+   backscatter, `rVV` and `rVH` (VV and VH minus a robust, MAD-clipped median
+   of the station's own series, computed without soil moisture data), with
+   `VHVV, angle, ndvi, doy` and without site or precipitation features. Under
+   RFI injection the reference median is computed from the series the model
+   actually receives (contaminated, filled or after discarding), never from
+   the clean values. The change-detection baseline
    uses VV only. Its relative wetness is standardised within each station and
    scaled to the mean soil moisture of the training stations and to their
    median within-station standard deviation (`cd`); the original version,
