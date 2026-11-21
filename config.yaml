@@ -232,6 +232,52 @@ case_study:
   threshold_quantile: 0.3
   variants: [M0, M1, M3, M4]
 
+# Follow-up experiments (exploratory), declared on 2026-11-22 after the main
+# analysis (Stages 1 to 6) was complete. They do not replace any earlier
+# result; their outputs are kept separately (results/aggregate/followup_*.csv,
+# figures 15 to 17, notebook 07). They use the same splits, Stage 2 models and
+# M4 models, and are run on F1, F2, F3 and the change-detection baselines.
+# Their hypothesis tests form a separate Holm family per evaluation, feature
+# set and model, and are reported as exploratory.
+followup:
+  n_seeds: 10
+  # 1. Oracle mitigation: fill (M3_oracle), discard (M3b_oracle) and the
+  #    RFI-aware model on oracle-filled input (M4_oracle) use the TRUE
+  #    injection flags instead of the detector. Upper bound on recovery.
+  #    Random contamination as in Stage 3 (same seed streams).
+  oracle:
+    severity_q: [10, 25, 50, 75, 90]
+    extent_q: [10, 25, 50, 75, 90]
+    p_c: 0.25
+    polarisation: both
+  # 2. Persistent RFI (fixed emitters): contamination that is not independent
+  #    between acquisitions.
+  #    block: one contiguous run of acquisitions covering the fraction p of
+  #      each station's series (random start per station and seed);
+  #    station: every acquisition of a random fraction p of the stations.
+  persistent:
+    modes: [block, station]
+    fraction: [0.25, 0.5]
+    severity_q: [50, 90]
+    extent_q: [50, 90]
+    polarisation: both
+  # 3. Stress test beyond the OpenSAR P90: higher percentiles of the same
+  #    OpenSAR statistics (100 = the largest observed value), random
+  #    contamination. The breakpoint is the weakest setting at which the
+  #    degradation D reaches the thresholds below.
+  stress:
+    severity_pct: [90, 95, 99, 100]
+    extent_pct: [90, 95, 99, 100]
+    p_c: [0.25, 0.5]
+    polarisation: both
+    breakpoint_relative_d: [0.05, 0.10]   # D as a share of the clean RMSE
+  # Exploratory tests (one-sided Wilcoxon on station RMSE, Holm within the
+  # follow-up family): oracle recovery RMSE_M1 > RMSE_M3_oracle and
+  # RMSE_M1 > RMSE_M3b_oracle at the median and the P90 setting; degradation
+  # RMSE_M1 > RMSE_M0 and detector recovery RMSE_M1 > RMSE_M3 for each
+  # persistent setting at P90 severity and extent; degradation at the
+  # strongest stress setting.
+
 plots:
   dpi: 400
   diagram_dpi: 450              # 7.16 inch wide diagrams give about 3200 pixels
