@@ -53,9 +53,9 @@ samples:
   second: OZNET
   second_small_sample_flag: true
 
-# Feature configurations. Both are fixed before Stage 3 and every later stage
-# (3, 4 and 5) is run and reported for both, side by side. No choice between
-# them is made after seeing the results. Any further configuration must be
+# Feature configurations. All are fixed before Stage 3 and every later stage
+# (3, 4 and 5) is run and reported for all of them, side by side. No choice
+# between them is made after seeing the results, and none is dropped. Any further configuration must be
 # added here before it is run, and all runs are saved and reported.
 feature_sets:
   F1:   # primary configuration: full feature set
@@ -64,7 +64,27 @@ feature_sets:
   F2:   # second configuration: radar-reliant, precipitation (p7, p30) removed
     role: second
     columns: [VV, VH, VHVV, angle, ndvi, elev, slope, doy]
+  F3:   # secondary configuration: relative backscatter, no site or rain features
+    role: secondary
+    columns: [rVV, rVH, VHVV, angle, ndvi, doy]
 primary_feature_set: F1
+
+# Relative backscatter used by F3: rVV = VV - ref(VV) and rVH = VH - ref(VH),
+# where ref is a robust median of the station's own Sentinel-1 series (no soil
+# moisture data is used). Robust median: take the median and the MAD of the
+# series, drop values further than clip_mad scaled MADs from the median, and
+# take the median of the remaining values.
+# Under RFI injection (Stage 3) the reference is always computed from the
+# series that the model actually receives, never from the clean values:
+#   M1: the contaminated series; M3 and M4: the series after detect-and-fill;
+#   M3b: the series after detect-and-discard. For the RFI-aware training of M4,
+#   the reference of each injected training copy is computed from that copy
+#   after detect-and-fill. In station-wise cross-validation the reference of a
+#   test station comes from its own (observed) series only.
+relative_backscatter:
+  columns: [VV, VH]
+  clip_mad: 3.0
+  min_obs: 5        # fewer valid values than this gives a missing reference
 target: sm
 
 cv:
@@ -109,17 +129,33 @@ injection:
   opensar_quantiles: [0.1, 0.25, 0.5, 0.75, 0.9]
 
 detection:
-  window: 10        # w, past acquisitions of the same orbit
+  window: 10        # w, past acquisitions of the same orbit (observed values)
   tau: 3.0          # robust z-score threshold
   tau_grid: [2.0, 2.5, 3.0, 3.5, 4.0]
   min_history: 5    # acquisitions needed before a z-score is computed
+  one_sided: true   # flag only increases (RFI adds power, so it raises sigma0)
+  mad_floor_db: 0.1 # lower bound on the scaled MAD, avoids division by ~0
+  # Detection runs separately on VV and VH. Fill replaces only the flagged
+  # polarisation; discard drops the acquisition if either is flagged.
 
 fill:
-  k: 5              # median of the previous k clean acquisitions
+  k: 5              # median of the previous k clean (unflagged) acquisitions
 
 rfi_aware_training:
   mix_lambda: 0.5   # weight of injected copies relative to clean samples
   seed_offset: 100000  # training injection seeds differ from test seeds
+  # The injected copy of the training fold draws, for each station, one
+  # setting (SIR, extent, p_c, polarisation) uniformly from the injection grid,
+  # then applies detect-and-fill, as M4 sees filled inputs at test time.
+
+# Stage 3 experiment. Injection is applied to test inputs only. Models for
+# M0, M1, M3 and M3b are the Stage 2 clean models. M2 is a placeholder (not
+# implemented). M4 does not apply to the change-detection models (they have no
+# trained component that could be made RFI-aware).
+experiment:
+  evaluations: [USCRN_cv, OZNET_cv, OZNET_transfer]
+  variants: [M0, M1, M2, M3, M3b, M4]
+  models: [rf, xgb, cd, cd_pooled]
 
 stats:
   n_bootstrap: 5000
