@@ -1,0 +1,8 @@
+Aspect,Base model,Extended model
+Constructs,"backscatter, vegetation, precipitation and site features; soil moisture","adds RFI severity, extent, contamination, backscatter error (mediator), mitigation (treatment), NDVI and polarisation (moderators)"
+Input assumption,radar input is clean,radar input may be contaminated by RFI
+Logic,features -> soil moisture,RFI -> backscatter error -> soil moisture error; mitigation reduces the backscatter error
+Models,"random forest, XGBoost, change detection (F1, F2, F3)","same models under M0, M1, M3, M3b, M4 (M2 reserved)"
+Research design,station-wise 5-fold cross-validation; transfer to OZNET,"controlled injection on test inputs, 10 seeds per setting, nested variants"
+Outcome measures,"RMSE, MAE, bias, ubRMSD, R2, R","plus D, G, RR, detection precision, recall and F1"
+Inference,cluster bootstrap intervals over stations,"plus Wilcoxon tests with Holm correction, mediation, moderation, power, learning curve"

@@ -1,0 +1,21 @@
+Symbol,Meaning,Unit
+"σ, σ̃",clean and contaminated backscatter coefficient (linear),-
+"VV, VH",backscatter in co- and cross-polarisation,dB
+SIR,signal-to-interference ratio,dB
+ρ,RFI extent (affected fraction),-
+p_c,probability that an acquisition is contaminated,-
+ε,"injected backscatter error, 10 log10(σ̃ / σ)",dB
+"w, τ",detection window (acquisitions) and z-score threshold,-
+k,number of previous clean acquisitions used for filling,-
+λ,weight of injected copies in RFI-aware training,-
+"rVV, rVH",backscatter minus the station's robust median,dB
+SM,"soil moisture, 0 to 5 cm",m3/m3
+"RMSE, MAE, ubRMSD","root mean square, mean absolute and unbiased RMS difference",m3/m3
+"R, R2",Pearson correlation and coefficient of determination,-
+"D, G, RR","degradation, recovery, recovery ratio","m3/m3, m3/m3, -"
+M0 to M4,"variants: clean, contaminated, published (n/a), fill, discard, RFI-aware",-
+"F1, F2, F3",feature configurations,-
+"a, b, c, c'","mediation paths (treatment to mediator, mediator to outcome, total, direct)",-
+"E, T2, T3",injected error and NDVI tercile indicators in the moderation model,"dB, -"
+r,Wilcoxon effect size Z / sqrt(N),-
+α,significance level (0.05),-

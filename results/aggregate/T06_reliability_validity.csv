@@ -1,0 +1,9 @@
+feature_set,model,"SD of RMSE over seeds, M0","SD of RMSE over seeds, M1","SD of RMSE over seeds, M3","SD of RMSE over seeds, M3b","SD of RMSE over seeds, M4",clean_R,clean_ubRMSD,clean_station_R,validation design,note
+F1,rf,0.0,0.0,0.0,0.0001,0.0001,0.6775,0.0877,0.7149,station-wise 5-fold cross-validation,"Cronbach's alpha, AVE and HTMT do not apply to sensor data; satellite and in situ data come from independent sources."
+F1,xgb,0.0,0.0001,0.0001,0.0001,0.0001,0.6493,0.0908,0.7441,station-wise 5-fold cross-validation,"Cronbach's alpha, AVE and HTMT do not apply to sensor data; satellite and in situ data come from independent sources."
+F2,rf,0.0,0.0001,0.0001,0.0002,0.0001,0.4351,0.112,0.5366,station-wise 5-fold cross-validation,"Cronbach's alpha, AVE and HTMT do not apply to sensor data; satellite and in situ data come from independent sources."
+F2,xgb,0.0,0.0001,0.0001,0.0003,0.0001,0.4494,0.1111,0.5711,station-wise 5-fold cross-validation,"Cronbach's alpha, AVE and HTMT do not apply to sensor data; satellite and in situ data come from independent sources."
+F3,rf,0.0,0.0001,0.0001,0.0002,0.0001,0.4462,0.1096,0.5058,station-wise 5-fold cross-validation,"Cronbach's alpha, AVE and HTMT do not apply to sensor data; satellite and in situ data come from independent sources."
+F3,xgb,0.0,0.0001,0.0002,0.0002,0.0002,0.3449,0.1194,0.4996,station-wise 5-fold cross-validation,"Cronbach's alpha, AVE and HTMT do not apply to sensor data; satellite and in situ data come from independent sources."
+VV,cd,0.0,0.0,0.0001,0.0001,,0.1508,0.1269,0.3103,station-wise 5-fold cross-validation,"Cronbach's alpha, AVE and HTMT do not apply to sensor data; satellite and in situ data come from independent sources."
+VV,cd_pooled,0.0,0.0004,0.0004,0.0005,,0.1769,0.1509,0.3103,station-wise 5-fold cross-validation,"Cronbach's alpha, AVE and HTMT do not apply to sensor data; satellite and in situ data come from independent sources."

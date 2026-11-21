@@ -1,0 +1,13 @@
+Item,Setting
+Stations,"88 (OZNET 12, USCRN 76)"
+Matchups,"8,829"
+Study period,2019 to 2023
+Matchup rules,one relative orbit per station; ISMN within 60 min; NDVI within 30 days; MIN_N = 50
+Missing-data treatment,rows with any missing feature removed (no imputation); quality rules logged
+Estimation,"random forest (300 trees, min leaf 3), XGBoost, change detection; station-wise 5-fold GroupKFold"
+Feature configurations,"F1 (primary), F2, F3"
+Injection,"OpenSAR (125 patches): severity levels P10: VV 0.28 dB (SIR 11.8), VH 1.29 dB (SIR 4.6); P25: VV 0.58 dB (SIR 8.5), VH 1.80 dB (SIR 2.9); P50: VV 1.47 dB (SIR 3.9), VH 3.51 dB (SIR -1.0); P75: VV 2.22 dB (SIR 1.8), VH 4.71 dB (SIR -2.9); P90: VV 3.20 dB (SIR -0.4), VH 6.29 dB (SIR -5.1); extent levels 0.033, 0.082, 0.214, 0.354, 0.489; p_c [0.1, 0.25, 0.5] (assumed); polarisation ['VV', 'VH', 'both']"
+Seeds,master seed 42; 10 injection seeds per setting
+Bootstrap,"5,000 cluster resamples over stations"
+Significance level,alpha = 0.05; Holm correction per family
+Software,Python 3.12.1; pandas 3.1.1; numpy 2.5.5; scikit-learn 1.9.1; xgboost 3.4.1; scipy 1.18.1; statsmodels 0.15.0; matplotlib 3.11.2

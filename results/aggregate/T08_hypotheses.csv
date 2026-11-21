@@ -1,0 +1,22 @@
+feature_set,test,description,n,median_diff,estimate,z,r,p,p_holm,verdict
+F1,H1,"RMSE_M1 slope vs severity (excess power, dB) > 0",76,5e-05,,1.46001,0.16748,0.07214,0.43286,not supported
+F1,H2,RMSE_M1 slope vs extent > 0,76,0.00032,,1.02512,0.11759,0.15265,0.76327,not supported
+F1,H3,indirect effect of mitigation via backscatter error != 0,76,,0.00064,,,0.0002,0.0014,not supported
+F1,H4,RMSE_M1 > RMSE_M3 (mitigation recovers accuracy),76,-1e-05,,-0.77143,-0.08849,0.77977,1.0,not supported
+F1,H5,RMSE_M3 > RMSE_M4 (RFI-aware training adds recovery),76,-0.00127,,-3.22549,-0.36999,0.99937,1.0,not supported
+F1,H6_ndvi,interaction E:T3 != 0,76,,0.0007,,,0.4928,1.0,not supported
+F1,H6_pol,interaction E:VH != 0,76,,-0.00032,,,0.3944,1.0,not supported
+F2,H1,"RMSE_M1 slope vs severity (excess power, dB) > 0",76,0.00016,,2.66634,0.30585,0.00383,0.02684,supported
+F2,H2,RMSE_M1 slope vs extent > 0,76,0.00146,,2.56797,0.29457,0.00511,0.03069,supported
+F2,H3,indirect effect of mitigation via backscatter error != 0,76,,0.0003,,,0.2176,0.8704,not supported
+F2,H4,RMSE_M1 > RMSE_M3 (mitigation recovers accuracy),76,6e-05,,-1.06136,-0.12175,0.85574,1.0,not supported
+F2,H5,RMSE_M3 > RMSE_M4 (RFI-aware training adds recovery),76,-0.00103,,-3.14783,-0.36108,0.99918,1.0,not supported
+F2,H6_ndvi,interaction E:T3 != 0,76,,0.00018,,,0.9272,1.0,not supported
+F2,H6_pol,interaction E:VH != 0,76,,-0.0009,,,0.1164,0.582,not supported
+F3,H1,"RMSE_M1 slope vs severity (excess power, dB) > 0",76,0.00011,,3.69145,0.42344,0.00011,0.00078,supported
+F3,H2,RMSE_M1 slope vs extent > 0,76,0.0006,,2.61974,0.3005,0.0044,0.0264,supported
+F3,H3,indirect effect of mitigation via backscatter error != 0,76,,0.00034,,,0.034,0.17,not supported
+F3,H4,RMSE_M1 > RMSE_M3 (mitigation recovers accuracy),76,-0.00057,,-3.15301,-0.36167,0.99919,1.0,not supported
+F3,H5,RMSE_M3 > RMSE_M4 (RFI-aware training adds recovery),76,-0.00224,,-4.69068,-0.53806,1.0,1.0,not supported
+F3,H6_ndvi,interaction E:T3 != 0,76,,-0.00405,,,0.152,0.608,not supported
+F3,H6_pol,interaction E:VH != 0,76,,-0.00086,,,0.4148,1.0,not supported

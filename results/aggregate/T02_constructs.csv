@@ -1,0 +1,13 @@
+Construct,Definition,Measure,Source
+RFI severity,Strength of interference relative to the signal,SIR (dB); lower is stronger,Injection setting
+RFI extent,Affected fraction of the footprint,ρ (0 to 1),Injection setting
+Contamination probability,Probability that an acquisition is contaminated,p_c (0 to 1),Injection setting
+Backscatter error (injected),Increase of sigma0 caused by interference,ε = 10 log10(1 + ρ 10^(-SIR/10)) (dB),Derived
+Residual backscatter error,Mean over VV and VH of |input - clean| after mitigation,dB,Derived
+Soil moisture error,Absolute and root mean square difference to ISMN,m3/m3,Model output vs ISMN
+Degradation,Loss of accuracy caused by RFI,D = RMSE_M1 - RMSE_M0 (m3/m3),Derived
+Recovery,Accuracy regained by a mitigation variant,G = RMSE_M1 - RMSE_variant (m3/m3),Derived
+Recovery ratio,Share of the degradation recovered,RR = G / D (-),Derived
+Mitigation (treatment),"Detect-and-fill (M3), detect-and-discard (M3b), with RFI-aware training (M4)",variant,Design
+Vegetation (moderator),Sentinel-2 NDVI terciles,NDVI (-),Sentinel-2
+Polarisation (moderator),Polarisation affected by interference,VV or VH,Injection setting
