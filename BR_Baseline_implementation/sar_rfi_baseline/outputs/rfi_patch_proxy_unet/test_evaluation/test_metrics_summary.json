@@ -1,0 +1,61 @@
+{
+  "checkpoint": "C:\\Users\\hp\\Pictures\\BR Baseline implementation\\outputs\\runs\\unet_rfipatch_snr-20\\best.pt",
+  "best_epoch": 5,
+  "best_val_psnr": 19.559684663590154,
+  "test_scenes": [
+    "s3",
+    "third"
+  ],
+  "test_sample_count_target_snr": 2,
+  "test_sample_count_all_levels": 8,
+  "snr_-20dB_results": [
+    {
+      "scene": "s3",
+      "snr_db": -20.0,
+      "input_psnr_u8": 18.008383253337648,
+      "output_psnr_u8": 17.839667287396598,
+      "delta_psnr_u8": -0.16871596594105043,
+      "input_ssim_u8": 0.512141307779812,
+      "output_ssim_u8": 0.4878866314406736,
+      "delta_ssim_u8": -0.024254676339138415,
+      "input_psnr_f64": 18.008792294426808,
+      "output_psnr_f64": 17.840277589528185,
+      "delta_psnr_f64": -0.16851470489862308,
+      "input_ssim_f64": 0.5127323474268465,
+      "output_ssim_f64": 0.48923279492302013,
+      "delta_ssim_f64": -0.02349955250382635,
+      "inference_time_s": 35.04604744911194
+    },
+    {
+      "scene": "third",
+      "snr_db": -20.0,
+      "input_psnr_u8": 22.585933145467607,
+      "output_psnr_u8": 22.413887790478807,
+      "delta_psnr_u8": -0.17204535498879991,
+      "input_ssim_u8": 0.5352281818087617,
+      "output_ssim_u8": 0.5162674467129976,
+      "delta_ssim_u8": -0.018960735095764125,
+      "input_psnr_f64": 22.587724225129165,
+      "output_psnr_f64": 22.416529791832055,
+      "delta_psnr_f64": -0.17119443329711004,
+      "input_ssim_f64": 0.5358866676870303,
+      "output_ssim_f64": 0.5179785595364842,
+      "delta_ssim_f64": -0.01790810815054611,
+      "inference_time_s": 33.801427602767944
+    }
+  ],
+  "average_metrics_snr_-20dB": {
+    "input_psnr_u8": 20.297158199402627,
+    "output_psnr_u8": 20.126777538937702,
+    "delta_psnr_u8": -0.17038066046492517,
+    "input_ssim_u8": 0.523684744794287,
+    "output_ssim_u8": 0.5020770390768357,
+    "delta_ssim_u8": -0.02160770571745127,
+    "input_psnr_f64": 20.298258259777988,
+    "output_psnr_f64": 20.12840369068012,
+    "delta_psnr_f64": -0.16985456909786656,
+    "input_ssim_f64": 0.5243095075569384,
+    "output_ssim_f64": 0.5036056772297521,
+    "delta_ssim_f64": -0.02070383032718623
+  }
+}

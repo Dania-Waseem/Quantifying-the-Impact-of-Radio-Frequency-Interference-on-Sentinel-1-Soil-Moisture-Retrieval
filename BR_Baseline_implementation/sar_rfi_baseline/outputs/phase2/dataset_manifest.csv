@@ -1,0 +1,29 @@
+dataset,subset,filename,rel_path,file_size_bytes,variable_key,shape,dtype,is_complex,has_nan,has_inf,min_abs,max_abs,n_samples,documented_snr_db,is_labeled
+Sentinel Polluted-SAR,Scenario 1,snr0.mat,Scenario 1\snr0.mat,5731131,s4,512x1536,complex64,True,False,False,1.089e-02,4.958e+03,1,0,False
+Sentinel Polluted-SAR,Scenario 1,snr10.mat,Scenario 1\snr10.mat,5401261,s4,512x1536,complex64,True,False,False,8.649e-04,4.935e+03,1,10,False
+Sentinel Polluted-SAR,Scenario 1,snr15.mat,Scenario 1\snr15.mat,5348479,s4,512x1536,complex64,True,False,False,1.050e+00,4.886e+03,1,15,False
+Sentinel Polluted-SAR,Scenario 1,snr5.mat,Scenario 1\snr5.mat,5588138,s4,512x1536,complex64,True,False,False,7.080e-02,4.952e+03,1,5,False
+Sentinel Polluted-SAR,Scenario 2,snr0.mat,Scenario 2\snr0.mat,4486238,s3,512x1500,complex64,True,False,False,0.000e+00,2.418e+03,1,0,False
+Sentinel Polluted-SAR,Scenario 2,snr10.mat,Scenario 2\snr10.mat,4456135,s3,512x1500,complex64,True,False,False,0.000e+00,2.436e+03,1,10,False
+Sentinel Polluted-SAR,Scenario 2,snr15.mat,Scenario 2\snr15.mat,4444946,s3,512x1500,complex64,True,False,False,0.000e+00,2.526e+03,1,15,False
+Sentinel Polluted-SAR,Scenario 2,snr5.mat,Scenario 2\snr5.mat,4459093,s3,512x1500,complex64,True,False,False,0.000e+00,2.421e+03,1,5,False
+Sentinel Polluted-SAR,Scenario 3,snr0.mat,Scenario 3\snr0.mat,2472322,s3,512x1500,complex64,True,False,False,0.000e+00,2.414e+03,1,0,False
+Sentinel Polluted-SAR,Scenario 3,snr10.mat,Scenario 3\snr10.mat,2218136,s3,512x1500,complex64,True,False,False,0.000e+00,2.390e+03,1,10,False
+Sentinel Polluted-SAR,Scenario 3,snr15.mat,Scenario 3\snr15.mat,2154539,s3,512x1500,complex64,True,False,False,0.000e+00,2.520e+03,1,15,False
+Sentinel Polluted-SAR,Scenario 3,snr5.mat,Scenario 3\snr5.mat,2370065,s3,512x1500,complex64,True,False,False,0.000e+00,2.408e+03,1,5,False
+RFI-Patch,RFI-1,fifth.mat,RFI-Patch\RFI-1\fifth.mat,18848126,ss,5x512x1500,complex64,True,False,False,0.000e+00,3.994e+03,4,"0,-10,-20,-30",True
+RFI-Patch,RFI-1,first.mat,RFI-Patch\RFI-1\first.mat,18615018,ss,5x512x1500,complex64,True,False,False,0.000e+00,2.039e+03,4,"0,-10,-20,-30",True
+RFI-Patch,RFI-1,fourth.mat,RFI-Patch\RFI-1\fourth.mat,18258477,ss,5x512x1500,complex64,True,False,False,0.000e+00,1.285e+03,4,"0,-10,-20,-30",True
+RFI-Patch,RFI-1,s1.mat,RFI-Patch\RFI-1\s1.mat,19318072,ss,5x512x1500,complex64,True,False,False,0.000e+00,2.329e+04,4,"0,-10,-20,-30",True
+RFI-Patch,RFI-1,s10.mat,RFI-Patch\RFI-1\s10.mat,19067806,ss,5x512x1500,complex64,True,False,False,0.000e+00,9.889e+03,4,"0,-10,-20,-30",True
+RFI-Patch,RFI-1,s2.mat,RFI-Patch\RFI-1\s2.mat,19349988,ss,5x512x1500,complex64,True,False,False,0.000e+00,1.467e+04,4,"0,-10,-20,-30",True
+RFI-Patch,RFI-1,s3.mat,RFI-Patch\RFI-1\s3.mat,19348571,ss,5x512x1500,complex64,True,False,False,0.000e+00,1.645e+04,4,"0,-10,-20,-30",True
+RFI-Patch,RFI-1,s4.mat,RFI-Patch\RFI-1\s4.mat,19194045,ss,5x512x1500,complex64,True,False,False,0.000e+00,9.110e+03,4,"0,-10,-20,-30",True
+RFI-Patch,RFI-1,s5.mat,RFI-Patch\RFI-1\s5.mat,18993782,ss,5x512x1500,complex64,True,False,False,0.000e+00,7.942e+03,4,"0,-10,-20,-30",True
+RFI-Patch,RFI-1,s6.mat,RFI-Patch\RFI-1\s6.mat,19089911,ss,5x512x1500,complex64,True,False,False,0.000e+00,8.090e+03,4,"0,-10,-20,-30",True
+RFI-Patch,RFI-1,s7.mat,RFI-Patch\RFI-1\s7.mat,19198046,ss,5x512x1500,complex64,True,False,False,0.000e+00,8.614e+03,4,"0,-10,-20,-30",True
+RFI-Patch,RFI-1,s8.mat,RFI-Patch\RFI-1\s8.mat,19301514,ss,5x512x1500,complex64,True,False,False,0.000e+00,1.286e+04,4,"0,-10,-20,-30",True
+RFI-Patch,RFI-1,s9.mat,RFI-Patch\RFI-1\s9.mat,19275413,ss,5x512x1500,complex64,True,False,False,0.000e+00,2.086e+04,4,"0,-10,-20,-30",True
+RFI-Patch,RFI-1,second.mat,RFI-Patch\RFI-1\second.mat,18801010,ss,5x512x1500,complex64,True,False,False,0.000e+00,3.417e+03,4,"0,-10,-20,-30",True
+RFI-Patch,RFI-1,sixth.mat,RFI-Patch\RFI-1\sixth.mat,18790402,ss,5x512x1500,complex64,True,False,False,0.000e+00,3.358e+03,4,"0,-10,-20,-30",True
+RFI-Patch,RFI-1,third.mat,RFI-Patch\RFI-1\third.mat,18522098,ss,5x512x1500,complex64,True,False,False,0.000e+00,2.597e+03,4,"0,-10,-20,-30",True

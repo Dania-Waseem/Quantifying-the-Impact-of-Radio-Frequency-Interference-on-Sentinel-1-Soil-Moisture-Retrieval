@@ -1,0 +1,28 @@
+{
+  "unit": "scene",
+  "seed": 42,
+  "val_ratio": 0.2,
+  "test_ratio": 0.2,
+  "splits": {
+    "smoke_000": "train",
+    "smoke_001": "train",
+    "smoke_002": "train",
+    "smoke_003": "train",
+    "smoke_004": "train",
+    "smoke_005": "train",
+    "smoke_006": "val",
+    "smoke_007": "test",
+    "smoke_008": "train",
+    "smoke_009": "test",
+    "smoke_010": "val",
+    "smoke_011": "train",
+    "smoke_012": "val",
+    "smoke_013": "train",
+    "smoke_014": "test",
+    "smoke_015": "test",
+    "smoke_016": "train",
+    "smoke_017": "train",
+    "smoke_018": "train",
+    "smoke_019": "val"
+  }
+}
