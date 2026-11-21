@@ -163,8 +163,6 @@ stats:
   alpha: 0.05
   ci_level: 0.95
   min_degradation: 1.0e-4   # guard for the recovery ratio G / D
-  learning_curve_sizes: [10, 20, 40, 60, 80, all]
-  learning_curve_repeats: 50
 
 # Robustness and sensitivity runs scheduled for Stage 4 (in addition to the
 # alternative checks listed in the project plan).
@@ -172,7 +170,57 @@ robustness:
   min_n_check: 75              # USCRN restricted to stations with >= 75 matchups
   exclude_vh_low: true         # rerun without the rows flagged vh_low
 
+# Stage 4 design, fixed before any Stage 4 result is computed.
+# The station-level and row-level analyses need the errors of every station,
+# so the listed scenarios are recomputed with the Stage 2 and M4 models (same
+# splits, same seed streams as Stage 3) and their per-station error sums and
+# row-level errors are kept locally (never committed).
+stage4:
+  # Reference scenario (PROVISIONAL, the middle of the provisional grid).
+  reference: {sir_db: 0, extent: 0.5, p_c: 0.25, polarisation: both}
+  # Dose-response sweeps around the reference (H1: severity, H2: extent).
+  severity_sweep: true         # all grid SIR values at the reference extent, p_c, polarisation
+  extent_sweep: true           # all grid extents at the reference SIR, p_c, polarisation
+  polarisation_check: [VV, VH] # reference with one polarisation hit (moderation, alternative check)
+  tau_check: true              # reference with every detection threshold in detection.tau_grid
+  # Hypothesis verdicts use this evaluation and model; all other evaluations
+  # and models are reported as well, with the same tests.
+  primary_evaluation: USCRN_cv
+  primary_model: rf
+  # Ablation of M4 (one component removed at a time): M4 without fill is the
+  # RFI-aware model applied to the unfilled contaminated input; M4 without
+  # RFI-aware training is M3.
+  ablations: [M4_nofill]
+  # Evaluation subsets (no retraining; the same predictions restricted to rows
+  # or stations): grassland (WorldCover 30), USCRN stations with >= 75
+  # matchups, rows not flagged vh_low, NDVI terciles.
+  subsets: [grassland, min_n_75, exclude_vh_low, ndvi_terciles]
+  # Hypothesis tests (one family per evaluation, feature set and model, Holm):
+  #   H1 severity slope > 0, H2 extent slope > 0 (one-sided Wilcoxon on
+  #   station slopes); H3 primary mediation indirect effect (bootstrap);
+  #   H4 RMSE_M3 < RMSE_M1 (one-sided Wilcoxon on station RMSE);
+  #   H5 RMSE_M4 < RMSE_M3 (one-sided Wilcoxon); H6 NDVI and polarisation
+  #   interaction terms (bootstrap, two-sided). H6 is supported if either
+  #   interaction is significant after correction.
+  learning_curve_sizes: [10, 20, 40, 60, 80, all]
+  learning_curve_repeats: 50
+  power_target: 0.8
+
+# Case study (Stage 6 diagram 4): an irrigation-advice rule applied to the
+# retrieved soil moisture. Advice is "irrigate" when soil moisture is below a
+# threshold; the threshold is a quantile of the in situ soil moisture of the
+# evaluation. Decisions from each variant are compared with the decision from
+# the in situ value, at the reference scenario, for all rows and for the
+# contaminated rows only. Fixed before the case study is computed.
+case_study:
+  evaluation: USCRN_cv
+  feature_set: F1
+  model: rf
+  threshold_quantile: 0.3
+  variants: [M0, M1, M3, M4]
+
 plots:
   dpi: 400
+  diagram_dpi: 450              # 7.16 inch wide diagrams give about 3200 pixels
   single_column_in: 3.5
   double_column_in: 7.16
