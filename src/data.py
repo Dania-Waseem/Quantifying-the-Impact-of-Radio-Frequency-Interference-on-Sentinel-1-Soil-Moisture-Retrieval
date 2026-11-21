@@ -208,7 +208,8 @@ def build_matchups(save: bool = True) -> tuple[pd.DataFrame, dict]:
     """Build the analysis table and return it with a screening summary.
 
     Steps (as listed in the project plan):
-      1. read Sentinel-1, drop rows with missing VV, VH or angle;
+      1. read Sentinel-1, drop rows with missing VV, VH or angle, and merge
+         duplicate rows of the same acquisition;
       2. keep one relative orbit per station (the most frequent);
       3. match the nearest ISMN hourly value within the time tolerance;
       4. add NDVI from the nearest Sentinel-2 date within the tolerance;
@@ -233,6 +234,17 @@ def build_matchups(save: bool = True) -> tuple[pd.DataFrame, dict]:
     s1 = s1.dropna(subset=["VV", "VH", "angle"])
     info["s1_missing_removed"] = n0 - len(s1)
     report(s1, "1b drop missing VV/VH/angle", log)
+
+    # Step 1c: duplicate acquisitions. The export contains a few rows with
+    # the same station, time and orbit (overlapping or reprocessed scenes of
+    # one acquisition, with equal or nearly equal values). They are merged
+    # into one row by averaging, so that each acquisition counts once.
+    key = ["station_id", "t", "orbit", "pass"]
+    dup = s1.duplicated(key, keep=False)
+    info["s1_duplicates_merged"] = int(dup.sum() - s1[dup].drop_duplicates(key).shape[0])
+    s1 = s1.groupby(key, as_index=False)[["VV", "VH", "angle"]].mean()
+    print(f"[1c duplicates] merged {info['s1_duplicates_merged']} duplicate acquisition rows")
+    report(s1, "1c merge duplicate acquisitions", log)
 
     # Step 2: one relative orbit per station.
     s1, chosen = select_main_orbit(s1)
@@ -304,6 +316,7 @@ def build_matchups(save: bool = True) -> tuple[pd.DataFrame, dict]:
             "ndvi", "ndvi_lag_days", "p7", "p30", "elev", "slope", "lc", "lat", "lon",
             "doy", "sm", "t_ismn", "vh_low"]
     df = df[cols].sort_values(["network", "station_id", "t"]).reset_index(drop=True)
+    assert not df.duplicated(["station_id", "t"]).any(), "duplicate station and time rows"
     info["log"] = pd.DataFrame(log)
 
     if save:
@@ -436,6 +449,8 @@ def run_stage1() -> tuple[pd.DataFrame, dict[str, pd.DataFrame]]:
     scr["removed"] = pd.DataFrame(
         [{"item": "Sentinel-1 rows with missing VV, VH or angle",
           "rows": info["s1_missing_removed"]},
+         {"item": "Sentinel-1 duplicate acquisition rows merged",
+          "rows": info["s1_duplicates_merged"]},
          {"item": "matchup rows with any missing feature or soil moisture",
           "rows": info["rows_missing_feature_removed"]}]
         + [{"item": f"quality rule: {r}", "rows": int(n)} for r, n in
