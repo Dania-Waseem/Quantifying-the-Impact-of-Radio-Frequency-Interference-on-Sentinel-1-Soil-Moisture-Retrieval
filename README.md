@@ -164,7 +164,7 @@ src/               analysis modules
   rfi.py           RFI injection, detection, filling and discarding
   experiment.py    variants M0 to M4 over folds, seeds, severity and extent
   stats.py         bootstrap, paired tests, mediation, moderation, power
-  tables.py        CSV and LaTeX table writers
+  tables.py        result tables T1 to T11 (CSV)
   plotstyle.py     shared figure style
   plots.py         result figures
 notebooks/         one thin notebook per stage
@@ -172,7 +172,7 @@ tools/             helper scripts (notebook generation)
 docs/              codebook and notation table
 data/processed/    generated tables (not tracked)
 models/            saved models (not tracked)
-results/           CSV and LaTeX results and logs
+results/           result tables (CSV) and logs
 figures/           PNG (400 dpi) and PDF figures; diagrams/ holds editable sources
 ```
 
