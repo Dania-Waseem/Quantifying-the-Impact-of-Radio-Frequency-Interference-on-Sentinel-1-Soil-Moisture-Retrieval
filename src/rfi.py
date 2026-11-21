@@ -53,16 +53,19 @@ def m2_published_suppression(df: pd.DataFrame) -> pd.DataFrame:
 
 
 # --------------------------------------------------------------------------
-# Injection grid (provisional or from OpenSAR statistics)
+# Injection grid (from OpenSAR statistics, provisional fallback)
 # --------------------------------------------------------------------------
 
 def load_opensar_stats() -> pd.DataFrame | None:
     """Read ``data/processed/opensar_rfi_stats.csv`` if it exists.
 
-    The file must have one row per patch and the columns ``patch_id, split,
-    extent, severity_db_vv, severity_db_vh``. Returns None if the file does
-    not exist. Raises ValueError if columns are missing or values are
-    invalid (extent outside 0 to 1, or negative severity).
+    The file has one row per patch with at least the columns ``patch_id,
+    split, extent, severity_db_vv, severity_db_vh``. ``severity_db_*`` is
+    the measured excess power (dB) of the masked RFI pixels against the
+    unmasked pixels; it can be zero or negative when a patch shows no power
+    excess in that polarisation. Other columns (for example ``sir_db_*``)
+    are ignored. Returns None if the file does not exist; raises ValueError
+    if columns are missing, values are missing, or extent is outside 0 to 1.
     """
     p = path("opensar_stats")
     if not p.exists():
@@ -71,32 +74,43 @@ def load_opensar_stats() -> pd.DataFrame | None:
     missing = [c for c in OPENSAR_COLUMNS if c not in df.columns]
     if missing:
         raise ValueError(f"{p} is missing columns: {missing}")
+    if df[OPENSAR_COLUMNS].isna().any().any():
+        raise ValueError(f"{p} has missing values in {OPENSAR_COLUMNS}")
     if not df["extent"].between(0, 1).all():
         raise ValueError(f"{p}: extent must lie between 0 and 1")
-    if (df[["severity_db_vv", "severity_db_vh"]] < 0).any().any():
-        raise ValueError(f"{p}: severity (dB increase) must not be negative")
-    return df
+    return df[OPENSAR_COLUMNS].copy()
 
 
-def sir_from_severity(severity_db: np.ndarray, extent: np.ndarray) -> np.ndarray:
-    """Convert a backscatter increase in dB at a given extent into SIR (dB).
+def sir_from_contrast(contrast_db: np.ndarray) -> np.ndarray:
+    """SIR (dB) of fully affected pixels with a measured excess power C (dB).
 
-    Inverts ``eps = 10 log10(1 + rho 10^(-SIR/10))``:
-    ``SIR = -10 log10((10^(eps/10) - 1) / rho)``.
+    Inverts ``C = 10 log10(1 + 10^(-SIR/10))``:
+    ``SIR = -10 log10(10^(C/10) - 1)``. Defined for C > 0 only.
     """
+    c = np.asarray(contrast_db, dtype=float)
     with np.errstate(divide="ignore", invalid="ignore"):
-        return -10 * np.log10((10 ** (np.asarray(severity_db) / 10) - 1) / np.asarray(extent))
+        return np.where(c > 0, -10 * np.log10(10 ** (c / 10) - 1), np.nan)
 
 
 def injection_grid(verbose: bool = True) -> dict:
-    """Return the injection grid (SIR, extent, p_c, polarisation).
+    """Return the injection grid.
 
-    If the OpenSAR statistics exist, the SIR and extent values are the
-    configured quantiles of the patch statistics (SIR derived from the
-    severity of both polarisations at the patch extent). Otherwise the
-    PROVISIONAL grid from ``config.yaml`` is used and a warning is printed
-    every time. ``p_c`` and the polarisation always come from the
-    configuration. The returned dictionary has a ``source`` entry.
+    Keys:
+      ``severity_q``: severity level labels (percentiles);
+      ``sir``: {level: {"VV": SIR, "VH": SIR}} in dB, one SIR per
+        polarisation;
+      ``contrast_db``: {level: {"VV": C, "VH": C}}, the excess power of the
+        level (dB);
+      ``extent_q``, ``extent``: extent level labels and values;
+      ``p_c``, ``polarisation``: from the configuration;
+      ``source``: "opensar" or "provisional"; ``notes``: text.
+
+    With the OpenSAR file: severity levels are percentiles of
+    ``severity_db_<pol>`` over the patches with C above the configured
+    minimum contrast in that polarisation, converted to SIR per
+    polarisation; extent levels are percentiles of extent over all patches.
+    Without the file: the provisional fallback lists, with a warning printed
+    every time.
     """
     cfg = load_config()["injection"]
     grid = {"p_c": list(cfg["p_c"]), "polarisation": list(cfg["polarisation"])}
@@ -108,19 +122,65 @@ def injection_grid(verbose: bool = True) -> dict:
         if verbose:
             print("WARNING:", msg)
         warnings.warn(msg, stacklevel=2)
-        grid.update(sir_db=list(cfg["sir_db"]), extent=list(cfg["extent"]),
-                    source="provisional")
+        fb = cfg["provisional_fallback"]
+        levels = list(range(1, len(fb["sir_db"]) + 1))
+        grid.update(severity_q=levels,
+                    sir={q: {"VV": float(s), "VH": float(s)} for q, s in zip(levels, fb["sir_db"])},
+                    contrast_db={q: {p: float(eps_db(s, 1.0)) for p in POLS}
+                                 for q, s in zip(levels, fb["sir_db"])},
+                    extent_q=list(range(1, len(fb["extent"]) + 1)), extent=list(fb["extent"]),
+                    source="provisional", notes=msg)
         return grid
-    q = cfg["opensar_quantiles"]
-    sir = np.concatenate([sir_from_severity(stats[f"severity_db_{p.lower()}"], stats["extent"])
-                          for p in POLS])
-    sir = sir[np.isfinite(sir)]
-    grid.update(sir_db=[float(v) for v in np.quantile(sir, q)],
-                extent=[float(v) for v in np.quantile(stats["extent"], q)],
-                source="opensar")
+    oc = cfg["opensar"]
+    pct = list(oc["percentiles"])
+    cmin = float(oc["min_contrast_db"])
+    contrast, excluded = {}, {}
+    for p in POLS:
+        c = stats[f"severity_db_{p.lower()}"]
+        keep = c > cmin
+        excluded[p] = int((~keep).sum())
+        contrast[p] = np.percentile(c[keep], pct)
+    ext = np.percentile(stats["extent"], pct)
+    grid.update(
+        severity_q=pct,
+        contrast_db={q: {p: float(contrast[p][i]) for p in POLS} for i, q in enumerate(pct)},
+        sir={q: {p: float(sir_from_contrast(contrast[p][i])) for p in POLS}
+             for i, q in enumerate(pct)},
+        extent_q=pct, extent=[float(v) for v in ext], source="opensar",
+        n_patches=len(stats), excluded=excluded,
+        notes=(f"OpenSAR: {len(stats)} patches; severity levels use patches with contrast "
+               f"above {cmin} dB (excluded: VV {excluded['VV']}, VH {excluded['VH']}); extent "
+               f"over all patches (range {stats['extent'].min():.3f} to "
+               f"{stats['extent'].max():.3f}, {int((stats['extent'] > 0.85).sum())} patches "
+               f"above 0.85)."))
     if verbose:
-        print("Injection grid derived from OpenSAR statistics:", grid)
+        print("Injection grid from OpenSAR statistics.", grid["notes"])
     return grid
+
+
+def grid_table(grid: dict | None = None) -> pd.DataFrame:
+    """The injection grid as a table (one row per severity or extent level)."""
+    grid = grid or injection_grid(verbose=False)
+    rows = [{"factor": "severity", "level": q, "contrast_db_VV": grid["contrast_db"][q]["VV"],
+             "contrast_db_VH": grid["contrast_db"][q]["VH"], "sir_db_VV": grid["sir"][q]["VV"],
+             "sir_db_VH": grid["sir"][q]["VH"]} for q in grid["severity_q"]]
+    rows += [{"factor": "extent", "level": q, "extent": v}
+             for q, v in zip(grid["extent_q"], grid["extent"])]
+    rows += [{"factor": "p_c", "level": i + 1, "p_c": v} for i, v in enumerate(grid["p_c"])]
+    t = pd.DataFrame(rows)
+    t["source"] = grid["source"]
+    return t
+
+
+def extent_value(grid: dict, q) -> float:
+    """Extent value of an extent level label."""
+    return grid["extent"][grid["extent_q"].index(q)]
+
+
+def severity_level_db(grid: dict, q) -> float:
+    """Mean excess power of a severity level over VV and VH (dB), used as the
+    severity axis of the dose-response analyses."""
+    return float(np.mean([grid["contrast_db"][q][p] for p in POLS]))
 
 
 # --------------------------------------------------------------------------
@@ -137,13 +197,15 @@ def pols_hit(polarisation: str) -> tuple[str, ...]:
     return POLS if polarisation == "both" else (polarisation,)
 
 
-def inject(df: pd.DataFrame, sir_db: np.ndarray | float, extent: np.ndarray | float,
+def inject(df: pd.DataFrame, sir_db, extent: np.ndarray | float,
            p_c: np.ndarray | float, polarisation, rng: np.random.Generator) -> pd.DataFrame:
     """Return a copy of ``df`` with RFI injected into the backscatter.
 
-    Parameters may be scalars (one setting for all rows) or per-row arrays
-    (used for the RFI-aware training copies, where each station has its own
-    setting). ``polarisation`` is a string or a per-row array of strings.
+    ``sir_db`` is either one value for both polarisations or a dictionary
+    ``{"VV": ..., "VH": ...}`` so that each polarisation is injected with its
+    own SIR. Parameters may be scalars (one setting for all rows) or per-row
+    arrays (used for the RFI-aware training copies, where each station has
+    its own setting). ``polarisation`` is a string or a per-row array.
 
     Adds the columns ``VV_clean``, ``VH_clean`` (the original values),
     ``inj_VV``, ``inj_VH`` (true contamination flags) and ``eps_VV``,
@@ -156,7 +218,8 @@ def inject(df: pd.DataFrame, sir_db: np.ndarray | float, extent: np.ndarray | fl
     for p in POLS:
         hit = contaminated & ((pol == p) | (pol == "both"))
         sigma = 10 ** (out[p].to_numpy() / 10)                     # dB to linear power
-        factor = 1 + np.broadcast_to(extent, (n,)) * 10 ** (-np.broadcast_to(sir_db, (n,)) / 10)
+        sir_p = sir_db[p] if isinstance(sir_db, dict) else sir_db
+        factor = 1 + np.broadcast_to(extent, (n,)) * 10 ** (-np.broadcast_to(sir_p, (n,)) / 10)
         out[f"{p}_clean"] = out[p]
         # Back to dB for contaminated rows only; other rows keep their exact
         # original value (no round trip through the linear domain).
