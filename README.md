@@ -169,5 +169,14 @@ are derived from the single seed in `config.yaml`.
 ## Outputs
 
 - `data/processed/matchups.csv`: analysis table (one row per acquisition).
-- `results/screening_*.csv`: data-screening summary.
+- `results/aggregate/screening_*.csv`: data-screening summary (counts,
+  quality rules, outlier flags, normality checks).
+- `results/aggregate/stage2_*.csv`: clean-model metrics with 95%
+  cluster-bootstrap intervals over stations, per-fold metrics and feature
+  importances.
 - Further result tables and figures are added as the stages are completed.
+
+Only aggregated results are part of the repository. Per-station and per-row
+outputs (`results/private/`, `data/processed/`) and fitted models
+(`models/`) are regenerated locally, because the source data may not be
+redistributed.
