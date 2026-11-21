@@ -53,7 +53,18 @@ samples:
   second: OZNET
   second_small_sample_flag: true
 
-features: [VV, VH, VHVV, angle, ndvi, p7, p30, elev, slope, doy]
+# Feature configurations. Both are fixed before Stage 3 and every later stage
+# (3, 4 and 5) is run and reported for both, side by side. No choice between
+# them is made after seeing the results. Any further configuration must be
+# added here before it is run, and all runs are saved and reported.
+feature_sets:
+  F1:   # primary configuration: full feature set
+    role: primary
+    columns: [VV, VH, VHVV, angle, ndvi, p7, p30, elev, slope, doy]
+  F2:   # second configuration: radar-reliant, precipitation (p7, p30) removed
+    role: second
+    columns: [VV, VH, VHVV, angle, ndvi, elev, slope, doy]
+primary_feature_set: F1
 target: sm
 
 cv:
@@ -72,6 +83,19 @@ models:
   change_detection:
     dry_percentile: 5
     wet_percentile: 95
+    # Two scalings of the relative wetness to soil moisture, both reported:
+    #   per_station (model "cd", primary): each station's relative wetness is
+    #     standardised over its own series, then given the pooled training
+    #     mean and, as spread, the median within-station standard deviation
+    #     of soil moisture over the training stations;
+    #   pooled (model "cd_pooled", original version): one mean and standard
+    #     deviation matching over all training rows.
+    scalings: [per_station, pooled]
+
+# Statistical testing rules for Stage 4.
+testing:
+  multiple_testing: holm       # Holm correction across the hypothesis tests;
+                               # corrected and uncorrected p-values are reported
 
 # PROVISIONAL injection grid. These values are placeholders and will be
 # replaced by quantiles of data/processed/opensar_rfi_stats.csv once the
