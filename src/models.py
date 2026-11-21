@@ -321,12 +321,14 @@ def run_stage2(n_jobs: int | None = None) -> dict[str, pd.DataFrame]:
         feature importances and run information in ``results/aggregate/``;
       * per-station metrics in ``results/private/``.
     """
-    from .data import load_matchups
+    from .data import add_derived_features, load_matchups
 
     cfg = load_config()
     n_jobs = cfg["n_jobs"] if n_jobs is None else n_jobs
     (path("models") / "stage2").mkdir(parents=True, exist_ok=True)
-    df = load_matchups()
+    # Derived backscatter features (VHVV, rVV, rVH) are computed from the clean
+    # series here; in Stage 3 they are recomputed from the observed series.
+    df = add_derived_features(load_matchups())
     tasks = build_tasks(df)
     print(f"Stage 2: {len(tasks)} fits on {n_jobs} workers")
     t0 = time.time()
