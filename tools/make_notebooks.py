@@ -239,6 +239,38 @@ print(len(figs), "figure files;", len(tabs), "tables;", len(dgms), "diagrams")""
     ])
 
 
+def nb07() -> None:
+    """Notebook 07: exploratory follow-up experiments."""
+    write("07_followup.ipynb", [
+        cell("markdown", """# 07 Follow-up experiments (exploratory)
+
+Declared in `config.yaml` (section `followup`) after the main analysis and run
+separately; no earlier result is changed. (1) Oracle mitigation: fill and
+discard with the true injection flags, an upper bound on recovery.
+(2) Persistent RFI: one contiguous block of each station's series, or every
+acquisition of a share of the stations. (3) Stress test beyond the OpenSAR
+P90, up to the largest observed values, with a degradation breakpoint. The
+tests form their own Holm family and are reported as exploratory. Logic in
+`src/followup.py`; figures 15 to 17 in `src/plots.py`."""),
+        cell("code", SETUP),
+        cell("code", """from src.followup import run_followup
+from src import plots
+
+out = run_followup()
+figs = plots.make_followup()"""),
+        cell("markdown", "## Exploratory tests (Holm within the follow-up family)"),
+        cell("code", """cols = ["evaluation", "feature_set", "model", "test", "n", "median_diff", "z", "r",
+        "p", "p_holm", "significant_holm"]
+out["followup_tests"][cols].round(5)"""),
+        cell("markdown", "## Breakpoints: weakest setting where D reaches 5% or 10% of the clean RMSE"),
+        cell("code", "out[\"followup_breakpoints\"].round(4)"),
+        cell("markdown", "## Oracle against detector recovery (USCRN, random forest)"),
+        cell("code", """s = out["followup_summary"]
+s[(s.experiment == "oracle") & (s.evaluation == "USCRN_cv") & (s.model == "rf")].pivot_table(
+    index=["feature_set", "label"], columns="variant", values="G_mean").round(5)"""),
+    ])
+
+
 if __name__ == "__main__":
     nb01()
     nb02()
@@ -246,3 +278,4 @@ if __name__ == "__main__":
     nb04()
     nb05()
     nb06()
+    nb07()

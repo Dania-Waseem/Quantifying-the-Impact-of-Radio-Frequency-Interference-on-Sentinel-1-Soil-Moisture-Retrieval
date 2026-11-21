@@ -26,6 +26,7 @@ NOTEBOOKS = [
     "04_extended_model.ipynb",
     "05_robustness_statistics.ipynb",
     "06_plots_tables.ipynb",
+    "07_followup.ipynb",
 ]
 
 
