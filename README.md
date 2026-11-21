@@ -140,15 +140,25 @@ The variables of the analysis table are described in
    sample. OZNET is used as a transfer test (trained on USCRN, tested on
    OZNET); within-OZNET cross-validation is also reported but is based on few
    stations and matchups.
-3. **RFI injection.** Interference is added in the linear power domain,
-   `sigma_tilde = sigma * (1 + rho * 10^(-SIR/10))`, where `rho` is the affected
-   fraction and SIR the signal-to-interference ratio in dB.
+3. **RFI injection.** Interference is added to the test inputs in the linear
+   power domain, `sigma_tilde = sigma * (1 + rho * 10^(-SIR/10))`, where `rho`
+   is the affected fraction and SIR the signal-to-interference ratio in dB.
+   Severity levels (the 10th to 90th percentiles of the OpenSAR excess power,
+   one SIR per polarisation) and extent levels (percentiles of the OpenSAR
+   masked fraction) are combined with three contamination probabilities and
+   three polarisation settings (VV, VH, both); every setting is repeated with
+   10 seeds.
 4. **Mitigation variants.** M0 clean input, M1 contaminated input, M2 published
-   RFI suppression (reserved), M3 detect-and-fill, M3b detect-and-discard,
-   M4 detect-and-fill with RFI-aware training.
+   RFI suppression (reserved, not implemented), M3 detect-and-fill (rolling
+   robust z-score per station, filled with the median of the previous clean
+   acquisitions), M3b detect-and-discard, M4 detect-and-fill with RFI-aware
+   training (the model is trained on clean plus injected copies).
 5. **Statistics.** Cluster bootstrap over stations (5,000 resamples), Wilcoxon
-   signed-rank tests, mediation and moderation analysis, nested robustness
-   checks and a station-count learning curve. Significance level 0.05.
+   signed-rank tests with effect sizes, Holm correction across the hypothesis
+   tests of each configuration (corrected and uncorrected p-values are
+   reported), mediation and moderation analysis, nested robustness and
+   alternative checks, a station-count learning curve, a power analysis and
+   reliability and validity analogues. Significance level 0.05.
 
 ## Repository structure
 
@@ -166,14 +176,17 @@ src/               analysis modules
   stats.py         bootstrap, paired tests, mediation, moderation, power
   tables.py        result tables T1 to T11 (CSV)
   plotstyle.py     shared figure style
-  plots.py         result figures
+  plots.py         result figures 5 to 14
+  diagrams.py      research diagrams 1 to 4
 notebooks/         one thin notebook per stage
-tools/             helper scripts (notebook generation)
-docs/              codebook and notation table
+tools/             notebook generation and pre-push checks
+docs/              codebook (variable descriptions)
 data/processed/    generated tables (not tracked)
 models/            saved models (not tracked)
-results/           result tables (CSV) and logs
-figures/           PNG (400 dpi) and PDF figures; diagrams/ holds editable sources
+results/aggregate/ aggregated result tables (CSV), tables T1 to T11
+figures/           result figures (PNG at 400 dpi and PDF); diagrams/ holds the diagrams (PNG)
+BR_Baseline_implementation/  baseline implementation contributed separately;
+                   not connected to this pipeline (M2 remains a placeholder)
 ```
 
 ## Environment
@@ -195,26 +208,63 @@ restart):
 1. `notebooks/01_data_cleaning.ipynb`: builds `data/processed/matchups.csv` and
    the data-screening summary.
 2. `notebooks/02_base_model.ipynb`: clean models and cross-validation.
-3. `notebooks/03_rfi_statistics.ipynb`: RFI statistics from OpenSAR (input
-   pending).
-4. `notebooks/04_extended_model.ipynb`: RFI injection and mitigation variants.
+3. `notebooks/03_rfi_statistics.ipynb`: RFI severity and extent from the
+   OpenSAR statistics and the resulting injection grid.
+4. `notebooks/04_extended_model.ipynb`: RFI injection and mitigation variants
+   (about 70 minutes on four CPU workers).
 5. `notebooks/05_robustness_statistics.ipynb`: statistics and robustness.
-6. `notebooks/06_plots_tables.ipynb`: figures and tables.
+6. `notebooks/06_plots_tables.ipynb`: figures, tables and diagrams.
 
-Alternatively, `python run_all.py` runs all stages in order. All random seeds
-are derived from the single seed in `config.yaml`.
+Alternatively, `python run_all.py` executes all notebooks in order (executed
+copies are written to `notebooks/executed/`, which is not tracked). All
+random seeds are derived from the single seed in `config.yaml`; a rerun
+reproduces every result file exactly.
 
 ## Outputs
 
-- `data/processed/matchups.csv`: analysis table (one row per acquisition).
 - `results/aggregate/screening_*.csv`: data-screening summary (counts,
   quality rules, outlier flags, normality checks).
 - `results/aggregate/stage2_*.csv`: clean-model metrics with 95%
   cluster-bootstrap intervals over stations, per-fold metrics and feature
-  importances.
-- Further result tables and figures are added as the stages are completed.
+  importances, for F1, F2, F3 and the change-detection baseline.
+- `results/aggregate/stage3_*.csv`: degradation, recovery and recovery ratio
+  by severity, extent, contamination probability and polarisation, and
+  detection precision, recall and F1; `stage3_grid.csv` holds the injection
+  grid (aggregated OpenSAR percentiles).
+- `results/aggregate/stage4_*.csv`: bootstrap intervals, hypothesis tests
+  with uncorrected and Holm-corrected p-values, verdicts for H1 to H6,
+  mediation, moderation, alternative checks, learning curve, power and
+  reliability analogues.
+- `results/aggregate/T01` to `T11`: result tables (CSV). T1 (gap table) is a
+  skeleton to be completed.
+- `figures/fig06` to `fig14`: result figures (PNG at 400 dpi and PDF). The
+  station map (figure 5) is written to `figures/private/` and not tracked.
+- `figures/diagrams/`: conceptual model, research design, system
+  architecture and case study (PNG).
 
 Only aggregated results are part of the repository. Per-station and per-row
-outputs (`results/private/`, `data/processed/`) and fitted models
-(`models/`) are regenerated locally, because the source data may not be
-redistributed.
+outputs (`results/private/`, `data/processed/`), large run files in
+`results/` and fitted models (`models/`) are regenerated locally, because
+the source data may not be redistributed.
+
+## Limitations
+
+- **OpenSAR proxy.** Severity and extent come from 125 of 223 OpenSAR
+  patches (98 had no measurable RFI in the mask). They are measured on SLC
+  pixels, while the injection acts on station-level GRD backscatter (3x3
+  pixel means), so the injected errors are a proxy for real station-level
+  contamination. Some patches show no excess power in one polarisation, and
+  the contamination probability is assumed rather than measured.
+- **Simulated contamination.** RFI is injected synthetically; no real
+  RFI-affected acquisitions at the stations are identified.
+- **Small second sample.** OZNET has 12 stations with 51 to 77 matchups each;
+  within-OZNET cross-validation has wide intervals and is reported as small.
+  OZNET is used mainly as a transfer test.
+- **Weak radar signal in the clean model.** The clean models depend mostly on
+  precipitation and site features; radar features contribute little, which
+  limits how much any radar perturbation can change the retrieval. F2 and
+  F3 are reported to examine this.
+- **Single orbit per station** and no incidence-angle normalisation in the
+  change-detection baseline.
+- **M2 not available.** The published RFI suppression baseline is not
+  connected to this pipeline.
