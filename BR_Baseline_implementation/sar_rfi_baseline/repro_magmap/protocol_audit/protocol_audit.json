@@ -1,0 +1,98 @@
+{
+  "n_files": 16,
+  "n_polluted_slices": 64,
+  "n_scenes": 16,
+  "folders": [
+    "RFI-1"
+  ],
+  "n_residual_clusters": 1,
+  "unique_blocks": [
+    [
+      [
+        237,
+        1260
+      ],
+      [
+        0,
+        511
+      ]
+    ]
+  ],
+  "train_sirs_db": [
+    -20.0
+  ],
+  "test_sirs_db": [
+    -30.0,
+    -20.0,
+    -10.0,
+    0.0
+  ],
+  "leaked_files": [],
+  "gaps": [
+    {
+      "key": "slice_count",
+      "found": {
+        "files": 16,
+        "polluted_slices": 64,
+        "folders": [
+          "RFI-1"
+        ]
+      },
+      "required": "640 slices (Sec. 3.1). Local files pack four SIRs each, so 640 polluted slices or 640 files would satisfy the count.",
+      "source": "paper Sec. 3.1; dataset README"
+    },
+    {
+      "key": "interference_patterns",
+      "found": {
+        "residual_clusters": 1,
+        "unique_blocks": [
+          [
+            [
+              237,
+              1260
+            ],
+            [
+              0,
+              511
+            ]
+          ]
+        ]
+      },
+      "required": "8 interference patterns with varying parameters (Sec. 3.1). The parameter values are not published.",
+      "source": "paper Sec. 3.1 and Table 2"
+    }
+  ],
+  "training_blocked": true,
+  "figure9_claim_ok": false,
+  "figure9_claim_reason": "Figure 9 is a plot without a numeric table, and the paper does not publish the train/test slice list. A matching file count would still not identify Figure 9.",
+  "split_status": "The scene holdout in configs/splits/rfipatch_rfi1_seed42_frozen.json is a local assignment (seed 42, about 10% validation and 10% test). The paper does not publish its split. New scenes found on disk are assigned by sample_seed and never share a label image with another part.",
+  "how_to_obtain_dataset": "Download the laboratory set from the authors' repository (https://github.com/fangfuping/SAR-RFI-DATASET). The README links a Baidu archive (https://pan.baidu.com/s/14BjmzpkJREBbmaAOPyjbyg?pwd=nh3f, code nh3f). Unpack every RFI-* folder of .mat files under Data/RFI-Patch. The loader already reads every RFI-*/*.mat it finds. Do not synthesize the missing patterns: Section 2 gives the chirp imaging model and Table 2 gives only the bandwidth range 0\u2013100 MHz and the four SIRs. The eight parameter tuples, block placements, scene list, and seeds are not in the paper or the released code.",
+  "not_synthesized_because": "Section 2 derives the block-interference image model. Table 2 specifies bandwidth 0\u2013100 MHz and SIRs [0.0, -10.0, -20.0, -30.0] dB. It does not give the eight patterns' chirp rates, amplitudes, positions, or the Sentinel scenes they were added to. Filling those in would be a new dataset, not the paper's.",
+  "split_scenes": {
+    "fifth": "train",
+    "first": "train",
+    "fourth": "train",
+    "s1": "train",
+    "s10": "train",
+    "s2": "train",
+    "s3": "test",
+    "s4": "train",
+    "s5": "train",
+    "s6": "train",
+    "s7": "val",
+    "s8": "val",
+    "s9": "train",
+    "second": "train",
+    "sixth": "train",
+    "third": "test"
+  },
+  "n_maps": {
+    "train": 2048,
+    "val": 1024,
+    "test": 8192
+  },
+  "train_levels_only": [
+    3
+  ],
+  "test_files_disjoint": true
+}

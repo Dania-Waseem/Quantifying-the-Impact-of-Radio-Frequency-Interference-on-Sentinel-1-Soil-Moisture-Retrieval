@@ -17,7 +17,7 @@ from .stft import MapConfig
 
 REPRO = Path(__file__).resolve().parents[1]          # sar_rfi_baseline/repro_magmap
 PROJECT = REPRO.parent                                 # sar_rfi_baseline
-DEFAULT_CONFIG = REPRO / "config_official_unet.yaml"
+DEFAULT_CONFIG = REPRO / "config_official_unet_sir20_amp.yaml"
 
 
 def load_config(path: str | Path = DEFAULT_CONFIG, overrides: dict | None = None) -> dict:

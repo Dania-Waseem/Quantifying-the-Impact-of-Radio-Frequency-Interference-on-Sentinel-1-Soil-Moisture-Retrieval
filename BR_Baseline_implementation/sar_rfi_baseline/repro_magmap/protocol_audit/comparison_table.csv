@@ -1,0 +1,5 @@
+sir_db,paper_fig9_unet_psnr_plot_reading,paper_fig9_unet_ssim_plot_reading,previous_rfi1_all_sir_train_psnr,previous_rfi1_all_sir_train_ssim,corrected_sec52_psnr,corrected_sec52_ssim,corrected_status
+0.0,30.7,0.965,43.68420078611957,0.9936357324375594,,,not trained; laboratory set is incomplete
+-10.0,30.8,0.948,41.91659081697817,0.9899078004581993,,,not trained; laboratory set is incomplete
+-20.0,31.5,0.953,39.20531555977649,0.9807518758478433,,,not trained; laboratory set is incomplete
+-30.0,25.4,0.852,34.234055346598716,0.9455085443679383,,,not trained; laboratory set is incomplete

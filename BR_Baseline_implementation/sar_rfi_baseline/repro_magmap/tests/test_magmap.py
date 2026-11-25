@@ -202,6 +202,45 @@ def _cfg(path):
     return PL.load_config(Path(__file__).resolve().parents[1] / path)
 
 
+def test_default_config_is_section_52():
+    from magmap import pipeline as PL
+
+    cfg = PL.load_config(PL.DEFAULT_CONFIG)
+    assert PL.split_levels(cfg, "train") == (3,)
+    assert cfg["protocol"]["paper_section"] == "5.2"
+    assert cfg["protocol"]["require_complete_laboratory_dataset"] is True
+
+
+def test_protocol_blocks_one_pattern_subset_and_passes_a_complete_count():
+    from magmap.protocol import assess, count_residual_clusters
+
+    short = assess(n_files=16, n_polluted_slices=64, n_scenes=16, folders=["RFI-1"],
+                   unique_blocks=[((237, 1260), (0, 511))], n_residual_clusters=1,
+                   train_sirs_db=[-20.0], test_sirs_db=[0.0, -10.0, -20.0, -30.0], leaked_files=[])
+    assert short["training_blocked"] is True
+    assert {g["key"] for g in short["gaps"]} == {"slice_count", "interference_patterns"}
+    assert short["figure9_claim_ok"] is False
+
+    full = assess(n_files=160, n_polluted_slices=640, n_scenes=160, folders=[f"RFI-{i}" for i in range(8)],
+                  unique_blocks=[((0, 10), (0, 511))] * 1, n_residual_clusters=8,
+                  train_sirs_db=[-20.0], test_sirs_db=[-30.0, -20.0, -10.0, 0.0], leaked_files=[])
+    assert full["training_blocked"] is False
+    assert full["figure9_claim_ok"] is False
+
+    leaked = assess(n_files=160, n_polluted_slices=640, n_scenes=160, folders=["RFI-1"],
+                    unique_blocks=[], n_residual_clusters=8,
+                    train_sirs_db=[-20.0], test_sirs_db=[0.0, -10.0, -20.0, -30.0],
+                    leaked_files=["RFI-1/s3"])
+    assert any(g["key"] == "scene_leakage" for g in leaked["gaps"])
+
+    same = np.ones(8, dtype=np.complex64)
+    same /= np.linalg.norm(same)
+    other = np.zeros(8, dtype=np.complex64)
+    other[0] = 1
+    assert count_residual_clusters([same, same * (1 + 0j), same]) == 1
+    assert count_residual_clusters([same, other]) == 2
+
+
 def test_split_levels_default_and_sir20_variant():
     from magmap import pipeline as PL
 

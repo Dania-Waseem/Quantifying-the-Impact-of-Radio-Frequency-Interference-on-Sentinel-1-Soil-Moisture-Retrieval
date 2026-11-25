@@ -16,6 +16,13 @@
 #     Neither affects the reported checkpoint (epoch_100): the authors' validation is dead code and
 #     their test loads model_epoch_100.pth.
 experiment: unet_magmap_official_sir20_amp
+# This file is the default training config (pipeline.DEFAULT_CONFIG).
+# Section 5.2 trains on −20 dB only and tests 0/−10/−20/−30 dB.
+# require_complete_laboratory_dataset makes train.py stop, instead of fitting the 16-file
+# RFI-1 subset and reporting it as Figure 9. Pass --allow-incomplete-data only for a smoke test.
+protocol:
+  paper_section: "5.2"
+  require_complete_laboratory_dataset: true
 
 data:
   rfi_patch_root: ../Data/RFI-Patch      # every RFI-*/*.mat below it is used

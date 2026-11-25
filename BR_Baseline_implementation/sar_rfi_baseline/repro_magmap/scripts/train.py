@@ -28,6 +28,7 @@ import numpy as np  # noqa: E402
 
 from magmap import data as D  # noqa: E402
 from magmap import pipeline as P  # noqa: E402
+from magmap.protocol import assess, count_residual_clusters, normalized_residual  # noqa: E402
 
 HIST_FIELDS = ["epoch", "lr", "train_loss_mean", "train_loss_sum", "train_steps", "nonfinite_losses", "skipped_steps",
                "val_loss", "val_psnr", "val_psnr_clip", "val_ssim", "val_ssim_clip", "epoch_seconds"]
@@ -48,6 +49,8 @@ def parse_args(argv=None):
     ap.add_argument("--num-workers", type=int)
     ap.add_argument("--resume", action="store_true")
     ap.add_argument("--dry-run", action="store_true", help="index data, write provenance, build model, no training")
+    ap.add_argument("--allow-incomplete-data", action="store_true",
+                    help="train even when the laboratory set is not the paper's 640-slice, 8-pattern set")
     return ap.parse_args(argv)
 
 
@@ -120,6 +123,20 @@ def main(argv=None) -> int:
     log("[data] SIR levels (dB): " + "; ".join(
         f"{p} {[D.LEVELS[k] for k in P.split_levels(cfg, p)]}"
         for p in ("train", "val", "test")))
+
+    audit = _protocol_audit(cfg, idx, parts)
+    P.write_json(out / "protocol_audit.json", audit)
+    for g in audit["gaps"]:
+        log(f"[protocol] {g['key']}: found {g['found']}; required {g['required']} ({g['source']})")
+    require = bool((cfg.get("protocol") or {}).get("require_complete_laboratory_dataset"))
+    if require and audit["training_blocked"] and not args.allow_incomplete_data:
+        log("[protocol] training stopped. This disk is not the paper's laboratory set, so a run "
+            "here would not be Figure 9. " + audit["how_to_obtain_dataset"])
+        log("[protocol] " + audit["not_synthesized_because"])
+        return 3
+    if audit["training_blocked"] and args.allow_incomplete_data:
+        log("[protocol] incomplete laboratory set; training continues only because "
+            "--allow-incomplete-data was set. Do not compare the scores with Figure 9.")
 
     model = M.build_unet(cfg["model"]["dim"]).to(device)
     cl = bool(t.get("channels_last", False))
@@ -226,6 +243,32 @@ def main(argv=None) -> int:
     note = "" if final == t["reported_checkpoint"] else f" (config's reported checkpoint is {t['reported_checkpoint']})"
     log(f"[done] final checkpoint: checkpoints/{final}.pt{note}; best {best_metric} {best_psnr:.3f} (checkpoints/best_val.pt)")
     return 0
+
+
+def _protocol_audit(cfg: dict, idx: dict, parts: dict) -> dict:
+    residuals = []
+    blocks = []
+    n_polluted = 0
+    for r in idx["records"]:
+        ss = D.load_ss(r.path)
+        residuals.append(normalized_residual(ss, 3))
+        pairing = idx["pairing"][r.file_id]
+        b = pairing["levels"][1]
+        blocks.append((tuple(b["affected_azimuth"] or ()), tuple(b["affected_range"] or ())))
+        n_polluted += sum(1 for lv in pairing["levels"].values() if lv["n_affected_lines"] > 0)
+        del ss
+    leaked = sorted(set(s[0] for s in parts["test"]) & ({s[0] for s in parts["train"]} | {s[0] for s in parts["val"]}))
+    return assess(
+        n_files=len(idx["records"]),
+        n_polluted_slices=n_polluted,
+        n_scenes=len(idx["split"]["scenes"]),
+        folders=sorted({r.folder for r in idx["records"]}),
+        unique_blocks=sorted(set(blocks)),
+        n_residual_clusters=count_residual_clusters(residuals),
+        train_sirs_db=[D.LEVELS[k] for k in P.split_levels(cfg, "train")],
+        test_sirs_db=[D.LEVELS[k] for k in P.split_levels(cfg, "test")],
+        leaked_files=leaked,
+    )
 
 
 def _plots(out: Path, history: list[dict]) -> None:

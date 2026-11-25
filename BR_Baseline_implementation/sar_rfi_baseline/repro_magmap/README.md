@@ -26,8 +26,18 @@ python repro_magmap/scripts/evaluate.py         --run <run> --device cuda [--ima
 python repro_magmap/scripts/evaluate.py         --run <run> --checkpoint best_val --device cuda
 ```
 
-Every script refuses to write into a non-empty output directory. Results on RFI-1 alone are a proxy;
-the paper's 640-slice protocol needs all RFI-Patch folders (they are picked up automatically).
+The default config is `config_official_unet_sir20_amp.yaml` (paper Section 5.2: train on −20 dB only,
+test on 0/−10/−20/−30 dB). `train.py` writes `protocol_audit.json` and stops when the laboratory set
+is not 640 slices and 8 interference patterns. `--allow-incomplete-data` is only for a smoke test.
+`config_official_unet.yaml` is the earlier all-SIR setting and is not the paper protocol.
+
+```
+python repro_magmap/scripts/audit_protocol.py --out-dir repro_magmap/protocol_audit
+```
+
+Results on RFI-1 alone are a proxy. The loader picks up every `RFI-*/*.mat` once the rest of the
+authors' archive is unpacked under `Data/RFI-Patch`. The eight interference parameter sets are not
+in the paper, so they are not synthesized.
 
 ## Variant SIR20 + AMP (2026-11-23)
 
