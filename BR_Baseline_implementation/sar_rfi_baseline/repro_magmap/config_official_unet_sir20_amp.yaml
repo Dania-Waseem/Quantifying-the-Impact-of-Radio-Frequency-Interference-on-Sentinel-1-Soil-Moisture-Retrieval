@@ -1,0 +1,77 @@
+# Authors'-implementation reproduction of the U-Net baseline (Fang et al., Remote Sens. 2025, 17, 3688)
+# Tags: [paper] stated in the 2025 paper | [code] authors' released code (FDNet/ train_FDNet.py,
+# options.py, model.py, dataset/mydataset.py, test/A_test_unet.py) | [ref13] Fang et al. 2024,
+# Remote Sens. 16, 2540 (cited by the paper for normalization) | [inferred] follows from documented
+# facts but is not stated | [choice] implementation choice, not documented anywhere.
+# Paths are relative to sar_rfi_baseline/.
+#
+# VARIANT sir20_amp (2026-11-23): identical to config_official_unet.yaml except
+#   * training uses the -20 dB polluted data only; validation and test use all four SIR levels
+#     [paper Sec. 5.2: "select the dataset with ... -20 dB as the training data, while the testing data
+#     included ... 0 dB, -10 dB, -20 dB, and -30 dB"; the authors' code reads a prebuilt train.mat, so the
+#     code itself cannot confirm or contradict this]
+#   * precision amp = FP16 autocast + GradScaler [code: train_FDNet.py autocast + timm NativeScaler]
+#   * channels_last: memory-layout optimization, enabled only if the T4 benchmark shows it is faster
+#   * validation every 5 epochs and at the last epoch, FP32 inference; best_val selected by clipped 8-bit PSNR.
+#     Neither affects the reported checkpoint (epoch_100): the authors' validation is dead code and
+#     their test loads model_epoch_100.pth.
+experiment: unet_magmap_official_sir20_amp
+
+data:
+  rfi_patch_root: ../Data/RFI-Patch      # every RFI-*/*.mat below it is used
+  frozen_split: configs/splits/rfipatch_rfi1_seed42_frozen.json   # [choice] keeps the proxy baseline's scene split
+  levels: [1, 2, 3, 4]                   # ss[1..4] = 0/-10/-20/-30 dB [dataset doc]; files indexed for these
+  train_levels: [3]                      # [paper Sec. 5.2] -20 dB only
+  val_levels: [1, 2, 3, 4]               # [choice] all four on the validation scenes (paper has no validation set)
+  test_levels: [1, 2, 3, 4]              # [paper Sec. 5.2, Fig. 9]
+  line_selection: rfi_affected           # [inferred] unaffected lines give infinite 8-bit PSNR
+  train_maps: 2048                       # [code] data volume of the authors' 2025 training logs and of ref13 (not stated for U-Net);
+                                         # drawn from the 12 training scenes at -20 dB (12 x 1024 affected lines available)
+  val_maps: 1024                         # [code] validation volume in the same logs
+  test_maps: all                         # every RFI-affected line of the test scenes
+  sample_seed: 1234                      # [choice] seeded, stratified over (file, SIR level)
+  normalization: map                     # [ref13 Eq.32 / paper Eq.26] divide input and label by max of the polluted map;
+                                         # "slice_image" = max of the polluted image slice (paper wording); scope UNKNOWN
+
+map:                                     # see magmap/stft.py
+  win_len: 64                            # [paper] Hamming, L/8
+  window: hamming_symmetric              # [choice] MATLAB hamming(64)
+  n_fft: 512                             # [inferred] 512 frequency rows
+  hop: 1                                 # [inferred] 512 frames from a 512-sample line
+  center: true                           # [choice]
+  pad_mode: constant                     # [choice] zero padding
+  fftshift: true                         # [choice]
+  n_frames: 512                          # [code] loader crops [0:512, 0:512]
+  magnitude: linear                      # [inferred] non-negative maps scored by label max; linear is a [choice]
+
+model:
+  name: UNet                             # [code] model.py class UNet, dim 32, 1 in / 1 out, global residual
+  dim: 32                                # [code] embed_dim default 32
+
+train:
+  epochs: 100                            # [paper] 100 epochs; [code] nepoch=101, model_epoch_100 is tested
+  batch_size: 4                          # [paper][code] 4 maps per step
+  optimizer: adamw                       # [paper][code]
+  lr: 2.0e-4                             # [paper][code]
+  betas: [0.9, 0.999]                    # [code]
+  eps: 1.0e-8                            # [code]
+  weight_decay: 0.02                     # [code]
+  loss: charbonnier                      # [code] CharbonnierLoss: mean(sqrt(d^2 + eps^2))
+  charbonnier_eps: 1.0e-3                # [code]
+  lr_step: 50                            # [code] StepLR(step_size=50, gamma=0.5)
+  lr_gamma: 0.5
+  scheduler_initial_step: true           # [code] scheduler.step() before training -> halves after epoch 49 and 99
+  precision: amp                         # [code] torch.cuda.amp.autocast + NativeScaler (fp16 + GradScaler)
+  channels_last: false                   # [optimization] memory layout only; set true only if benchmark_t4.py shows a gain
+  seed: 1234                             # [code]
+  cudnn_benchmark: true                  # [code]
+  shuffle: true                          # [code]
+  drop_last: false                       # [code]
+  num_workers: 2                         # [choice]
+  checkpoint_every: 20                   # [code] --checkpoint 20 -> model_epoch_20 ... model_epoch_100
+  val_every: 5                           # [choice] every 5 epochs + last; the authors' validation never runs (dead code)
+  val_ssim_every: 5                      # [choice] SSIM at every validation
+  val_precision: fp32                    # [choice] validation inference in FP32, the precision of the authors' test,
+                                         # so best_val is selected under the same precision as the test
+  best_val_metric: val_psnr_clip         # [choice] best_val.pt by clipped 8-bit PSNR (the literal uint8 value wraps and swings)
+  reported_checkpoint: epoch_100         # [code] A_test_unet.py loads model_epoch_100.pth
