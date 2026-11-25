@@ -1,0 +1,37 @@
+{
+  "sample": [
+    "RFI-1/s4",
+    3,
+    298
+  ],
+  "sir_db": -20.0,
+  "steps_run": 3000,
+  "precision": "fp32",
+  "device": "cuda",
+  "input": {
+    "psnr": 15.718080997055806,
+    "ssim": 0.548576673750568,
+    "psnr_clip": 12.281636240481635,
+    "ssim_clip": 0.5558219352085793,
+    "frac_out_of_range": 0.055126190185546875
+  },
+  "output": {
+    "psnr": 34.26431766818573,
+    "ssim": 0.9269511598912491,
+    "psnr_clip": 35.48276998226109,
+    "ssim_clip": 0.9274697315687109,
+    "frac_out_of_range": 0.000102996826171875
+  },
+  "psnr_gain_db": 23.201133741779454,
+  "initial_loss": 0.07709578424692154,
+  "final_loss": 0.0012894534738734365,
+  "criteria": {
+    "metric": "psnr_clip",
+    "min_gain_db": 10.0,
+    "max_loss_ratio": 0.5
+  },
+  "pass": true,
+  "seconds": 346.7599596977234,
+  "seconds_per_step": 0.11558665386835734,
+  "note": "diagnostic on one training map; not a baseline result"
+}

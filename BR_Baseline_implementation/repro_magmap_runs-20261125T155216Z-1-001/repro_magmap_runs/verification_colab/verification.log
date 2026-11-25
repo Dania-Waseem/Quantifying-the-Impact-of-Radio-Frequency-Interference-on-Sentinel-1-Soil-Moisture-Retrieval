@@ -1,0 +1,27 @@
+[data] 16 files in ['RFI-1'] under /content/BR/Data/RFI-Patch; 16 scenes; split train=12, val=2, test=2
+[PASS] 1a_all_files_load_with_expected_layout  n_files=16, layout=ss complex (5, 512, 1500)
+[PASS] 1b_pairing_outside_block_exactly_equal  
+[PASS] 1c_rfi_power_steps_match_documented_10dB  min_step_db=9.542, max_step_db=10.103
+[PASS] 1d_same_block_support_all_levels  
+[PASS] 1e_cross_file_negative_control  own_max=0.0, other_min=989.8934326171875
+[PASS] 1f_scene_split_no_leakage  
+    ss: ['complex64', [5, 512, 1500]]
+    range_line: ['complex64', [512]]
+    map_input: ['float32', [512, 512]]
+    map_label: ['float32', [512, 512]]
+    sample: ['RFI-1/fifth', 1, 243]
+    scale: 3286.475729712916
+[PASS] 2_sample_dims  
+[PASS] 3_example_figures_written  
+[PASS] 4a_stft_istft_identity_lines  max_rel_err=1.2164965952535211e-15
+[PASS] 4b_full_slice_identity_shape_and_values  max_rel_err=1.2554604198610063e-15
+[PASS] 4c_magnitude_plus_own_phase_identity  max_rel_err=6.187377410858323e-16
+[PASS] 4d_map_shape_no_resizing  total_frames=513, kept_frames=512, n_fft=512, hop=1, win=64
+[PASS] 5a_input_and_label_share_one_scale  normalization=map, input_max_is_1=True, max_label_err=2.979643776157559e-08
+[PASS] 5b_slice_image_option_equals_normalize_image_before_stft  max_abs_err=3.78016205004883e-08
+[PASS] 6_unet_io_dims  
+[PASS] 7a_parameter_count_matches_authors_log  ours=9502561, authors_log=9502561
+[PASS] 7b_same_as_authors_model_py  authors_params=9502561, ours_params=9502561, authors_log_params=9502561, same_state_dict_names_in_order=True, same_shapes=True, strict_load_ok=True, max_abs_output_diff_same_weights=0.0
+[PASS] 10a_metric_replica_identity  
+
+ALL CHECKS PASSED (49s)

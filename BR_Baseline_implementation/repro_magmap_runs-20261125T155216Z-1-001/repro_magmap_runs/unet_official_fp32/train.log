@@ -1,0 +1,468 @@
+[data] 16 files in ['RFI-1'] under /content/BR/Data/RFI-Patch; 16 scenes; split train=12, val=2, test=2
+[data] maps: train 2048, val 1024, test 8192 (test is not loaded during training); map (512, 512), normalization=map
+[model] UNet 1->1, 9,502,561 parameters (authors' log: 9,502,561)
+[train] precision requested=fp32 used=fp32; epochs=100; batch=4; lr=0.0002 AdamW wd=0.02; StepLR(50,0.5) initial_step=True; seed=1234
+[check] sample tensors (1, 512, 512) torch.float32; input max 1.0000; label max 0.3432
+    step 100/512 loss 0.021862
+    step 200/512 loss 0.009486
+    step 300/512 loss 0.007292
+    step 400/512 loss 0.006481
+    step 500/512 loss 0.004647
+Epoch 1	lr 2.000e-04	train 0.009834 (sum 5.0351)	val loss 0.004461991222342476	val PSNR 13.444008271770398	val SSIM None	277.9s
+    step 100/512 loss 0.005028
+    step 200/512 loss 0.004431
+    step 300/512 loss 0.003815
+    step 400/512 loss 0.003442
+    step 500/512 loss 0.003930
+Epoch 2	lr 2.000e-04	train 0.004133 (sum 2.1159)	val loss 0.0033701791471685283	val PSNR 14.204399717563021	val SSIM None	262.5s
+    step 100/512 loss 0.003406
+    step 200/512 loss 0.003148
+    step 300/512 loss 0.003148
+    step 400/512 loss 0.003487
+    step 500/512 loss 0.002963
+Epoch 3	lr 2.000e-04	train 0.003224 (sum 1.6505)	val loss 0.002741820926530636	val PSNR 23.45496043032673	val SSIM None	262.8s
+    step 100/512 loss 0.003675
+    step 200/512 loss 0.002895
+    step 300/512 loss 0.002693
+    step 400/512 loss 0.002780
+    step 500/512 loss 0.002632
+Epoch 4	lr 2.000e-04	train 0.002934 (sum 1.5025)	val loss 0.0027610886536422186	val PSNR 22.510070539171934	val SSIM None	262.6s
+    step 100/512 loss 0.002663
+    step 200/512 loss 0.002672
+    step 300/512 loss 0.002614
+    step 400/512 loss 0.003050
+    step 500/512 loss 0.002639
+Epoch 5	lr 2.000e-04	train 0.002721 (sum 1.3931)	val loss 0.0024251198847196065	val PSNR 21.05969508426471	val SSIM None	262.1s
+    step 100/512 loss 0.002494
+    step 200/512 loss 0.002534
+    step 300/512 loss 0.002451
+    step 400/512 loss 0.002380
+    step 500/512 loss 0.002440
+Epoch 6	lr 2.000e-04	train 0.002465 (sum 1.2620)	val loss 0.0023059018149069743	val PSNR 21.38768870160379	val SSIM None	262.5s
+    step 100/512 loss 0.002312
+    step 200/512 loss 0.003077
+    step 300/512 loss 0.002348
+    step 400/512 loss 0.002331
+    step 500/512 loss 0.002568
+Epoch 7	lr 2.000e-04	train 0.002522 (sum 1.2911)	val loss 0.00224436775306458	val PSNR 27.973346989494317	val SSIM None	262.2s
+    step 100/512 loss 0.002350
+    step 200/512 loss 0.002858
+    step 300/512 loss 0.002448
+    step 400/512 loss 0.002198
+    step 500/512 loss 0.002168
+Epoch 8	lr 2.000e-04	train 0.002407 (sum 1.2323)	val loss 0.0023865441448833735	val PSNR 16.322864395796437	val SSIM None	263.3s
+    step 100/512 loss 0.002171
+    step 200/512 loss 0.002156
+    step 300/512 loss 0.002091
+    step 400/512 loss 0.002082
+    step 500/512 loss 0.002065
+Epoch 9	lr 2.000e-04	train 0.002110 (sum 1.0804)	val loss 0.0022438154483097605	val PSNR 18.124592937220303	val SSIM None	262.6s
+    step 100/512 loss 0.002083
+    step 200/512 loss 0.002023
+    step 300/512 loss 0.002227
+    step 400/512 loss 0.002206
+    step 500/512 loss 0.002084
+Epoch 10	lr 2.000e-04	train 0.002120 (sum 1.0855)	val loss 0.0021817980591549713	val PSNR 20.863286624434288	val SSIM 0.8720685781454878	333.2s
+    step 100/512 loss 0.002075
+    step 200/512 loss 0.001975
+    step 300/512 loss 0.002278
+    step 400/512 loss 0.001990
+    step 500/512 loss 0.001997
+Epoch 11	lr 2.000e-04	train 0.002063 (sum 1.0561)	val loss 0.0019080652332377213	val PSNR 23.064530112746084	val SSIM None	263.0s
+    step 100/512 loss 0.001885
+    step 200/512 loss 0.001876
+    step 300/512 loss 0.002012
+    step 400/512 loss 0.001934
+    step 500/512 loss 0.002241
+Epoch 12	lr 2.000e-04	train 0.001995 (sum 1.0217)	val loss 0.002111513646923413	val PSNR 17.172267672205297	val SSIM None	262.8s
+    step 100/512 loss 0.001892
+    step 200/512 loss 0.001914
+    step 300/512 loss 0.001913
+    step 400/512 loss 0.001931
+    step 500/512 loss 0.001935
+Epoch 13	lr 2.000e-04	train 0.001914 (sum 0.9801)	val loss 0.0019690927188094065	val PSNR 18.50145414483262	val SSIM None	262.6s
+    step 100/512 loss 0.002057
+    step 200/512 loss 0.002388
+    step 300/512 loss 0.001976
+    step 400/512 loss 0.001837
+    step 500/512 loss 0.001803
+Epoch 14	lr 2.000e-04	train 0.002005 (sum 1.0263)	val loss 0.0018897337672569847	val PSNR 26.791293712176557	val SSIM None	262.4s
+    step 100/512 loss 0.001778
+    step 200/512 loss 0.001922
+    step 300/512 loss 0.001902
+    step 400/512 loss 0.001824
+    step 500/512 loss 0.001920
+Epoch 15	lr 2.000e-04	train 0.001870 (sum 0.9575)	val loss 0.0019222285027353792	val PSNR 24.396992741810962	val SSIM None	262.5s
+    step 100/512 loss 0.001821
+    step 200/512 loss 0.001784
+    step 300/512 loss 0.001785
+    step 400/512 loss 0.001801
+    step 500/512 loss 0.001845
+Epoch 16	lr 2.000e-04	train 0.001806 (sum 0.9249)	val loss 0.001819335689106083	val PSNR 24.115353345352077	val SSIM None	262.7s
+    step 100/512 loss 0.001742
+    step 200/512 loss 0.001919
+    step 300/512 loss 0.001833
+    step 400/512 loss 0.002137
+    step 500/512 loss 0.001692
+Epoch 17	lr 2.000e-04	train 0.001863 (sum 0.9537)	val loss 0.0017383898302796297	val PSNR 32.8460937291812	val SSIM None	263.2s
+    step 100/512 loss 0.001729
+    step 200/512 loss 0.001752
+    step 300/512 loss 0.001800
+    step 400/512 loss 0.001739
+    step 500/512 loss 0.001765
+Epoch 18	lr 2.000e-04	train 0.001756 (sum 0.8988)	val loss 0.0018690559809328988	val PSNR 18.845072808271887	val SSIM None	262.2s
+    step 100/512 loss 0.001736
+    step 200/512 loss 0.001760
+    step 300/512 loss 0.002092
+    step 400/512 loss 0.001613
+    step 500/512 loss 0.001674
+Epoch 19	lr 2.000e-04	train 0.001773 (sum 0.9078)	val loss 0.001930108957367338	val PSNR 31.80082540181685	val SSIM None	263.2s
+    step 100/512 loss 0.001768
+    step 200/512 loss 0.001783
+    step 300/512 loss 0.001685
+    step 400/512 loss 0.001670
+    step 500/512 loss 0.001709
+Epoch 20	lr 2.000e-04	train 0.001724 (sum 0.8828)	val loss 0.001970198071376217	val PSNR 32.966654975747005	val SSIM 0.909496533152291	332.5s
+    step 100/512 loss 0.001688
+    step 200/512 loss 0.001726
+    step 300/512 loss 0.001677
+    step 400/512 loss 0.001691
+    step 500/512 loss 0.001621
+Epoch 21	lr 2.000e-04	train 0.001679 (sum 0.8595)	val loss 0.0017865244112726941	val PSNR 25.55035442082454	val SSIM None	263.5s
+    step 100/512 loss 0.001725
+    step 200/512 loss 0.001641
+    step 300/512 loss 0.001864
+    step 400/512 loss 0.002441
+    step 500/512 loss 0.001570
+Epoch 22	lr 2.000e-04	train 0.001844 (sum 0.9442)	val loss 0.0018192736442870228	val PSNR 20.716701212713403	val SSIM None	262.4s
+    step 100/512 loss 0.001582
+    step 200/512 loss 0.001552
+    step 300/512 loss 0.001671
+    step 400/512 loss 0.001589
+    step 500/512 loss 0.001592
+Epoch 23	lr 2.000e-04	train 0.001603 (sum 0.8206)	val loss 0.0020053488619851123	val PSNR 31.154722561398636	val SSIM None	262.1s
+    step 100/512 loss 0.001659
+    step 200/512 loss 0.001623
+    step 300/512 loss 0.001517
+    step 400/512 loss 0.001628
+    step 500/512 loss 0.001560
+Epoch 24	lr 2.000e-04	train 0.001596 (sum 0.8169)	val loss 0.0018168410751968622	val PSNR 23.04804340257207	val SSIM None	261.8s
+    step 100/512 loss 0.001575
+    step 200/512 loss 0.001580
+    step 300/512 loss 0.001598
+    step 400/512 loss 0.001583
+    step 500/512 loss 0.001812
+Epoch 25	lr 2.000e-04	train 0.001629 (sum 0.8339)	val loss 0.001717762404041423	val PSNR 31.091547447402263	val SSIM None	262.4s
+    step 100/512 loss 0.001557
+    step 200/512 loss 0.001583
+    step 300/512 loss 0.001549
+    step 400/512 loss 0.001541
+    step 500/512 loss 0.001545
+Epoch 26	lr 2.000e-04	train 0.001551 (sum 0.7943)	val loss 0.0015985280301720195	val PSNR 26.9330525120767	val SSIM None	263.2s
+    step 100/512 loss 0.001506
+    step 200/512 loss 0.001597
+    step 300/512 loss 0.001557
+    step 400/512 loss 0.001601
+    step 500/512 loss 0.001587
+Epoch 27	lr 2.000e-04	train 0.001568 (sum 0.8026)	val loss 0.0016103520933938853	val PSNR 35.198321449883395	val SSIM None	262.6s
+    step 100/512 loss 0.001477
+    step 200/512 loss 0.001528
+    step 300/512 loss 0.001529
+    step 400/512 loss 0.001499
+    step 500/512 loss 0.001502
+Epoch 28	lr 2.000e-04	train 0.001509 (sum 0.7728)	val loss 0.001706174674382055	val PSNR 26.624167822431748	val SSIM None	263.1s
+    step 100/512 loss 0.001549
+    step 200/512 loss 0.001561
+    step 300/512 loss 0.001652
+    step 400/512 loss 0.001420
+    step 500/512 loss 0.001464
+Epoch 29	lr 2.000e-04	train 0.001532 (sum 0.7846)	val loss 0.0017254879267056822	val PSNR 31.631814209226505	val SSIM None	262.3s
+    step 100/512 loss 0.001523
+    step 200/512 loss 0.001458
+    step 300/512 loss 0.001453
+    step 400/512 loss 0.001470
+    step 500/512 loss 0.001506
+Epoch 30	lr 2.000e-04	train 0.001482 (sum 0.7587)	val loss 0.00160313531250722	val PSNR 31.356269385881102	val SSIM 0.9450363064781074	333.7s
+    step 100/512 loss 0.001525
+    step 200/512 loss 0.001449
+    step 300/512 loss 0.001490
+    step 400/512 loss 0.001455
+    step 500/512 loss 0.001486
+Epoch 31	lr 2.000e-04	train 0.001481 (sum 0.7581)	val loss 0.0018004358266807685	val PSNR 33.54628716881372	val SSIM None	262.6s
+    step 100/512 loss 0.001488
+    step 200/512 loss 0.001511
+    step 300/512 loss 0.001401
+    step 400/512 loss 0.001491
+    step 500/512 loss 0.001491
+Epoch 32	lr 2.000e-04	train 0.001476 (sum 0.7557)	val loss 0.0017259864061998087	val PSNR 24.356755283131605	val SSIM None	262.6s
+    step 100/512 loss 0.001450
+    step 200/512 loss 0.001434
+    step 300/512 loss 0.001461
+    step 400/512 loss 0.001404
+    step 500/512 loss 0.001472
+Epoch 33	lr 2.000e-04	train 0.001443 (sum 0.7389)	val loss 0.0016479165210512292	val PSNR 22.02409897038425	val SSIM None	262.5s
+    step 100/512 loss 0.001515
+    step 200/512 loss 0.001452
+    step 300/512 loss 0.001452
+    step 400/512 loss 0.001544
+    step 500/512 loss 0.001462
+Epoch 34	lr 2.000e-04	train 0.001484 (sum 0.7598)	val loss 0.0015955414214658958	val PSNR 26.834166350271573	val SSIM None	262.8s
+    step 100/512 loss 0.001371
+    step 200/512 loss 0.001498
+    step 300/512 loss 0.001451
+    step 400/512 loss 0.001451
+    step 500/512 loss 0.001439
+Epoch 35	lr 2.000e-04	train 0.001440 (sum 0.7374)	val loss 0.001554590204705164	val PSNR 33.07330313090272	val SSIM None	262.2s
+    step 100/512 loss 0.001457
+    step 200/512 loss 0.001513
+    step 300/512 loss 0.001451
+    step 400/512 loss 0.001394
+    step 500/512 loss 0.001951
+Epoch 36	lr 2.000e-04	train 0.001572 (sum 0.8048)	val loss 0.002265164545860898	val PSNR 24.158211598879202	val SSIM None	262.8s
+    step 100/512 loss 0.001457
+    step 200/512 loss 0.001363
+    step 300/512 loss 0.001369
+    step 400/512 loss 0.001386
+    step 500/512 loss 0.001356
+Epoch 37	lr 2.000e-04	train 0.001386 (sum 0.7097)	val loss 0.001555057789573766	val PSNR 34.505190919594334	val SSIM None	263.0s
+    step 100/512 loss 0.001409
+    step 200/512 loss 0.001365
+    step 300/512 loss 0.001422
+    step 400/512 loss 0.001373
+    step 500/512 loss 0.001423
+Epoch 38	lr 2.000e-04	train 0.001398 (sum 0.7156)	val loss 0.0016387341470363026	val PSNR 24.297218588098723	val SSIM None	262.7s
+    step 100/512 loss 0.001360
+    step 200/512 loss 0.001359
+    step 300/512 loss 0.001415
+    step 400/512 loss 0.001422
+    step 500/512 loss 0.001399
+Epoch 39	lr 2.000e-04	train 0.001395 (sum 0.7143)	val loss 0.00209088642259303	val PSNR 25.198100385477606	val SSIM None	262.8s
+    step 100/512 loss 0.001409
+    step 200/512 loss 0.001439
+    step 300/512 loss 0.001410
+    step 400/512 loss 0.001417
+    step 500/512 loss 0.001422
+Epoch 40	lr 2.000e-04	train 0.001418 (sum 0.7262)	val loss 0.0016133465574057482	val PSNR 30.905620851901297	val SSIM 0.9457746894817356	332.1s
+    step 100/512 loss 0.001366
+    step 200/512 loss 0.001457
+    step 300/512 loss 0.001689
+    step 400/512 loss 0.001351
+    step 500/512 loss 0.001361
+Epoch 41	lr 2.000e-04	train 0.001442 (sum 0.7384)	val loss 0.001536423569177714	val PSNR 33.251841259327975	val SSIM None	262.7s
+    step 100/512 loss 0.001432
+    step 200/512 loss 0.001346
+    step 300/512 loss 0.001350
+    step 400/512 loss 0.001397
+    step 500/512 loss 0.001364
+Epoch 42	lr 2.000e-04	train 0.001376 (sum 0.7047)	val loss 0.0015359090307356382	val PSNR 34.06652585985174	val SSIM None	262.5s
+    step 100/512 loss 0.001367
+    step 200/512 loss 0.001459
+    step 300/512 loss 0.001336
+    step 400/512 loss 0.001340
+    step 500/512 loss 0.001341
+Epoch 43	lr 2.000e-04	train 0.001368 (sum 0.7003)	val loss 0.0015309871596400626	val PSNR 33.615557207334696	val SSIM None	263.0s
+    step 100/512 loss 0.001378
+    step 200/512 loss 0.001422
+    step 300/512 loss 0.001338
+    step 400/512 loss 0.001369
+    step 500/512 loss 0.001346
+Epoch 44	lr 2.000e-04	train 0.001369 (sum 0.7011)	val loss 0.00157197496309891	val PSNR 34.362952222472266	val SSIM None	263.1s
+    step 100/512 loss 0.001368
+    step 200/512 loss 0.001368
+    step 300/512 loss 0.001377
+    step 400/512 loss 0.001356
+    step 500/512 loss 0.001348
+Epoch 45	lr 2.000e-04	train 0.001362 (sum 0.6972)	val loss 0.001571477613197203	val PSNR 26.047967374203463	val SSIM None	263.2s
+    step 100/512 loss 0.001350
+    step 200/512 loss 0.001458
+    step 300/512 loss 0.001409
+    step 400/512 loss 0.001356
+    step 500/512 loss 0.001634
+Epoch 46	lr 2.000e-04	train 0.001446 (sum 0.7402)	val loss 0.001887311907921685	val PSNR 26.61960584765221	val SSIM None	262.7s
+    step 100/512 loss 0.001351
+    step 200/512 loss 0.001300
+    step 300/512 loss 0.001303
+    step 400/512 loss 0.001383
+    step 500/512 loss 0.001309
+Epoch 47	lr 2.000e-04	train 0.001329 (sum 0.6802)	val loss 0.0015403794682242733	val PSNR 30.549490474351888	val SSIM None	262.9s
+    step 100/512 loss 0.001316
+    step 200/512 loss 0.001313
+    step 300/512 loss 0.001348
+    step 400/512 loss 0.001328
+    step 500/512 loss 0.001341
+Epoch 48	lr 2.000e-04	train 0.001331 (sum 0.6813)	val loss 0.0016662855332469917	val PSNR 35.25115403736925	val SSIM None	263.1s
+    step 100/512 loss 0.001331
+    step 200/512 loss 0.001392
+    step 300/512 loss 0.001343
+    step 400/512 loss 0.001322
+    step 500/512 loss 0.001333
+Epoch 49	lr 2.000e-04	train 0.001344 (sum 0.6880)	val loss 0.0015168299173637934	val PSNR 26.785104286501124	val SSIM None	262.9s
+    step 100/512 loss 0.001209
+    step 200/512 loss 0.001213
+    step 300/512 loss 0.001250
+    step 400/512 loss 0.001212
+    step 500/512 loss 0.001234
+Epoch 50	lr 1.000e-04	train 0.001224 (sum 0.6269)	val loss 0.0015131701802602038	val PSNR 36.519099062564706	val SSIM 0.9556131459175765	329.9s
+    step 100/512 loss 0.001201
+    step 200/512 loss 0.001192
+    step 300/512 loss 0.001211
+    step 400/512 loss 0.001191
+    step 500/512 loss 0.001204
+Epoch 51	lr 1.000e-04	train 0.001200 (sum 0.6145)	val loss 0.0014858442009426653	val PSNR 27.708253217747817	val SSIM None	262.7s
+    step 100/512 loss 0.001195
+    step 200/512 loss 0.001212
+    step 300/512 loss 0.001193
+    step 400/512 loss 0.001205
+    step 500/512 loss 0.001211
+Epoch 52	lr 1.000e-04	train 0.001204 (sum 0.6164)	val loss 0.001477533930028585	val PSNR 30.356551972166095	val SSIM None	263.0s
+    step 100/512 loss 0.001208
+    step 200/512 loss 0.001199
+    step 300/512 loss 0.001188
+    step 400/512 loss 0.001198
+    step 500/512 loss 0.001200
+Epoch 53	lr 1.000e-04	train 0.001202 (sum 0.6152)	val loss 0.0014997459829828585	val PSNR 30.37078266038849	val SSIM None	262.0s
+    step 100/512 loss 0.001201
+    step 200/512 loss 0.001194
+    step 300/512 loss 0.001213
+    step 400/512 loss 0.001216
+    step 500/512 loss 0.001187
+Epoch 54	lr 1.000e-04	train 0.001202 (sum 0.6155)	val loss 0.0014620004180869728	val PSNR 33.10197751881106	val SSIM None	263.0s
+    step 100/512 loss 0.001213
+    step 200/512 loss 0.001217
+    step 300/512 loss 0.001200
+    step 400/512 loss 0.001190
+    step 500/512 loss 0.001194
+Epoch 55	lr 1.000e-04	train 0.001203 (sum 0.6159)	val loss 0.0014715216248077923	val PSNR 37.914083877534566	val SSIM None	262.4s
+    step 100/512 loss 0.001196
+    step 200/512 loss 0.001193
+    step 300/512 loss 0.001194
+    step 400/512 loss 0.001183
+    step 500/512 loss 0.001210
+Epoch 56	lr 1.000e-04	train 0.001196 (sum 0.6125)	val loss 0.0014727428842888912	val PSNR 32.90231327871034	val SSIM None	263.1s
+    step 100/512 loss 0.001214
+    step 200/512 loss 0.001168
+    step 300/512 loss 0.001205
+    step 400/512 loss 0.001194
+    step 500/512 loss 0.001184
+Epoch 57	lr 1.000e-04	train 0.001192 (sum 0.6104)	val loss 0.0014512693987853709	val PSNR 36.16054166359222	val SSIM None	263.4s
+    step 100/512 loss 0.001182
+    step 200/512 loss 0.001198
+    step 300/512 loss 0.001201
+    step 400/512 loss 0.001199
+    step 500/512 loss 0.001194
+Epoch 58	lr 1.000e-04	train 0.001195 (sum 0.6116)	val loss 0.001481445391618763	val PSNR 32.76642984153049	val SSIM None	262.9s
+    step 100/512 loss 0.001202
+    step 200/512 loss 0.001202
+    step 300/512 loss 0.001186
+    step 400/512 loss 0.001196
+    step 500/512 loss 0.001172
+Epoch 59	lr 1.000e-04	train 0.001191 (sum 0.6098)	val loss 0.0014554645977113978	val PSNR 35.36440799812071	val SSIM None	263.1s
+    step 100/512 loss 0.001176
+    step 200/512 loss 0.001184
+    step 300/512 loss 0.001189
+    step 400/512 loss 0.001192
+    step 500/512 loss 0.001211
+Epoch 60	lr 1.000e-04	train 0.001191 (sum 0.6096)	val loss 0.0014702793137075787	val PSNR 35.285674812888686	val SSIM 0.9658564113815356	332.3s
+    step 100/512 loss 0.001177
+    step 200/512 loss 0.001203
+    step 300/512 loss 0.001173
+    step 400/512 loss 0.001209
+    step 500/512 loss 0.001172
+Epoch 61	lr 1.000e-04	train 0.001187 (sum 0.6079)	val loss 0.0014875729552841221	val PSNR 25.01047964713012	val SSIM None	262.9s
+    step 100/512 loss 0.001184
+    step 200/512 loss 0.001166
+    step 300/512 loss 0.001182
+    step 400/512 loss 0.001199
+    step 500/512 loss 0.001159
+Epoch 62	lr 1.000e-04	train 0.001178 (sum 0.6029)	val loss 0.0014743523834113148	val PSNR 33.857932293606424	val SSIM None	263.2s
+    step 100/512 loss 0.001194
+    step 200/512 loss 0.001185
+    step 300/512 loss 0.001162
+    step 400/512 loss 0.001181
+    step 500/512 loss 0.001208
+Epoch 63	lr 1.000e-04	train 0.001186 (sum 0.6071)	val loss 0.0014777665992369293	val PSNR 31.958725036482143	val SSIM None	263.0s
+    step 100/512 loss 0.001170
+    step 200/512 loss 0.001198
+    step 300/512 loss 0.001183
+    step 400/512 loss 0.001172
+    step 500/512 loss 0.001181
+Epoch 64	lr 1.000e-04	train 0.001181 (sum 0.6044)	val loss 0.001458720244045253	val PSNR 32.298204423876555	val SSIM None	262.4s
+    step 100/512 loss 0.001161
+    step 200/512 loss 0.001163
+    step 300/512 loss 0.001196
+    step 400/512 loss 0.001170
+    step 500/512 loss 0.001192
+Epoch 65	lr 1.000e-04	train 0.001176 (sum 0.6024)	val loss 0.001494232364166237	val PSNR 27.218472036936262	val SSIM None	262.7s
+    step 100/512 loss 0.001188
+    step 200/512 loss 0.001159
+    step 300/512 loss 0.001189
+    step 400/512 loss 0.001218
+    step 500/512 loss 0.001164
+Epoch 66	lr 1.000e-04	train 0.001183 (sum 0.6056)	val loss 0.0014683349736515083	val PSNR 37.723831227770624	val SSIM None	262.9s
+    step 100/512 loss 0.001168
+    step 200/512 loss 0.001167
+    step 300/512 loss 0.001173
+    step 400/512 loss 0.001167
+    step 500/512 loss 0.001191
+Epoch 67	lr 1.000e-04	train 0.001173 (sum 0.6006)	val loss 0.0014767596958336071	val PSNR 31.10526300042617	val SSIM None	263.4s
+    step 100/512 loss 0.001162
+    step 200/512 loss 0.001158
+    step 300/512 loss 0.001173
+    step 400/512 loss 0.001186
+    step 500/512 loss 0.001176
+Epoch 68	lr 1.000e-04	train 0.001171 (sum 0.5996)	val loss 0.0014943172650419	val PSNR 25.95691889475718	val SSIM None	263.1s
+    step 100/512 loss 0.001170
+    step 200/512 loss 0.001174
+    step 300/512 loss 0.001156
+    step 400/512 loss 0.001175
+    step 500/512 loss 0.001162
+Epoch 69	lr 1.000e-04	train 0.001167 (sum 0.5977)	val loss 0.0014804696475039236	val PSNR 37.68163892553021	val SSIM None	263.3s
+[data] 16 files in ['RFI-1'] under /content/BR/Data/RFI-Patch; 16 scenes; split train=12, val=2, test=2
+[data] maps: train 2048, val 1024, test 8192 (test is not loaded during training); map (512, 512), normalization=map
+[model] UNet 1->1, 9,502,561 parameters (authors' log: 9,502,561)
+[train] precision requested=fp32 used=fp32; epochs=100; batch=4; lr=0.0002 AdamW wd=0.02; StepLR(50,0.5) initial_step=True; seed=1234
+[check] sample tensors (1, 512, 512) torch.float32; input max 1.0000; label max 0.3432
+[data] 16 files in ['RFI-1'] under /content/BR/Data/RFI-Patch; 16 scenes; split train=12, val=2, test=2
+[data] maps: train 2048, val 1024, test 8192 (test is not loaded during training); map (512, 512), normalization=map
+[model] UNet 1->1, 9,502,561 parameters (authors' log: 9,502,561)
+[train] precision requested=fp32 used=fp32; epochs=100; batch=4; lr=0.0002 AdamW wd=0.02; StepLR(50,0.5) initial_step=True; seed=1234
+[check] sample tensors (1, 512, 512) torch.float32; input max 1.0000; label max 0.3432
+[data] 16 files in ['RFI-1'] under /content/BR/Data/RFI-Patch; 16 scenes; split train=12, val=2, test=2
+[data] maps: train 2048, val 1024, test 8192 (test is not loaded during training); map (512, 512), normalization=map
+[model] UNet 1->1, 9,502,561 parameters (authors' log: 9,502,561)
+[train] precision requested=fp32 used=fp32; epochs=100; batch=4; lr=0.0002 AdamW wd=0.02; StepLR(50,0.5) initial_step=True; seed=1234
+[check] sample tensors (1, 512, 512) torch.float32; input max 1.0000; label max 0.3432
+[data] 16 files in ['RFI-1'] under /content/BR/Data/RFI-Patch; 16 scenes; split train=12, val=2, test=2
+[data] maps: train 2048, val 1024, test 8192 (test is not loaded during training); map (512, 512), normalization=map
+[model] UNet 1->1, 9,502,561 parameters (authors' log: 9,502,561)
+[train] precision requested=fp32 used=fp32; epochs=100; batch=4; lr=0.0002 AdamW wd=0.02; StepLR(50,0.5) initial_step=True; seed=1234
+[check] sample tensors (1, 512, 512) torch.float32; input max 1.0000; label max 0.3432
+[resume] from epoch 98 (lr now 1.000e-04)
+    step 100/512 loss 0.001182
+    step 200/512 loss 0.001154
+    step 300/512 loss 0.001151
+    step 400/512 loss 0.001148
+    step 500/512 loss 0.001144
+Epoch 99	lr 1.000e-04	train 0.001158 (sum 0.5927)	val loss 0.001527248327874986	val PSNR 31.650824450016135	val SSIM None	267.0s
+    step 100/512 loss 0.001122
+    step 200/512 loss 0.001103
+    step 300/512 loss 0.001099
+    step 400/512 loss 0.001103
+    step 500/512 loss 0.001104
+Epoch 100	lr 5.000e-05	train 0.001107 (sum 0.5666)	val loss 0.0014532355894516513	val PSNR 38.29132886054641	val SSIM 0.9744409551630571	324.9s
+[done] final checkpoint: checkpoints/epoch_100.pt; best val PSNR 38.319 (checkpoints/best_val.pt)
+[warn] CUDA unavailable, using cpu
+[data] 16 files in ['RFI-1'] under /content/BR/Data/RFI-Patch; 16 scenes; split train=12, val=2, test=2
+[data] maps: train 2048, val 1024, test 8192 (test is not loaded during training); map (512, 512), normalization=map
+[model] UNet 1->1, 9,502,561 parameters (authors' log: 9,502,561)
+[train] precision requested=fp32 used=fp32; epochs=100; batch=4; lr=0.0002 AdamW wd=0.02; StepLR(50,0.5) initial_step=True; seed=1234
+[check] sample tensors (1, 512, 512) torch.float32; input max 1.0000; label max 0.3432
+[resume] from epoch 100 (lr now 5.000e-05)
+[done] final checkpoint: checkpoints/epoch_100.pt; best val PSNR 38.319 (checkpoints/best_val.pt)
+[data] 16 files in ['RFI-1'] under /content/BR/Data/RFI-Patch; 16 scenes; split train=12, val=2, test=2
+[data] maps: train 2048, val 1024, test 8192 (test is not loaded during training); map (512, 512), normalization=map
+[model] UNet 1->1, 9,502,561 parameters (authors' log: 9,502,561)
+[train] precision requested=fp32 used=fp32; epochs=100; batch=4; lr=0.0002 AdamW wd=0.02; StepLR(50,0.5) initial_step=True; seed=1234
+[check] sample tensors (1, 512, 512) torch.float32; input max 1.0000; label max 0.3432
+[resume] from epoch 100 (lr now 5.000e-05)
+[done] final checkpoint: checkpoints/epoch_100.pt; best val PSNR 38.319 (checkpoints/best_val.pt)

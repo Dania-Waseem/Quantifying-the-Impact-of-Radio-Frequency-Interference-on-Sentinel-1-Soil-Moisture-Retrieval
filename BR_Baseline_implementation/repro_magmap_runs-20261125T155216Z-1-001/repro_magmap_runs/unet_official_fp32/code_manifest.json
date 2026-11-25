@@ -1,0 +1,21 @@
+{
+  "repro_magmap/config_official_unet.yaml": "0b5ae5dddf873f63ca332ef2a63803802a98a38d84fba4c000cbf2f9027037ff",
+  "repro_magmap/magmap/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "repro_magmap/magmap/data.py": "a2b82f6557cb177bba66d615e597a3d9d572d74f2f4a0383913e4fb0c85df402",
+  "repro_magmap/magmap/matscan.py": "1eb32ce58362792f18eee0d074a8eb8ce90104fcfc08e2b629469e3166a63bc7",
+  "repro_magmap/magmap/metrics8.py": "eddbe9f9fb41f1570368ca3b1bcf1566b93b9fb1309ce7fe0d9deca21f8335f5",
+  "repro_magmap/magmap/model.py": "d8084d7c237c0167705947040efc183005a7913c80f1d7bb2172ce484aa7e9c2",
+  "repro_magmap/magmap/pipeline.py": "5372644cdd9a19ff843e7a2ee78255dd0f175493f142085ab9d10c793f35352d",
+  "repro_magmap/magmap/stft.py": "87fcf295ee8c660f6b5b9519534d6fe21376bd84b5945c3c215eb6813d8783dc",
+  "repro_magmap/magmap/trainer.py": "f69cf7090a29252f056cca29bd5f0fa1c017045fbb6e34a0f6122a776b7c5559",
+  "repro_magmap/scripts/compare_amp.py": "875289f193b46172df2e178073ab3e696d96195edbf6d66b717f47ef9072a8f8",
+  "repro_magmap/scripts/evaluate.py": "b1b89b2e613c123fce8b342b8a2ec6ce3372c91c1519e541ba12aff4192203eb",
+  "repro_magmap/scripts/inspect_dataset.py": "417c10c051a1701666cdd53787c369b9ddd21a8cffa3407e8faba22ec80d3e73",
+  "repro_magmap/scripts/overfit_one_sample.py": "755b665012ef93fd884299b4d271f6556e4d40b7f3337b91d1994a60bff591fd",
+  "repro_magmap/scripts/package_colab.py": "f8331a22d742eed62dbfdc3cc2d4ce80db6f4a552deba45f7ea9c53f5be8fbaa",
+  "repro_magmap/scripts/sentinel_qualitative.py": "ba690aa1406b563dfd4bfdfd7906fb3cb5d43f77d8113c4d3319d8dfbc8537bf",
+  "repro_magmap/scripts/train.py": "d003cdfc4c99b75a3267784274e4f296e4b687c3192e47abb5d572d7ca007917",
+  "repro_magmap/scripts/verify_pipeline.py": "99094614d6755000f52db29b89a1a0322c7b5e2fd8fc20467eb7e30b9530b141",
+  "repro_magmap/tests/test_magmap.py": "3302371ed5581bb37776bcbae3e8279cb84ba8c142feab813df08d8f8edde95e",
+  "src/models/unet.py": "b740e0d81f93adac45b4f53298de87b51e025779776f1140da4bf4561ca67b2c"
+}

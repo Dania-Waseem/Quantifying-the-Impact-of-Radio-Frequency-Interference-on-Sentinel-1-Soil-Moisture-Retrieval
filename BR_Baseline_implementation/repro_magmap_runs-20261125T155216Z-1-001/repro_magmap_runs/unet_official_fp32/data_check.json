@@ -1,0 +1,1175 @@
+{
+  "root": "/content/BR/Data/RFI-Patch",
+  "file_sha256": {
+    "RFI-1/fifth": "20b106845a8d2dde22060fa00805facfbf9e35d177d7ab9c5b94cbb0a9dfbf85",
+    "RFI-1/first": "795154722a1f397331ab94215d28f1845ac3ec0b40924b3c9c1c361fbac15072",
+    "RFI-1/fourth": "1cebd90a2f3a072fe3174c9564f4e229cb1fd4744c82fac5625c416082ac4aaa",
+    "RFI-1/s1": "de6593710c1021a6bda067ecc2bb563211e5eeafaa51727eeeaf20582c8f186e",
+    "RFI-1/s10": "db67fb79ebbc6f8eb53bc10d13cb9b631e366d73ac8523ba1a0ec1cb0cd28b27",
+    "RFI-1/s2": "b96bdbd5ed8e536006db587ffff663539a6037f566fc13c30a8ad2dff409b8f6",
+    "RFI-1/s3": "84b8d90d62b3ba85cd4a9084f0c16cbcbda44aed8e771cc34a01a7d9c09d6146",
+    "RFI-1/s4": "165926c8f7d33fd692ca6db1e9d37001371c00b7a398f412e474e9f1b9b99172",
+    "RFI-1/s5": "7751f4f3a5ca955a8ebe8f41803e4fd4e460f9ba642c53c8f352e17a8ebf1d2b",
+    "RFI-1/s6": "57a744076b21377de7c3fa5a063c8de981a0974c99396ad6a8bb6c677f2f9e40",
+    "RFI-1/s7": "2a92c6ea8fd1929a2ed0439dcdf6bd48abe0176dd84f5744145e5fd1e8340cc8",
+    "RFI-1/s8": "32be821f55a87b872c089a4cf94d21f4a49b7bbe94410f859c4ff6f64d438f9f",
+    "RFI-1/s9": "2655404014a43cd467f97624cb53b1899d13f3095522a9103ecb49e16e7cf1d0",
+    "RFI-1/second": "a5ac1e229086f4d3c5ce43dfc425930f356cad4a44c741fcc09c0f80d74352ad",
+    "RFI-1/sixth": "5e9c81a1ce01b2dc8c4e48e9a87b34ee0c2cad60f549884cfdd6afd57987d00d",
+    "RFI-1/third": "cf8ba336b0c31ff91e6107d8cb04afcd9ecbddf1efc5eea175e26204c549468e"
+  },
+  "pairing": {
+    "RFI-1/fifth": {
+      "levels": {
+        "1": {
+          "documented_sir_db": 0.0,
+          "affected_azimuth": [
+            237,
+            1260
+          ],
+          "n_affected_lines": 1024,
+          "affected_range": [
+            0,
+            511
+          ],
+          "max_abs_difference_outside_block": 0.0,
+          "sir_in_difference_support_db": 0.8741712433983362,
+          "rfi_power": 1898.7176513671875
+        },
+        "2": {
+          "documented_sir_db": -10.0,
+          "affected_azimuth": [
+            237,
+            1260
+          ],
+          "n_affected_lines": 1024,
+          "affected_range": [
+            0,
+            511
+          ],
+          "max_abs_difference_outside_block": 0.0,
+          "sir_in_difference_support_db": -9.228828410253513,
+          "rfi_power": 19442.869140625
+        },
+        "3": {
+          "documented_sir_db": -20.0,
+          "affected_azimuth": [
+            237,
+            1260
+          ],
+          "n_affected_lines": 1024,
+          "affected_range": [
+            0,
+            511
+          ],
+          "max_abs_difference_outside_block": 0.0,
+          "sir_in_difference_support_db": -19.125829125161403,
+          "rfi_power": 189871.78125
+        },
+        "4": {
+          "documented_sir_db": -30.0,
+          "affected_azimuth": [
+            237,
+            1260
+          ],
+          "n_affected_lines": 1024,
+          "affected_range": [
+            0,
+            511
+          ],
+          "max_abs_difference_outside_block": 0.0,
+          "sir_in_difference_support_db": -28.668253822453245,
+          "rfi_power": 1708845.875
+        }
+      },
+      "rfi_power_step_db": [
+        10.10299965365185,
+        9.897000714907891,
+        9.542424697291844
+      ],
+      "same_block_all_levels": true,
+      "outside_block_exactly_equal": true,
+      "pairing_ok": true
+    },
+    "RFI-1/first": {
+      "levels": {
+        "1": {
+          "documented_sir_db": 0.0,
+          "affected_azimuth": [
+            237,
+            1260
+          ],
+          "n_affected_lines": 1024,
+          "affected_range": [
+            0,
+            511
+          ],
+          "max_abs_difference_outside_block": 0.0,
+          "sir_in_difference_support_db": 0.8042957650731503,
+          "rfi_power": 694.0694580078125
+        },
+        "2": {
+          "documented_sir_db": -10.0,
+          "affected_azimuth": [
+            237,
+            1260
+          ],
+          "n_affected_lines": 1024,
+          "affected_range": [
+            0,
+            511
+          ],
+          "max_abs_difference_outside_block": 0.0,
+          "sir_in_difference_support_db": -9.298703944541352,
+          "rfi_power": 7107.271484375
+        },
+        "3": {
+          "documented_sir_db": -20.0,
+          "affected_azimuth": [
+            237,
+            1260
+          ],
+          "n_affected_lines": 1024,
+          "affected_range": [
+            0,
+            511
+          ],
+          "max_abs_difference_outside_block": 0.0,
+          "sir_in_difference_support_db": -19.19570420437402,
+          "rfi_power": 69406.9453125
+        },
+        "4": {
+          "documented_sir_db": -30.0,
+          "affected_azimuth": [
+            237,
+            1260
+          ],
+          "n_affected_lines": 1024,
+          "affected_range": [
+            0,
+            511
+          ],
+          "max_abs_difference_outside_block": 0.0,
+          "sir_in_difference_support_db": -28.738129678980236,
+          "rfi_power": 624662.5625
+        }
+      },
+      "rfi_power_step_db": [
+        10.102999709614501,
+        9.89700025983267,
+        9.542425474606214
+      ],
+      "same_block_all_levels": true,
+      "outside_block_exactly_equal": true,
+      "pairing_ok": true
+    },
+    "RFI-1/fourth": {
+      "levels": {
+        "1": {
+          "documented_sir_db": 0.0,
+          "affected_azimuth": [
+            237,
+            1260
+          ],
+          "n_affected_lines": 1024,
+          "affected_range": [
+            0,
+            511
+          ],
+          "max_abs_difference_outside_block": 0.0,
+          "sir_in_difference_support_db": 0.7370452799953335,
+          "rfi_power": 163.86553955078125
+        },
+        "2": {
+          "documented_sir_db": -10.0,
+          "affected_azimuth": [
+            237,
+            1260
+          ],
+          "n_affected_lines": 1024,
+          "affected_range": [
+            0,
+            511
+          ],
+          "max_abs_difference_outside_block": 0.0,
+          "sir_in_difference_support_db": -9.36595467817032,
+          "rfi_power": 1677.9832763671875
+        },
+        "3": {
+          "documented_sir_db": -20.0,
+          "affected_azimuth": [
+            237,
+            1260
+          ],
+          "n_affected_lines": 1024,
+          "affected_range": [
+            0,
+            511
+          ],
+          "max_abs_difference_outside_block": 0.0,
+          "sir_in_difference_support_db": -19.262954914119167,
+          "rfi_power": 16386.5546875
+        },
+        "4": {
+          "documented_sir_db": -30.0,
+          "affected_azimuth": [
+            237,
+            1260
+          ],
+          "n_affected_lines": 1024,
+          "affected_range": [
+            0,
+            511
+          ],
+          "max_abs_difference_outside_block": 0.0,
+          "sir_in_difference_support_db": -28.80538023857403,
+          "rfi_power": 147479.0
+        }
+      },
+      "rfi_power_step_db": [
+        10.102999958165654,
+        9.897000235948845,
+        9.542425324454866
+      ],
+      "same_block_all_levels": true,
+      "outside_block_exactly_equal": true,
+      "pairing_ok": true
+    },
+    "RFI-1/s1": {
+      "levels": {
+        "1": {
+          "documented_sir_db": 0.0,
+          "affected_azimuth": [
+            237,
+            1260
+          ],
+          "n_affected_lines": 1024,
+          "affected_range": [
+            0,
+            511
+          ],
+          "max_abs_difference_outside_block": 0.0,
+          "sir_in_difference_support_db": 1.2799215272252793,
+          "rfi_power": 27755.15234375
+        },
+        "2": {
+          "documented_sir_db": -10.0,
+          "affected_azimuth": [
+            237,
+            1260
+          ],
+          "n_affected_lines": 1024,
+          "affected_range": [
+            0,
+            511
+          ],
+          "max_abs_difference_outside_block": 0.0,
+          "sir_in_difference_support_db": -8.82307788636672,
+          "rfi_power": 284212.75
+        },
+        "3": {
+          "documented_sir_db": -20.0,
+          "affected_azimuth": [
+            237,
+            1260
+          ],
+          "n_affected_lines": 1024,
+          "affected_range": [
+            0,
+            511
+          ],
+          "max_abs_difference_outside_block": 0.0,
+          "sir_in_difference_support_db": -18.7200784972237,
+          "rfi_power": 2775515.25
+        },
+        "4": {
+          "documented_sir_db": -30.0,
+          "affected_azimuth": [
+            237,
+            1260
+          ],
+          "n_affected_lines": 1024,
+          "affected_range": [
+            0,
+            511
+          ],
+          "max_abs_difference_outside_block": 0.0,
+          "sir_in_difference_support_db": -28.26250406973028,
+          "rfi_power": 24979640.0
+        }
+      },
+      "rfi_power_step_db": [
+        10.102999413592,
+        9.897000610856978,
+        9.54242557250658
+      ],
+      "same_block_all_levels": true,
+      "outside_block_exactly_equal": true,
+      "pairing_ok": true
+    },
+    "RFI-1/s10": {
+      "levels": {
+        "1": {
+          "documented_sir_db": 0.0,
+          "affected_azimuth": [
+            237,
+            1260
+          ],
+          "n_affected_lines": 1024,
+          "affected_range": [
+            0,
+            511
+          ],
+          "max_abs_difference_outside_block": 0.0,
+          "sir_in_difference_support_db": 2.500423058708581,
+          "rfi_power": 6929.2421875
+        },
+        "2": {
+          "documented_sir_db": -10.0,
+          "affected_azimuth": [
+            237,
+            1260
+          ],
+          "n_affected_lines": 1024,
+          "affected_range": [
+            0,
+            511
+          ],
+          "max_abs_difference_outside_block": 0.0,
+          "sir_in_difference_support_db": -7.602576354672909,
+          "rfi_power": 70955.4375
+        },
+        "3": {
+          "documented_sir_db": -20.0,
+          "affected_azimuth": [
+            237,
+            1260
+          ],
+          "n_affected_lines": 1024,
+          "affected_range": [
+            0,
+            511
+          ],
+          "max_abs_difference_outside_block": 0.0,
+          "sir_in_difference_support_db": -17.499576745430133,
+          "rfi_power": 692924.1875
+        },
+        "4": {
+          "documented_sir_db": -30.0,
+          "affected_azimuth": [
+            237,
+            1260
+          ],
+          "n_affected_lines": 1024,
+          "affected_range": [
+            0,
+            511
+          ],
+          "max_abs_difference_outside_block": 0.0,
+          "sir_in_difference_support_db": -27.042002057447032,
+          "rfi_power": 6236318.0
+        }
+      },
+      "rfi_power_step_db": [
+        10.10299941338149,
+        9.897000390757224,
+        9.5424253120169
+      ],
+      "same_block_all_levels": true,
+      "outside_block_exactly_equal": true,
+      "pairing_ok": true
+    },
+    "RFI-1/s2": {
+      "levels": {
+        "1": {
+          "documented_sir_db": 0.0,
+          "affected_azimuth": [
+            237,
+            1260
+          ],
+          "n_affected_lines": 1024,
+          "affected_range": [
+            0,
+            511
+          ],
+          "max_abs_difference_outside_block": 0.0,
+          "sir_in_difference_support_db": 1.3857933828219147,
+          "rfi_power": 34885.484375
+        },
+        "2": {
+          "documented_sir_db": -10.0,
+          "affected_azimuth": [
+            237,
+            1260
+          ],
+          "n_affected_lines": 1024,
+          "affected_range": [
+            0,
+            511
+          ],
+          "max_abs_difference_outside_block": 0.0,
+          "sir_in_difference_support_db": -8.717205986018955,
+          "rfi_power": 357227.34375
+        },
+        "3": {
+          "documented_sir_db": -20.0,
+          "affected_azimuth": [
+            237,
+            1260
+          ],
+          "n_affected_lines": 1024,
+          "affected_range": [
+            0,
+            511
+          ],
+          "max_abs_difference_outside_block": 0.0,
+          "sir_in_difference_support_db": -18.614206694985246,
+          "rfi_power": 3488548.5
+        },
+        "4": {
+          "documented_sir_db": -30.0,
+          "affected_azimuth": [
+            237,
+            1260
+          ],
+          "n_affected_lines": 1024,
+          "affected_range": [
+            0,
+            511
+          ],
+          "max_abs_difference_outside_block": 0.0,
+          "sir_in_difference_support_db": -28.156631720216577,
+          "rfi_power": 31396936.0
+        }
+      },
+      "rfi_power_step_db": [
+        10.10299936884087,
+        9.897000708966292,
+        9.542425025231328
+      ],
+      "same_block_all_levels": true,
+      "outside_block_exactly_equal": true,
+      "pairing_ok": true
+    },
+    "RFI-1/s3": {
+      "levels": {
+        "1": {
+          "documented_sir_db": 0.0,
+          "affected_azimuth": [
+            237,
+            1260
+          ],
+          "n_affected_lines": 1024,
+          "affected_range": [
+            0,
+            511
+          ],
+          "max_abs_difference_outside_block": 0.0,
+          "sir_in_difference_support_db": 1.6440512578916946,
+          "rfi_power": 35895.24609375
+        },
+        "2": {
+          "documented_sir_db": -10.0,
+          "affected_azimuth": [
+            237,
+            1260
+          ],
+          "n_affected_lines": 1024,
+          "affected_range": [
+            0,
+            511
+          ],
+          "max_abs_difference_outside_block": 0.0,
+          "sir_in_difference_support_db": -8.45894821989113,
+          "rfi_power": 367567.3125
+        },
+        "3": {
+          "documented_sir_db": -20.0,
+          "affected_azimuth": [
+            237,
+            1260
+          ],
+          "n_affected_lines": 1024,
+          "affected_range": [
+            0,
+            511
+          ],
+          "max_abs_difference_outside_block": 0.0,
+          "sir_in_difference_support_db": -18.35594860977613,
+          "rfi_power": 3589524.5
+        },
+        "4": {
+          "documented_sir_db": -30.0,
+          "affected_azimuth": [
+            237,
+            1260
+          ],
+          "n_affected_lines": 1024,
+          "affected_range": [
+            0,
+            511
+          ],
+          "max_abs_difference_outside_block": 0.0,
+          "sir_in_difference_support_db": -27.898373636953036,
+          "rfi_power": 32305720.0
+        }
+      },
+      "rfi_power_step_db": [
+        10.102999477782824,
+        9.897000389885001,
+        9.542425027176906
+      ],
+      "same_block_all_levels": true,
+      "outside_block_exactly_equal": true,
+      "pairing_ok": true
+    },
+    "RFI-1/s4": {
+      "levels": {
+        "1": {
+          "documented_sir_db": 0.0,
+          "affected_azimuth": [
+            237,
+            1260
+          ],
+          "n_affected_lines": 1024,
+          "affected_range": [
+            0,
+            511
+          ],
+          "max_abs_difference_outside_block": 0.0,
+          "sir_in_difference_support_db": 1.1062433754127483,
+          "rfi_power": 13558.4150390625
+        },
+        "2": {
+          "documented_sir_db": -10.0,
+          "affected_azimuth": [
+            237,
+            1260
+          ],
+          "n_affected_lines": 1024,
+          "affected_range": [
+            0,
+            511
+          ],
+          "max_abs_difference_outside_block": 0.0,
+          "sir_in_difference_support_db": -8.996756249636544,
+          "rfi_power": 138838.171875
+        },
+        "3": {
+          "documented_sir_db": -20.0,
+          "affected_azimuth": [
+            237,
+            1260
+          ],
+          "n_affected_lines": 1024,
+          "affected_range": [
+            0,
+            511
+          ],
+          "max_abs_difference_outside_block": 0.0,
+          "sir_in_difference_support_db": -18.893756612075002,
+          "rfi_power": 1355841.5
+        },
+        "4": {
+          "documented_sir_db": -30.0,
+          "affected_azimuth": [
+            237,
+            1260
+          ],
+          "n_affected_lines": 1024,
+          "affected_range": [
+            0,
+            511
+          ],
+          "max_abs_difference_outside_block": 0.0,
+          "sir_in_difference_support_db": -28.43618188442025,
+          "rfi_power": 12202574.0
+        }
+      },
+      "rfi_power_step_db": [
+        10.102999625049291,
+        9.897000362438458,
+        9.54242527234525
+      ],
+      "same_block_all_levels": true,
+      "outside_block_exactly_equal": true,
+      "pairing_ok": true
+    },
+    "RFI-1/s5": {
+      "levels": {
+        "1": {
+          "documented_sir_db": 0.0,
+          "affected_azimuth": [
+            237,
+            1260
+          ],
+          "n_affected_lines": 1024,
+          "affected_range": [
+            0,
+            511
+          ],
+          "max_abs_difference_outside_block": 0.0,
+          "sir_in_difference_support_db": 1.8195005934251027,
+          "rfi_power": 4347.7421875
+        },
+        "2": {
+          "documented_sir_db": -10.0,
+          "affected_azimuth": [
+            237,
+            1260
+          ],
+          "n_affected_lines": 1024,
+          "affected_range": [
+            0,
+            511
+          ],
+          "max_abs_difference_outside_block": 0.0,
+          "sir_in_difference_support_db": -8.283499247328148,
+          "rfi_power": 44520.8828125
+        },
+        "3": {
+          "documented_sir_db": -20.0,
+          "affected_azimuth": [
+            237,
+            1260
+          ],
+          "n_affected_lines": 1024,
+          "affected_range": [
+            0,
+            511
+          ],
+          "max_abs_difference_outside_block": 0.0,
+          "sir_in_difference_support_db": -18.180499406574896,
+          "rfi_power": 434774.21875
+        },
+        "4": {
+          "documented_sir_db": -30.0,
+          "affected_azimuth": [
+            237,
+            1260
+          ],
+          "n_affected_lines": 1024,
+          "affected_range": [
+            0,
+            511
+          ],
+          "max_abs_difference_outside_block": 0.0,
+          "sir_in_difference_support_db": -27.722924535652055,
+          "rfi_power": 3912968.0
+        }
+      },
+      "rfi_power_step_db": [
+        10.10299984075325,
+        9.897000159246748,
+        9.542425129077158
+      ],
+      "same_block_all_levels": true,
+      "outside_block_exactly_equal": true,
+      "pairing_ok": true
+    },
+    "RFI-1/s6": {
+      "levels": {
+        "1": {
+          "documented_sir_db": 0.0,
+          "affected_azimuth": [
+            237,
+            1260
+          ],
+          "n_affected_lines": 1024,
+          "affected_range": [
+            0,
+            511
+          ],
+          "max_abs_difference_outside_block": 0.0,
+          "sir_in_difference_support_db": 1.2113421716356623,
+          "rfi_power": 7865.7099609375
+        },
+        "2": {
+          "documented_sir_db": -10.0,
+          "affected_azimuth": [
+            237,
+            1260
+          ],
+          "n_affected_lines": 1024,
+          "affected_range": [
+            0,
+            511
+          ],
+          "max_abs_difference_outside_block": 0.0,
+          "sir_in_difference_support_db": -8.891657664360302,
+          "rfi_power": 80544.875
+        },
+        "3": {
+          "documented_sir_db": -20.0,
+          "affected_azimuth": [
+            237,
+            1260
+          ],
+          "n_affected_lines": 1024,
+          "affected_range": [
+            0,
+            511
+          ],
+          "max_abs_difference_outside_block": 0.0,
+          "sir_in_difference_support_db": -18.788657504846903,
+          "rfi_power": 786570.9375
+        },
+        "4": {
+          "documented_sir_db": -30.0,
+          "affected_azimuth": [
+            237,
+            1260
+          ],
+          "n_affected_lines": 1024,
+          "affected_range": [
+            0,
+            511
+          ],
+          "max_abs_difference_outside_block": 0.0,
+          "sir_in_difference_support_db": -28.331082944325416,
+          "rfi_power": 7079139.0
+        }
+      },
+      "rfi_power_step_db": [
+        10.102999835995965,
+        9.896999840486599,
+        9.542425439478514
+      ],
+      "same_block_all_levels": true,
+      "outside_block_exactly_equal": true,
+      "pairing_ok": true
+    },
+    "RFI-1/s7": {
+      "levels": {
+        "1": {
+          "documented_sir_db": 0.0,
+          "affected_azimuth": [
+            237,
+            1260
+          ],
+          "n_affected_lines": 1024,
+          "affected_range": [
+            0,
+            511
+          ],
+          "max_abs_difference_outside_block": 0.0,
+          "sir_in_difference_support_db": -0.19301906912805353,
+          "rfi_power": 12498.693359375
+        },
+        "2": {
+          "documented_sir_db": -10.0,
+          "affected_azimuth": [
+            237,
+            1260
+          ],
+          "n_affected_lines": 1024,
+          "affected_range": [
+            0,
+            511
+          ],
+          "max_abs_difference_outside_block": 0.0,
+          "sir_in_difference_support_db": -10.296018274990121,
+          "rfi_power": 127986.609375
+        },
+        "3": {
+          "documented_sir_db": -20.0,
+          "affected_azimuth": [
+            237,
+            1260
+          ],
+          "n_affected_lines": 1024,
+          "affected_range": [
+            0,
+            511
+          ],
+          "max_abs_difference_outside_block": 0.0,
+          "sir_in_difference_support_db": -20.193018770519373,
+          "rfi_power": 1249869.25
+        },
+        "4": {
+          "documented_sir_db": -30.0,
+          "affected_azimuth": [
+            237,
+            1260
+          ],
+          "n_affected_lines": 1024,
+          "affected_range": [
+            0,
+            511
+          ],
+          "max_abs_difference_outside_block": 0.0,
+          "sir_in_difference_support_db": -29.735444154472553,
+          "rfi_power": 11248824.0
+        }
+      },
+      "rfi_power_step_db": [
+        10.10299920586207,
+        9.897000495529252,
+        9.542425383953182
+      ],
+      "same_block_all_levels": true,
+      "outside_block_exactly_equal": true,
+      "pairing_ok": true
+    },
+    "RFI-1/s8": {
+      "levels": {
+        "1": {
+          "documented_sir_db": 0.0,
+          "affected_azimuth": [
+            237,
+            1260
+          ],
+          "n_affected_lines": 1024,
+          "affected_range": [
+            0,
+            511
+          ],
+          "max_abs_difference_outside_block": 0.0,
+          "sir_in_difference_support_db": 1.5322812549469413,
+          "rfi_power": 25431.61328125
+        },
+        "2": {
+          "documented_sir_db": -10.0,
+          "affected_azimuth": [
+            237,
+            1260
+          ],
+          "n_affected_lines": 1024,
+          "affected_range": [
+            0,
+            511
+          ],
+          "max_abs_difference_outside_block": 0.0,
+          "sir_in_difference_support_db": -8.570718290605287,
+          "rfi_power": 260419.71875
+        },
+        "3": {
+          "documented_sir_db": -20.0,
+          "affected_azimuth": [
+            237,
+            1260
+          ],
+          "n_affected_lines": 1024,
+          "affected_range": [
+            0,
+            511
+          ],
+          "max_abs_difference_outside_block": 0.0,
+          "sir_in_difference_support_db": -18.46771903856319,
+          "rfi_power": 2543161.5
+        },
+        "4": {
+          "documented_sir_db": -30.0,
+          "affected_azimuth": [
+            237,
+            1260
+          ],
+          "n_affected_lines": 1024,
+          "affected_range": [
+            0,
+            511
+          ],
+          "max_abs_difference_outside_block": 0.0,
+          "sir_in_difference_support_db": -28.01014384834055,
+          "rfi_power": 22888452.0
+        }
+      },
+      "rfi_power_step_db": [
+        10.10299954555223,
+        9.897000747957902,
+        9.542424809777364
+      ],
+      "same_block_all_levels": true,
+      "outside_block_exactly_equal": true,
+      "pairing_ok": true
+    },
+    "RFI-1/s9": {
+      "levels": {
+        "1": {
+          "documented_sir_db": 0.0,
+          "affected_azimuth": [
+            237,
+            1260
+          ],
+          "n_affected_lines": 1024,
+          "affected_range": [
+            0,
+            511
+          ],
+          "max_abs_difference_outside_block": 0.0,
+          "sir_in_difference_support_db": 1.4298688512668625,
+          "rfi_power": 21903.60546875
+        },
+        "2": {
+          "documented_sir_db": -10.0,
+          "affected_azimuth": [
+            237,
+            1260
+          ],
+          "n_affected_lines": 1024,
+          "affected_range": [
+            0,
+            511
+          ],
+          "max_abs_difference_outside_block": 0.0,
+          "sir_in_difference_support_db": -8.673131053980702,
+          "rfi_power": 224292.9375
+        },
+        "3": {
+          "documented_sir_db": -20.0,
+          "affected_azimuth": [
+            237,
+            1260
+          ],
+          "n_affected_lines": 1024,
+          "affected_range": [
+            0,
+            511
+          ],
+          "max_abs_difference_outside_block": 0.0,
+          "sir_in_difference_support_db": -18.57013105579157,
+          "rfi_power": 2190360.5
+        },
+        "4": {
+          "documented_sir_db": -30.0,
+          "affected_azimuth": [
+            237,
+            1260
+          ],
+          "n_affected_lines": 1024,
+          "affected_range": [
+            0,
+            511
+          ],
+          "max_abs_difference_outside_block": 0.0,
+          "sir_in_difference_support_db": -28.112556480643715,
+          "rfi_power": 19713246.0
+        }
+      },
+      "rfi_power_step_db": [
+        10.102999905247565,
+        9.89700000181087,
+        9.542425424852144
+      ],
+      "same_block_all_levels": true,
+      "outside_block_exactly_equal": true,
+      "pairing_ok": true
+    },
+    "RFI-1/second": {
+      "levels": {
+        "1": {
+          "documented_sir_db": 0.0,
+          "affected_azimuth": [
+            237,
+            1260
+          ],
+          "n_affected_lines": 1024,
+          "affected_range": [
+            0,
+            511
+          ],
+          "max_abs_difference_outside_block": 0.0,
+          "sir_in_difference_support_db": 1.113146585350639,
+          "rfi_power": 1794.5023193359375
+        },
+        "2": {
+          "documented_sir_db": -10.0,
+          "affected_azimuth": [
+            237,
+            1260
+          ],
+          "n_affected_lines": 1024,
+          "affected_range": [
+            0,
+            511
+          ],
+          "max_abs_difference_outside_block": 0.0,
+          "sir_in_difference_support_db": -8.989852833333924,
+          "rfi_power": 18375.703125
+        },
+        "3": {
+          "documented_sir_db": -20.0,
+          "affected_azimuth": [
+            237,
+            1260
+          ],
+          "n_affected_lines": 1024,
+          "affected_range": [
+            0,
+            511
+          ],
+          "max_abs_difference_outside_block": 0.0,
+          "sir_in_difference_support_db": -18.886853095588073,
+          "rfi_power": 179450.21875
+        },
+        "4": {
+          "documented_sir_db": -30.0,
+          "affected_azimuth": [
+            237,
+            1260
+          ],
+          "n_affected_lines": 1024,
+          "affected_range": [
+            0,
+            511
+          ],
+          "max_abs_difference_outside_block": 0.0,
+          "sir_in_difference_support_db": -28.429278274013928,
+          "rfi_power": 1615052.0
+        }
+      },
+      "rfi_power_step_db": [
+        10.102999418684561,
+        9.89700026225415,
+        9.542425178425853
+      ],
+      "same_block_all_levels": true,
+      "outside_block_exactly_equal": true,
+      "pairing_ok": true
+    },
+    "RFI-1/sixth": {
+      "levels": {
+        "1": {
+          "documented_sir_db": 0.0,
+          "affected_azimuth": [
+            237,
+            1260
+          ],
+          "n_affected_lines": 1024,
+          "affected_range": [
+            0,
+            511
+          ],
+          "max_abs_difference_outside_block": 0.0,
+          "sir_in_difference_support_db": 2.384659626001247,
+          "rfi_power": 1626.7255859375
+        },
+        "2": {
+          "documented_sir_db": -10.0,
+          "affected_azimuth": [
+            237,
+            1260
+          ],
+          "n_affected_lines": 1024,
+          "affected_range": [
+            0,
+            511
+          ],
+          "max_abs_difference_outside_block": 0.0,
+          "sir_in_difference_support_db": -7.718340429242016,
+          "rfi_power": 16657.671875
+        },
+        "3": {
+          "documented_sir_db": -20.0,
+          "affected_azimuth": [
+            237,
+            1260
+          ],
+          "n_affected_lines": 1024,
+          "affected_range": [
+            0,
+            511
+          ],
+          "max_abs_difference_outside_block": 0.0,
+          "sir_in_difference_support_db": -17.61534047828572,
+          "rfi_power": 162672.5625
+        },
+        "4": {
+          "documented_sir_db": -30.0,
+          "affected_azimuth": [
+            237,
+            1260
+          ],
+          "n_affected_lines": 1024,
+          "affected_range": [
+            0,
+            511
+          ],
+          "max_abs_difference_outside_block": 0.0,
+          "sir_in_difference_support_db": -27.157766128876094,
+          "rfi_power": 1464053.25
+        }
+      },
+      "rfi_power_step_db": [
+        10.103000055243264,
+        9.897000049043706,
+        9.54242565059037
+      ],
+      "same_block_all_levels": true,
+      "outside_block_exactly_equal": true,
+      "pairing_ok": true
+    },
+    "RFI-1/third": {
+      "levels": {
+        "1": {
+          "documented_sir_db": 0.0,
+          "affected_azimuth": [
+            237,
+            1260
+          ],
+          "n_affected_lines": 1024,
+          "affected_range": [
+            0,
+            511
+          ],
+          "max_abs_difference_outside_block": 0.0,
+          "sir_in_difference_support_db": 3.9933363042483476,
+          "rfi_power": 529.7647705078125
+        },
+        "2": {
+          "documented_sir_db": -10.0,
+          "affected_azimuth": [
+            237,
+            1260
+          ],
+          "n_affected_lines": 1024,
+          "affected_range": [
+            0,
+            511
+          ],
+          "max_abs_difference_outside_block": 0.0,
+          "sir_in_difference_support_db": -6.109663074515322,
+          "rfi_power": 5424.791015625
+        },
+        "3": {
+          "documented_sir_db": -20.0,
+          "affected_azimuth": [
+            237,
+            1260
+          ],
+          "n_affected_lines": 1024,
+          "affected_range": [
+            0,
+            511
+          ],
+          "max_abs_difference_outside_block": 0.0,
+          "sir_in_difference_support_db": -16.00666365572297,
+          "rfi_power": 52976.4765625
+        },
+        "4": {
+          "documented_sir_db": -30.0,
+          "affected_azimuth": [
+            237,
+            1260
+          ],
+          "n_affected_lines": 1024,
+          "affected_range": [
+            0,
+            511
+          ],
+          "max_abs_difference_outside_block": 0.0,
+          "sir_in_difference_support_db": -25.549088963602514,
+          "rfi_power": 476788.3125
+        }
+      },
+      "rfi_power_step_db": [
+        10.10299937876367,
+        9.897000581207646,
+        9.542425307879546
+      ],
+      "same_block_all_levels": true,
+      "outside_block_exactly_equal": true,
+      "pairing_ok": true
+    }
+  }
+}

@@ -1,0 +1,82 @@
+{
+  "config_file": "/content/BR/sar_rfi_baseline/repro_magmap/config_official_unet.yaml",
+  "config": {
+    "experiment": "unet_magmap_official",
+    "data": {
+      "rfi_patch_root": "../Data/RFI-Patch",
+      "frozen_split": "configs/splits/rfipatch_rfi1_seed42_frozen.json",
+      "levels": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "line_selection": "rfi_affected",
+      "train_maps": 2048,
+      "val_maps": 1024,
+      "test_maps": "all",
+      "sample_seed": 1234,
+      "normalization": "map"
+    },
+    "map": {
+      "win_len": 64,
+      "window": "hamming_symmetric",
+      "n_fft": 512,
+      "hop": 1,
+      "center": true,
+      "pad_mode": "constant",
+      "fftshift": true,
+      "n_frames": 512,
+      "magnitude": "linear"
+    },
+    "model": {
+      "name": "UNet",
+      "dim": 32
+    },
+    "train": {
+      "epochs": 100,
+      "batch_size": 4,
+      "optimizer": "adamw",
+      "lr": 0.0002,
+      "betas": [
+        0.9,
+        0.999
+      ],
+      "eps": 1e-08,
+      "weight_decay": 0.02,
+      "loss": "charbonnier",
+      "charbonnier_eps": 0.001,
+      "lr_step": 50,
+      "lr_gamma": 0.5,
+      "scheduler_initial_step": true,
+      "precision": "fp32",
+      "seed": 1234,
+      "cudnn_benchmark": true,
+      "shuffle": true,
+      "drop_last": false,
+      "num_workers": 2,
+      "checkpoint_every": 20,
+      "val_every": 1,
+      "val_ssim_every": 10,
+      "reported_checkpoint": "epoch_100"
+    }
+  },
+  "map_shape": [
+    512,
+    512
+  ],
+  "cli": {
+    "config": "/content/BR/sar_rfi_baseline/repro_magmap/config_official_unet.yaml",
+    "out_dir": "/content/drive/MyDrive/repro_magmap_runs/unet_official_fp32",
+    "device": "cuda",
+    "precision": "fp32",
+    "epochs": null,
+    "max_steps_per_epoch": null,
+    "max_val_batches": null,
+    "train_maps": null,
+    "val_maps": null,
+    "num_workers": null,
+    "resume": false,
+    "dry_run": false
+  }
+}
