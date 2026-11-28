@@ -271,7 +271,47 @@ s[(s.experiment == "oracle") & (s.evaluation == "USCRN_cv") & (s.model == "rf")]
     ])
 
 
+def nb08() -> None:
+    """Notebook 08: v2 model comparison with F4 and nested selection."""
+    write("08_v2_models.ipynb", [
+        cell("markdown", """# 08 v2 models: F4 and nested model selection
+
+Radar-reliant feature sets F2, F3 and F4 (F3 plus temporal context from past
+overpasses) with random forest, XGBoost, histogram gradient boosting, ridge
+regression and a random forest grid; change detection for comparison.
+Hyperparameters and the best model per feature set are chosen by nested
+station-grouped cross-validation on the training stations only; every model
+is reported on the outer test folds. Clean (M0) and contaminated (M1)
+predictions over the full injection grid with the Stage 3 seeds; H1 dose
+response test; Stage 7 conditional and drought-alert metrics on the per-row
+predictions of the 7 row-level scenarios. Declared in `config.yaml`
+(`v2_study`). Logic in `src/stage7_models.py` and `src/stage7.py`."""),
+        cell("code", SETUP),
+        cell("code", """from src.stage7_models import run_models, aggregate_models, merge_rows
+from src.stage7 import run_stage7_metrics
+from src.config import path
+
+for fset in ["F4", "F2", "F3"]:
+    run_models([fset])
+out = aggregate_models()
+rows_file = merge_rows("models")
+metrics = run_stage7_metrics(rows_file, path("results_aggregate") / "stage4_scenarios.csv",
+                             tag="_models")"""),
+        cell("markdown", "## Outer RMSE (M0, M1) and damage D, with the inner selection share"),
+        cell("code", """o = out["stage7_models_outer"]
+o.pivot_table(index=["evaluation", "feature_set", "model", "selected_share"],
+              columns="quantity", values="estimate").round(4)"""),
+        cell("markdown", "## H1 dose response (v2 Holm family on USCRN)"),
+        cell("code", "out[\"stage7_models_h1\"].round(5)"),
+    ])
+
+
 if __name__ == "__main__":
+    import sys
+    if len(sys.argv) > 1:          # generate selected notebooks only, e.g. "nb08"
+        for name in sys.argv[1:]:
+            globals()[name]()
+        raise SystemExit
     nb01()
     nb02()
     nb03()
