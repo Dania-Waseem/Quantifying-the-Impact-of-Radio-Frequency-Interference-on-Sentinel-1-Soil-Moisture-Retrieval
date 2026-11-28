@@ -283,3 +283,35 @@ plots:
   diagram_dpi: 450              # 7.16 inch wide diagrams give about 3200 pixels
   single_column_in: 3.5
   double_column_in: 7.16
+
+# Version 2 of the study (branch v2-improvements), declared on 2026-11-28
+# before any v2 run. Gaps and questions are those of the approved proposal,
+# unchanged. The v1 (pilot) results stay as they are; v2 outputs use new names
+# (stage7_*, figures 18 and up, tables T12 and up).
+v2_study:
+  gaps:
+    G1: "RFI research stops at the image. Studies judge detection or image quality, not what RFI and mitigation do to a product such as soil moisture."
+    G2: "Soil moisture research assumes usable input. No study deliberately adds RFI to the input and measures the loss in accuracy."
+    G3: "The effect of severity and extent is not measured for Sentinel-1 (only passive microwave evidence exists), nor how much mitigation recovers."
+  research_questions:
+    RQ1: "How does RFI contamination affect the accuracy of Sentinel-1 based soil moisture retrieval?"
+    RQ2: "How does the loss in retrieval accuracy change with the severity and the spatial extent of RFI?"
+    RQ3: "To what extent can RFI mitigation recover the retrieval performance lost to interference?"
+    RQ4: "(optional) Does the impact differ across land cover types?"
+  hypotheses:
+    H1: {question: RQ2, name: dose response, statement: "For radar-reliant models (F2, F3, F4, change detection), error rises with RFI severity and extent."}
+    H2: {question: RQ2, name: persistence, statement: "Persistent interferers (block and station modes) cause more damage than random hits."}
+    H3: {question: RQ3, name: detection quality, statement: "A stronger, station-grouped detector recovers a positive, significant share of the damage and more than the rolling z-score detector."}
+    H4: {question: RQ3, name: image to product, statement: "Image-domain suppression scaled by its measured power reduction (variant M2) recovers more accuracy than station-level fill (M3), and PSNR gain does not rank suppressors the same way as soil moisture recovery."}
+    H5: {question: RQ1, name: decisions, statement: "RFI flips drought alerts (soil moisture below the 30th percentile) at a rate that RMSE alone does not show."}
+    H6: {question: RQ4, name: land cover, optional: true, statement: "The damage differs between grassland and other land cover classes."}
+  secondary:
+    - "Old H3 (mediation), old H5 (RFI-aware training) and old H6 (moderation) are reported with their pilot outcomes, not as formal hypotheses."
+  testing:
+    multiple_testing: holm        # separate Holm family for the v2 tests
+    family: v2
+  # Stage 7 metrics on per-row predictions (conditional view and drought events).
+  metrics:
+    drought_quantile: 0.30        # alert when soil moisture is below the station's own 30th percentile of observed soil moisture
+    n_bootstrap: 5000             # cluster bootstrap over stations
+    flip_variants: [M1, M3, M3b, M4]
