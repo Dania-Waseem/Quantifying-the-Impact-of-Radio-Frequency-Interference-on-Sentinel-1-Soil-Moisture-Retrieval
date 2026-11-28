@@ -310,6 +310,74 @@ v2_study:
   testing:
     multiple_testing: holm        # separate Holm family for the v2 tests
     family: v2
+  # Feature set F4 (declared before any F4 run): F3 plus temporal context from
+  # PAST overpasses of the same station only (no look-ahead in these features):
+  #   rVV_prev, rVH_prev: relative backscatter of the previous overpass;
+  #   dVV, dVH: change since the previous overpass (current minus previous);
+  #   rVV_med5, rVH_med5: median relative backscatter of the previous 5 overpasses.
+  # Missing past values (the first overpasses of a station) are set to 0, the
+  # station reference level of relative backscatter. As in F3, the reference
+  # median of rVV and rVH is computed from the station's whole observed series
+  # (backscatter only, no soil moisture). Under injection, F4 is recomputed
+  # from the series the model receives, so contamination carries into the lags.
+  # F4 is kept here (not in the v1 feature_sets block) so that v1 reruns are
+  # unchanged.
+  feature_sets:
+    F4:
+      columns: [rVV, rVH, VHVV, angle, ndvi, doy, rVV_prev, rVH_prev, dVV, dVH, rVV_med5, rVH_med5]
+      past_window: 5
+      fill_missing_past: 0.0
+  # Stage 7 model comparison on the radar-reliant feature sets.
+  models:
+    feature_sets: [F2, F3, F4]
+    evaluations: [USCRN_cv, OZNET_cv, OZNET_transfer]
+    # Existing models (fixed settings as in Stage 2): random forest and XGBoost
+    # are reused from the Stage 2 cache for F2 and F3 and fitted for F4;
+    # change detection (VV only) is reused from the cache.
+    families:
+      rf: [{n_estimators: 300, min_samples_leaf: 3}]
+      xgb: [{n_estimators: 500, learning_rate: 0.05, max_depth: 6, subsample: 0.8, colsample_bytree: 0.8}]
+      hgb:                       # histogram gradient boosting (scikit-learn)
+        - {learning_rate: 0.05, max_leaf_nodes: 15, max_iter: 300}
+        - {learning_rate: 0.05, max_leaf_nodes: 31, max_iter: 300}
+        - {learning_rate: 0.10, max_leaf_nodes: 15, max_iter: 300}
+        - {learning_rate: 0.10, max_leaf_nodes: 31, max_iter: 300}
+      ridge:                     # standardised features
+        - {alpha: 0.1}
+        - {alpha: 1.0}
+        - {alpha: 10.0}
+        - {alpha: 100.0}
+        - {alpha: 1000.0}
+      rf_grid:
+        - {n_estimators: 100, min_samples_leaf: 1}
+        - {n_estimators: 100, min_samples_leaf: 5}
+        - {n_estimators: 100, min_samples_leaf: 10}
+        - {n_estimators: 300, min_samples_leaf: 1}
+        - {n_estimators: 300, min_samples_leaf: 5}
+        - {n_estimators: 300, min_samples_leaf: 10}
+    # Nested selection: within each outer station-grouped split, the training
+    # stations are split into inner station-grouped folds. Hyperparameters per
+    # family, and then the best family per feature set, are chosen by the
+    # pooled inner-validation RMSE on clean input (M0). The outer test stations
+    # are never used for selection. Every family is reported on the outer test
+    # folds; "selected" is the per-fold inner choice.
+    inner_folds: 4
+    selection_metric: rmse_clean_inner
+    # Runs: M0 and M1 over the full Stage 3 injection grid with the Stage 3 seed
+    # streams; per-row predictions for the 7 Stage 4 row-level scenarios.
+    variants: [M0, M1]
+  # H1 test (dose response): per station, the degradation D at each ordered
+  # level (levels ranked 1 to 5; other factors and seeds pooled), the slope of
+  # D over the ranks; one-sided Wilcoxon signed-rank test that the station
+  # slopes are positive, effect size r = Z / sqrt(N), and a 95% cluster
+  # bootstrap interval (5000 resamples) of the mean station slope. Separately
+  # for severity and for extent. Radar-reliant models: every family on F2, F3,
+  # F4, and change detection. The v2 Holm family is formed over the formal v2
+  # tests on the primary evaluation (USCRN_cv); it is recomputed when later
+  # prompts add tests for H2 to H6.
+  h1_test:
+    factors: [severity, extent]
+    primary_evaluation: USCRN_cv
   # Stage 7 metrics on per-row predictions (conditional view and drought events).
   metrics:
     drought_quantile: 0.30        # alert when soil moisture is below the station's own 30th percentile of observed soil moisture
