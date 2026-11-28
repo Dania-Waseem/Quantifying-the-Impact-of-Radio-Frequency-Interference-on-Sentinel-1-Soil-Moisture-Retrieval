@@ -54,9 +54,19 @@ def is_other(path: str) -> bool:
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--data-root", default=str(ROOT))
-    data_root = Path(ap.parse_args().data_root)
+    ap.add_argument("--base", default=None,
+                    help="check only the commits in BASE..HEAD and the files they add or "
+                         "change (problems already on BASE are not re-checked)")
+    args = ap.parse_args()
+    data_root = Path(args.data_root)
 
-    files = [f for f in git("ls-files").splitlines() if f and not is_other(f)]
+    if args.base:
+        files = [f for f in git("diff", "--name-only", "--diff-filter=d",
+                                f"{args.base}...HEAD").splitlines() if f]
+        rev_range = [f"{args.base}..HEAD"]
+    else:
+        files = [f for f in git("ls-files").splitlines() if f and not is_other(f)]
+        rev_range = []
     problems = []
 
     # 1. Data files (own files only).
@@ -68,7 +78,7 @@ def main() -> int:
             problems.append(f"CSV outside allowed folders: {f}")
 
     # 2. History.
-    for line in git("log", "--format=%H%x09%an <%ae>%x09%cn <%ce>").splitlines():
+    for line in git("log", "--format=%H%x09%an <%ae>%x09%cn <%ce>", *rev_range).splitlines():
         sha, author, committer = line.split("\t")
         msg = git("log", "-1", "--format=%B", sha)
         for m in msg.splitlines():
@@ -109,10 +119,15 @@ def main() -> int:
             if bad:
                 problems.append(f"per-row or per-station columns {sorted(bad)} in {f}")
 
-    other = [f for f in git("ls-files").splitlines() if f and is_other(f)]
-    print(f"{len(files)} own tracked files checked; {len(other)} files of another "
-          f"contributor under {OTHER_PATHS} left unchecked; {len(names)} station and patch "
-          f"names searched")
+    if args.base:
+        n_commits = len(git("rev-list", f"{args.base}..HEAD").split())
+        print(f"scope: {n_commits} commits and {len(files)} added or changed files since "
+              f"{args.base}; {len(names)} station and patch names searched")
+    else:
+        other = [f for f in git("ls-files").splitlines() if f and is_other(f)]
+        print(f"{len(files)} own tracked files checked; {len(other)} files of another "
+              f"contributor under {OTHER_PATHS} left unchecked; {len(names)} station and "
+              f"patch names searched")
     if problems:
         print("CHECKS FAILED:")
         for p in problems:
